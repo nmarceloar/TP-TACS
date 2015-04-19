@@ -2,7 +2,7 @@
 	border: 2px solid;
 	border-radius: 5px;
 	border-color: #cccccc;
-	width: 200px;
+	width: 300px;
 }
 
 /*hack para que el autocomplete de jquery ui se vea bien sobre el modal de bootstrap*/
@@ -17,3 +17,6 @@
 	border-radius: 5px;
 }
 
+.btn-float{
+	float: right;
+}
