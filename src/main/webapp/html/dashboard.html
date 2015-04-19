@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
@@ -113,6 +112,35 @@
                 </div>
             </div>
         </div>
-        
+        <!-- Fin Modal vuelos -->
+        <!-- Inicio Modal detalle viaje -->
+            <div class="modal fade" id="modDetalleViaje" role="dialog">
+                <div class="modal-dialog modal-lg">
+                    <!-- contenido del modal -->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4>Detalles de tu viaje</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <p>Detalles del vuelo</p>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div id="googleMapVueloDetalle" class="map-crea-viaje"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" id="btnBorrar">Borrar <span class="glyphicon glyphicon-trash"></span></button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="btnVolver">Volver</button>
+                        </div>
+                    <!-- contenido del modal -->
+                </div>
+            </div>
+        </div>
+        <!-- Fin Modal detalle viaje -->
     </body>
 </html>
