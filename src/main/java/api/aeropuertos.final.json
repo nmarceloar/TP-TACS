@@ -1,0 +1,312 @@
+  { "aeropuertos": [ {
+        "icao": "LEMD",
+        "iata": "MAD",
+        "name": "Madrid Barajas International Airport",
+        "city": "Madrid",
+        "country": "ES",
+        "elevation": "2001",
+        "lat": "40.4936",
+        "lon": "-3.56676",
+        "tz": "Europe Madrid"
+    },
+	   {
+        "icao": "LEMD",
+        "iata": "MAD",
+        "name": "Madrid Barajas International Airport",
+        "city": "Madrid",
+        "country": "ES",
+        "elevation": "2001",
+        "lat": "40.4936",
+        "lon": "-3.56676",
+        "tz": "Europe Madrid"
+    },
+	{
+        "icao": "SA13",
+        "iata": "",
+        "name": "Estancia La Estrella Airport",
+        "city": "Tandil",
+        "country": "AR",
+        "elevation": "456",
+        "lat": "-37.5593986511",
+        "lon": "-58.6660003662",
+        "tz": "America Argentina Buenos_Aires"
+    },
+	 {
+        "icao": "SAEZ",
+        "iata": "EZE",
+        "name": "Ministro Pistarini International Airport",
+        "city": "Ezeiza",
+        "country": "AR",
+        "elevation": "67",
+        "lat": "-34.8222",
+        "lon": "-58.5358",
+        "tz": "America Argentina Buenos_Aires"
+    },
+	
+	 {
+        "icao": "SABE",
+        "iata": "AEP",
+        "name": "Jorge Newbery Airpark",
+        "city": "Buenos Aires",
+        "country": "AR",
+        "elevation": "18",
+        "lat": "-34.5592",
+        "lon": "-58.4156",
+        "tz": "America Argentina San_Luis"
+    },
+	
+	 {
+        "icao": "KMIA",
+        "iata": "MIA",
+        "name": "Miami International Airport",
+        "city": "Miami",
+        "country": "US",
+        "elevation": "8",
+        "lat": "25.7931995392",
+        "lon": "-80.2906036377",
+        "tz": "America New_York"
+    },
+	 {
+        "icao": "LEAB",
+        "iata": "ABC",
+        "name": "Albacete-Los Llanos Airport",
+        "city": "Albacete",
+        "country": "ES",
+        "elevation": "2302",
+        "lat": "38.9485015869",
+        "lon": "-1.8635200262",
+        "tz": "Europe Madrid"
+    },
+	 {
+        "icao": "SVBC",
+        "iata": "BLA",
+        "name": "General Jose Antonio Anzoategui International Airport",
+        "city": "Barcelona",
+        "country": "VE",
+        "elevation": "26",
+        "lat": "10.1070995331",
+        "lon": "-64.689201355",
+        "tz": "America Caracas"
+    },
+	 {
+        "icao": "LEBL",
+        "iata": "BCN",
+        "name": "Barcelona International Airport",
+        "city": "Barcelona",
+        "country": "ES",
+        "elevation": "12",
+        "lat": "41.2971000671",
+        "lon": "2.0784599781",
+        "tz": "Europe Madrid"
+    },
+	 {
+        "icao": "SVBC",
+        "iata": "BLA",
+        "name": "General Jose Antonio Anzoategui International Airport",
+        "city": "Barcelona",
+        "country": "VE",
+        "elevation": "26",
+        "lat": "10.1070995331",
+        "lon": "-64.689201355",
+        "tz": "America Caracas"
+    },
+	
+	 {
+        "icao": "SBGL",
+        "iata": "GIG",
+        "name": "Galeao - Antonio Carlos Jobim International Airport",
+        "city": "Rio De Janeiro",
+        "country": "BR",
+        "elevation": "28",
+        "lat": "-22.8099994659",
+        "lon": "-43.2505569458",
+        "tz": "America Sao_Paulo"
+    },
+	
+	{
+        "icao": "SBSC",
+        "iata": "SNZ",
+        "name": "Santa Cruz Airport",
+        "city": "Rio De Janeiro",
+        "country": "BR",
+        "elevation": "10",
+        "lat": "-22.9323997498",
+        "lon": "-43.7191009521",
+        "tz": "America Sao_Paulo"
+    },
+	
+	 {
+        "icao": "SBSC",
+        "iata": "SNZ",
+        "name": "Santa Cruz Airport",
+        "city": "Rio De Janeiro",
+        "country": "BR",
+        "elevation": "10",
+        "lat": "-22.9323997498",
+        "lon": "-43.7191009521",
+        "tz": "America Sao_Paulo"
+    },
+	
+	{
+        "icao": "OYGD",
+        "iata": "AAY",
+        "name": "Al Ghaidah International Airport",
+        "city": "",
+        "country": "YE",
+        "elevation": "134",
+        "lat": "16.1916999817",
+        "lon": "52.1749992371",
+        "tz": "Asia Aden"
+    },
+	
+	{
+        "icao": "SA16",
+        "iata": "",
+        "name": "La Puntilla Airport",
+        "city": "La Puntilla",
+        "country": "AR",
+        "elevation": "2952",
+        "lat": "-32.9627990723",
+        "lon": "-68.8737030029",
+        "tz": "America Argentina Mendoza"
+    },
+	
+	 {
+        "icao": "SAME",
+        "iata": "MDZ",
+        "name": "El Plumerillo Airport",
+        "city": "Mendoza",
+        "country": "AR",
+        "elevation": "2310",
+        "lat": "-32.8316993713",
+        "lon": "-68.7929000854",
+        "tz": "America Argentina Mendoza"
+    },
+    {
+        "icao": "SAMH",
+        "iata": "",
+        "name": "Valle Hermoso Airport",
+        "city": "Valle Hermoso",
+        "country": "AR",
+        "elevation": "2500",
+        "lat": "-35.1461982727",
+        "lon": "-70.2053985596",
+        "tz": "America Argentina Mendoza"
+    },
+	{
+        "icao": "SAMM",
+        "iata": "LGS",
+        "name": "Comodoro D.R. Salomon Airport",
+        "city": "Malargue",
+        "country": "AR",
+        "elevation": "4685",
+        "lat": "-35.493598938",
+        "lon": "-69.5743026733",
+        "tz": "America Argentina Mendoza"
+    },
+	
+	{
+        "icao": "SAMR",
+        "iata": "AFA",
+        "name": "Suboficial Ay Santiago Germano Airport",
+        "city": "San Rafael",
+        "country": "AR",
+        "elevation": "2470",
+        "lat": "-34.5882987976",
+        "lon": "-68.4039001465",
+        "tz": "America Argentina Mendoza"
+    },
+	 {
+        "icao": "SAZS",
+        "iata": "BRC",
+        "name": "San Carlos De Bariloche Airport",
+        "city": "San Carlos de Bariloche",
+        "country": "AR",
+        "elevation": "2774",
+        "lat": "-41.1511993408",
+        "lon": "-71.1575012207",
+        "tz": "America Argentina Salta"
+    },
+	  {
+        "icao": "SAZT",
+        "iata": "TDL",
+        "name": "Heroes De Malvinas Airport",
+        "city": "Tandil",
+        "country": "AR",
+        "elevation": "574",
+        "lat": "-37.2374000549",
+        "lon": "-59.2279014587",
+        "tz": "America Argentina Buenos_Aires"
+    },
+	 {
+        "icao": "SAZV",
+        "iata": "VLG",
+        "name": "Villa Gesell Airport",
+        "city": "Villa Gesell",
+        "country": "AR",
+        "elevation": "32",
+        "lat": "-37.2354",
+        "lon": "-57.0292",
+        "tz": "America Argentina Buenos_Aires"
+    },
+	 {
+        "icao": "SAZW",
+        "iata": "CUT",
+        "name": "Cutral-Co Airport",
+        "city": "Cutral-Co",
+        "country": "AR",
+        "elevation": "2132",
+        "lat": "-38.9397010803",
+        "lon": "-69.2646026611",
+        "tz": "America Argentina Salta"
+    },
+	{
+        "icao": "SAZY",
+        "iata": "CPC",
+        "name": "Aviador C. Campos Airport",
+        "city": "Chapelco San Martin de los Andes",
+        "country": "AR",
+        "elevation": "2569",
+        "lat": "-40.0754013062",
+        "lon": "-71.137298584",
+        "tz": "America Argentina Salta"
+    },
+	 {
+        "icao": "LIRA",
+        "iata": "CIA",
+        "name": "Ciampino Airport",
+        "city": "Roma",
+        "country": "IT",
+        "elevation": "427",
+        "lat": "41.7994003296",
+        "lon": "12.5949001312",
+        "tz": "Europe Rome"
+    },
+	 {
+        "icao": "TAPA",
+        "iata": "ANU",
+        "name": "V.C. Bird International Airport",
+        "city": "St. George",
+        "country": "AG",
+        "elevation": "62",
+        "lat": "17.1367",
+        "lon": "-61.792702",
+        "tz": "America Antigua"
+    },
+	 {
+        "icao": "ULLI",
+        "iata": "LED",
+        "name": "Pulkovo Airport",
+        "city": "St. Petersburg",
+        "country": "RU",
+        "elevation": "78",
+        "lat": "59.8003005981",
+        "lon": "30.2625007629",
+        "tz": "Europe Moscow"
+    }
+	
+	
+	]}
+	
+	
+	
