@@ -1,54 +1,74 @@
-
 package model;
 
+import java.util.Date;
+
 public class Vuelo {
-	
-	private String descripcion;
-	
-	public Vuelo(String descripcion) {
-	
-		this.setDescripcion(descripcion);
-		
+
+	private String aerolinea;
+	private String nroVuelo;
+	private String avion;
+	private Date fechaSalida;
+	private Date fechaArribo;
+
+	public Vuelo() {
+		super();
 	}
-	
-	
-	/**
-	 * @return the descripcion
-	 */
-	public String getDescripcion() {
-	
-		return this.descripcion;
+
+	public Vuelo(String aerolinea, String nroVuelo, String avion,
+			Date fechaSalida, Date fechaArribo) {
+		super();
+		this.aerolinea = aerolinea;
+		this.nroVuelo = nroVuelo;
+		this.avion = avion;
+		this.fechaSalida = fechaSalida;
+		this.fechaArribo = fechaArribo;
 	}
-	
-	
-	/**
-	 * @param descripcion
-	 *            the descripcion to set
-	 */
-	public void setDescripcion(String descripcion) {
-	
-		if (descripcion != null) {
-			
-			this.descripcion = descripcion;
-		}
-		
-		else {
-			throw new NullPointerException("La descripcion debe existir");
-		}
-		
+
+	public String getAerolinea() {
+		return aerolinea;
 	}
-	
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
+
+	public void setAerolinea(String aerolinea) {
+		this.aerolinea = aerolinea;
+	}
+
+	public String getNroVuelo() {
+		return nroVuelo;
+	}
+
+	public void setNroVuelo(String nroVuelo) {
+		this.nroVuelo = nroVuelo;
+	}
+
+	public String getAvion() {
+		return avion;
+	}
+
+	public void setAvion(String avion) {
+		this.avion = avion;
+	}
+
+	public Date getFechaSalida() {
+		return fechaSalida;
+	}
+
+	public void setFechaSalida(Date fechaSalida) {
+		this.fechaSalida = fechaSalida;
+	}
+
+	public Date getFechaArribo() {
+		return fechaArribo;
+	}
+
+	public void setFechaArribo(Date fechaArribo) {
+		this.fechaArribo = fechaArribo;
+	}
+
 	@Override
 	public String toString() {
-	
-		return "Vuelo [descripcion=" + this.descripcion + "]";
+		return "Vuelo " + getNroVuelo() + " de " + getAerolinea()
+				+ " - Desde: " + getFechaSalida() + " hasta "
+				+ getFechaArribo();
 	}
-	
-	
+
 }
