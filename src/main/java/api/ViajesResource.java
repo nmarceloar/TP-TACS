@@ -1,6 +1,3 @@
-/**
- * 
- */
 
 package api;
 
@@ -11,13 +8,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import jersey.repackaged.com.google.common.base.Preconditions;
+
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-/**
- * @author nmarcelo.ar
- *
- */
+import api.Despegar;
+import api.OpcionDeViaje;
+import api.ViajesProvider;
+
 @Path("/viajes")
 public class ViajesResource {
 	
@@ -25,16 +24,14 @@ public class ViajesResource {
 	
 	public ViajesResource() {
 	
-		// refactorizar para hacer testeos
 		this.proveedorDeViajes = new Despegar();
-		
 	}
 	
 	@GET
 	@Produces("application/json")
 	public List<OpcionDeViaje> findOpcionesDeViaje(
-	    @QueryParam("cityFrom") String cityFrom, // iata code refactor
-	    @QueryParam("cityTo") String cityTo, // iata code refactor
+	    @QueryParam("aeroOrigen") String aeroOrigen, // iata code refactor
+	    @QueryParam("aeroDestino") String aeroDestino, // iata code refactor
 	    @QueryParam("fechaIda") String fechaIda, // refactor a date time
 	    @QueryParam("fechaVuelta") String fechaVuelta // refactor a datetime
 	    ) {
@@ -43,8 +40,8 @@ public class ViajesResource {
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy");
 		
 		return this.proveedorDeViajes.findOpcionesDeViaje(
-		    cityFrom,
-		    cityTo,
+		    aeroOrigen,
+		    aeroDestino,
 		    fmt.parseDateTime(fechaIda),
 		    fmt.parseDateTime(fechaVuelta));
 		

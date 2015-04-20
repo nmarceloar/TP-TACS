@@ -35,8 +35,11 @@ public class Despegar implements ViajesProvider {
 	}
 	
 	@Override
-	public List<OpcionDeViaje> findOpcionesDeViaje(String fromCity,
-	    String toCity, DateTime fechaIda, DateTime fechaVuelta) {
+	public List<OpcionDeViaje> findOpcionesDeViaje(
+		String aeroOrigen,
+	    String aeroDestino, 
+	    DateTime fechaIda, 
+	    DateTime fechaVuelta) {
 	
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		
@@ -45,8 +48,8 @@ public class Despegar implements ViajesProvider {
 		WebTarget webTarget =
 		    restClient.target(TARGET)
 		                    .queryParam("site", "ar")
-		                    .queryParam("from", fromCity)
-		                    .queryParam("to", toCity)
+		                    .queryParam("from", aeroOrigen)
+		                    .queryParam("to", aeroDestino)
 		                    .queryParam("departure_date", fmt.print(fechaIda))
 		                    .queryParam("return_date", fmt.print(fechaVuelta))
 		                    .queryParam("adults", "1");
@@ -62,8 +65,6 @@ public class Despegar implements ViajesProvider {
 			
 			opcionesDeViaje =
 			    response.readEntity(OpcionesDeViaje.class);
-			
-			// restClient.close();
 			
 		}
 		

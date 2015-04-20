@@ -7,7 +7,6 @@ package tests;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import api.Aeropuerto;
@@ -19,28 +18,6 @@ import api.StaticAeropuertosProvider;
  */
 public class StaticAeropuertosProviderTest {
 	
-	StaticAeropuertosProvider provider;
-	
-	@Before()
-	public void before() {
-	
-		provider = new StaticAeropuertosProvider();
-		
-	}
-	
-	/**
-	 * Test method for
-	 * {@link api.StaticAeropuertosProvider#StaticAeropuertosProvider()}.
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testStaticAeropuertosProvider() {
-	
-		Assert.assertTrue(provider.hasAeropuertos());
-		
-	}
-	
 	/**
 	 * Test method for
 	 * {@link api.StaticAeropuertosProvider#findAeropuertosByCity(java.lang.String)}
@@ -51,10 +28,29 @@ public class StaticAeropuertosProviderTest {
 	@Test
 	public void testFindAeropuertosByCity() {
 	
-		List<Aeropuerto> byName =
-		    provider.findAeropuertosByCity("bariloche");
+		StaticAeropuertosProvider provider = new StaticAeropuertosProvider();
 		
-		Assert.assertTrue(byName.size() == 1);
+		final List<Aeropuerto> byName =
+		    provider.findAeropuertosByCity("buenos");
+		
+		Assert.assertTrue(byName
+		                .size() == 1);
+		
+	}
+	
+	/**
+	 * Test method for
+	 * {@link api.StaticAeropuertosProvider#StaticAeropuertosProvider()}.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testStaticAeropuertosProvider() {
+	
+		StaticAeropuertosProvider provider = new StaticAeropuertosProvider();
+		
+		Assert.assertTrue(provider
+		                .hasAeropuertos());
 		
 	}
 	

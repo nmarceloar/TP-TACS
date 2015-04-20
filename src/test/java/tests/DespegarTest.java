@@ -19,33 +19,24 @@ import api.OpcionDeViaje;
  */
 public class DespegarTest {
 	
-	/**
-	 * @throws java.lang.Exception
-	 */
-	
-	/**
-	 * Test method for
-	 * {@link api.Despegar#findOpcionesDeViaje(java.lang.String, java.lang.String, org.joda.time.DateTime, org.joda.time.DateTime)}
-	 * .
-	 */
 	@Test
 	public void testFindOpcionesDeViaje() {
 	
 		Despegar despegar = new Despegar();
 		
+		DateTime fechaIda = DateTime.now().plusDays(5);
+		DateTime fechaVuelta = fechaIda.plusDays(30);
+		
 		List<OpcionDeViaje> opciones =
-		    despegar.findOpcionesDeViaje("BUE", "MIA", new DateTime(2015, 4,
-		        22, 0,
-		        0), new DateTime(2015, 4, 30, 0, 0));
+		    despegar.findOpcionesDeViaje(
+		        "BUE",
+		        "MIA",
+		        fechaIda,
+		        fechaVuelta
+		                    );
 		
 		Assert.assertNotNull(opciones);
-		
-		for (OpcionDeViaje opcion : opciones) {
-			
-			System.out.println(opcion.toString() + "\n");
-			
-		}
+		Assert.assertTrue(opciones.size() > 0);
 		
 	}
-	
 }

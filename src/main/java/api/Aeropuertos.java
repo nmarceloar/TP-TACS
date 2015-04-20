@@ -67,4 +67,9 @@ public class Aeropuertos {
 		this.additionalProperties.put(name, value);
 	}
 	
+	public void addAeropuerto(Aeropuerto aero) {
+	
+		this.getAeropuertos().add(aero);
+	}
+	
 }

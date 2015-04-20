@@ -14,11 +14,10 @@ import org.joda.time.DateTime;
  */
 public interface ViajesProvider {
 	
-	
-	//agregar excepciones --> refactor 
+	// agregar excepciones --> refactor
 	public List<OpcionDeViaje> findOpcionesDeViaje(
-	    String cityFrom,
-	    String cityTo,
+	    String aeroOrigen,
+	    String aeroDestino,
 	    DateTime fechaIda,
 	    DateTime fechaVuelta);
 	
