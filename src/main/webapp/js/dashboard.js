@@ -7,6 +7,45 @@ $(function () {
     google.maps.event.addDomListener(window, 'load', initialize);
     formResetViaje();
     formResetVuelos();
+    
+    $("a[role=linkViaje]").click(initClickDetalle);
+    
+    // notificaciones de recomendación *******************************
+    /* TODO
+     * $("#drpDwnRecomendaciones").click(function(event){
+     * 		event.preventDefault();
+     * 		acá debería traer las últimas 5 notificaciones y resalto las no leídas
+     * });
+     * 
+     * TODO
+     * $("#btnMarcarComoLeidas").click.... marcar las notificaciones como leídas
+     */
+    
+    $("#verTodasRecomendaciones").click(function(event){
+    	event.preventDefault();
+    	//TODO get lista de recomendaciones completa
+    	$("#modListaRecomendaciones").modal('show');
+    });
+    // notificaciones de recomendación *******************************
+    
+    // recomendar ****************************************
+    var listaAmigosTrucha = ['Juan','Pedro','Luis','Luc&iacute;a','Romina','Jimena','Roberto','Julio','Makoto','Dimitri'];
+    $("#btnRecomendarViaje").click(function(event){
+    	event.preventDefault();
+    	$("#modRecomendar").modal("show");
+    });
+    
+    //TODO habría que hacer que los elementos se te vayan agregando en el input (como el de facebook)
+    $("#boxAmigos").autocomplete({
+    	//TODO get amigoss
+        source: listaAmigosTrucha,
+        select: function (event, ui) {
+            $("#amigosList").append("<li>"+ui.item.value+"</li>");
+            $("#boxAmigos").val('');
+        }
+    });
+    // recomendar ****************************************
+    
     //modal nuevo viaje ******************************
     /*$("#modNuevoViaje").on('shown',function() {
      google.maps.event.trigger(map, "resize");
@@ -89,14 +128,6 @@ $(function () {
     $("#lstVuevloVuelta").hide();
     $("#boxVueloIda").hide();
     $("#boxVueloVuelta").hide();
-    /*$("a[role=vueloIda]").click(function(event){
-     event.preventDefault();
-     console.log($(this).attr("id"));
-     $("#lstVuevloVuelta").show();
-     $("#lstVuevloIda").hide();
-     $("#boxVueloIda").show();
-     getVuelos('Vuelta');
-     });*/
 
     $("#cancelVueloIda").click(function (event) {
         event.preventDefault();
@@ -122,7 +153,8 @@ $(function () {
         contViajes++;
         $("#listViajes").append(getViajeHTML(contViajes, $("#ciudadOrigen").val(), $("#ciudadDestino").val(),
                 $("#fechaDesde").val(), $("#fechaHasta").val()));
-
+        
+        $("div[id="+contViajes+"] a[role=linkViaje]").click(initClickDetalle);
         //limpio el form para futuros viajes
         formResetViaje();
         formResetVuelos();
@@ -136,7 +168,7 @@ $(function () {
 });
 function getViajeHTML(idViaje, origen, destino, desde, hasta) {
     return '<div class="list-group-item" id="' + idViaje + '">'
-            + '<h3 class="list-group-item-heading"><a href="#">Viaje 1. Desde '
+            + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje 1. Desde '
             + origen
             + ' a '
             + destino
@@ -145,7 +177,7 @@ function getViajeHTML(idViaje, origen, destino, desde, hasta) {
             + ' y volviendo el d&iacute;a '
             + hasta
             + '</a></h3>'
-            + '<p class="list-group-item-text" align="right"><a href="#">Compartir</a> <a href="#">Eliminar</a></p>'
+            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#">Compartir</a> <a href="#">Eliminar</a></p>'
             + '</div>';
     }
 
@@ -179,6 +211,7 @@ function initialize() {
     };
     map = new google.maps.Map(document.getElementById("googleMapViaje"), mapProp);
     map = new google.maps.Map(document.getElementById("googleMapVuelo"), mapProp);
+    map = new google.maps.Map(document.getElementById("googleMapViajeReview"), mapProp);
 }
 
 function initClickIda() {
@@ -210,4 +243,13 @@ function templateVuelo(sentido, idVuelo, aeropuertoOrigen, aeropuertoDestion, ho
             '<h4 class="list-group-item-heading">Vuelo ' + idVuelo + ' de ' + aerolinea + ' de las ' + horarioSalida + ' horas.</h4>' +
             '<p class="list-group-item-text">Saliendo desde el aeropuerto ' + aeropuertoOrigen + ' llegando al aeropuerto ' + aeropuertoDestion + ' a las ' + horarioLlegada + '</p>' +
             '</a>';
+}
+
+function initClickDetalle(){
+	// reviso si la lista de recomendaciones está abierta y la cierro si hace falta
+	if(typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown){
+		$("#modListaRecomendaciones").modal("hide");
+	}
+	//TODO get detalle de viaje (por api)
+	$("#modDetalleViaje").modal('show');
 }
