@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+    "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
@@ -20,11 +20,21 @@
                 <h2>¡Bienvenido a TACS por el mundo!</h2>      
                 <p class="btn-quiero-viajar"><a href="#" class="btn btn-info btn-lg" id="btnNuevoViaje">¿A dónde querés ir hoy? <span class="glyphicon glyphicon-plane"></span></a></p>      
             </div>
-            
+
             <!-- viajes recientes -->
             <div class="list-group" id="listViajes">
                 <div class="list-group-item active"><h4>Tus viajes</h4></div>
                 <div class="list-group-item" id="itemSinViaje">Todavía no hiciste ningún viaje <span class="glyphicon glyphicon-thumbs-down"></span></div>
+            </div>
+            <!-- viajes de amigos -->
+            <div class="list-group" id="listViajesAmigos">
+                <div class="list-group-item active"><h5> Viajes de amigos </h5></div>
+                <div class="list-group-item" id="itemAmigo"> 
+                    <h5 class="list-group-item-heading">
+                        <a href="#">Viaje 1 - De mi amigo Luis Desde Roma hasta Buenos Aires</a>
+                    </h5><p class="list-group-item-text" align="right"><a href="#">Ver detalle</a> </p>
+                </div>
+                <div class="list-group-item" id="itemSinViaje">Tus amigos no han viajado aún <span class="glyphicon glyphicon-thumbs-down"></span></div>
             </div>
             <!-- Inicio Modal viaje -->
             <div class="modal fade" id="modNuevoViaje" role="dialog">
@@ -34,43 +44,43 @@
                         <div class="modal-header">
                             <h4>¡Empezá un nuevo viaje!</h4>
                         </div>  
-						<div class="modal-body">
-						    <div class="container-fluid">
-							    <div class="row">
-								    <div class="col-md-5">
-									    <form role="form" id="frmNuevoViaje">
-					                       <div class="form-group">
-					                           <input type="text" id="ciudadOrigen" placeholder="¿Desde dónde salís?" class="box" />
-					                       </div>
-                                           <div class="form-group" id="fechaDesdeContainer">
-                                               <input type="text" id="fechaDesde" placeholder="¿Cuándo salís?" class="box" />
-                                               <span class="add-on"><span class="glyphicon glyphicon-calendar"></span></span>
-                                           </div>
-					                       <div class="form-group" id="dstContainter">
-					                           <input type="text" id="ciudadDestino" placeholder="¿Hasta dónde querés ir?" class="box" />
-					                       </div>
-                                           <div class="form-group" id="fechaHastaContainer">
-                                               <input type="text" id="fechaHasta" placeholder="¿Cuándo volvés?" class="box" />
-                                               <span class="add-on"><span class="glyphicon glyphicon-calendar"></span></span>
-                                           </div>
-					                   </form>
-					                </div>
-	                                <div class="col-md-5">
-	                                    <div id="googleMapViaje" class="map-crea-viaje"></div>
-	                                </div>
-					            </div>
-					         </div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-primary" data-dismiss="modal" id="btnBuscarVuelo">Buscar vuelos <span class="glyphicon glyphicon-search"></span></button>
-							<button type="button" class="btn btn-default" data-dismiss="modal" id="btnCancelarViaje">Cancelar</button>
-						</div>
-	                 </div>
-	                 <!-- fin contenido del modal-->
-	            </div>
-	        </div>
-	        <!-- Fin Modal viaje -->
-	        <!-- Inicio Modal vuelos -->
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <form role="form" id="frmNuevoViaje">
+                                            <div class="form-group">
+                                                <input type="text" id="ciudadOrigen" placeholder="¿Desde dónde salís?" class="box" />
+                                            </div>
+                                            <div class="form-group" id="fechaDesdeContainer">
+                                                <input type="text" id="fechaDesde" placeholder="¿Cuándo salís?" class="box" />
+                                                <span class="add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                                            </div>
+                                            <div class="form-group" id="dstContainter">
+                                                <input type="text" id="ciudadDestino" placeholder="¿Hasta dónde querés ir?" class="box" />
+                                            </div>
+                                            <div class="form-group" id="fechaHastaContainer">
+                                                <input type="text" id="fechaHasta" placeholder="¿Cuándo volvés?" class="box" />
+                                                <span class="add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div id="googleMapViaje" class="map-crea-viaje"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnBuscarVuelo">Buscar vuelos <span class="glyphicon glyphicon-search"></span></button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="btnCancelarViaje">Cancelar</button>
+                        </div>
+                    </div>
+                    <!-- fin contenido del modal-->
+                </div>
+            </div>
+            <!-- Fin Modal viaje -->
+            <!-- Inicio Modal vuelos -->
             <div class="modal fade" id="modVuelos" role="dialog">
                 <div class="modal-dialog modal-lg">
                     <!-- contenido del modal -->
@@ -82,37 +92,37 @@
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-md-5">
-		                                <form role="form" id="frmVuelos">
-		                                    <div class="well well-sm" id="boxVueloIda">Vuelo de ida elegido <button type="button" class="btn btn-default btn-xs btn-float" id="cancelVueloIda"><span class="glyphicon glyphicon-remove"></span></button> </div>
+                                        <form role="form" id="frmVuelos">
+                                            <div class="well well-sm" id="boxVueloIda">Vuelo de ida elegido <button type="button" class="btn btn-default btn-xs btn-float" id="cancelVueloIda"><span class="glyphicon glyphicon-remove"></span></button> </div>
                                             <div id="lstVuevloIda">
-			                                    <p class="list-group-item-text">Opciones para el vuelo de ida. Desde origen a destino, saliendo el día dd/mm/yyyy:</p>
-			                                    <div class="list-group">
-			                                        <div class="list-group-item" id="sinVuelosIda">No hay vuelos disponibles <span class="glyphicon glyphicon-thumbs-down"></span></div>
-												</div>
-										    </div>
-										    <div class="well well-sm" id="boxVueloVuelta">Vuelo de vuelta elegido <button type="button" class="btn btn-default btn-xs btn-float" id="cancelVueloVuelta"><span class="glyphicon glyphicon-remove"></span></button> </div>
-											<div id="lstVuevloVuelta">
-	                                            <p class="list-group-item-text">Opciones para el vuelo de vuelta. Vuelos desde destino a origen, saliendo el día dd/mm/yyyy:</p>
-	                                            <div class="list-group">
-	                                                <div class="list-group-item" id="sinVuelosVuelta">No hay vuelos disponibles <span class="glyphicon glyphicon-thumbs-down"></span></div>
-	                                            </div>
-	                                        </div>
-		                                </form>
-		                            </div>
-	                                <div class="col-md-5">
-	                                    <div id="googleMapVuelo" class="map-crea-viaje"></div>
-	                                </div>
-		                        </div>
+                                                <p class="list-group-item-text">Opciones para el vuelo de ida. Desde origen a destino, saliendo el día dd/mm/yyyy:</p>
+                                                <div class="list-group">
+                                                    <div class="list-group-item" id="sinVuelosIda">No hay vuelos disponibles <span class="glyphicon glyphicon-thumbs-down"></span></div>
+                                                </div>
+                                            </div>
+                                            <div class="well well-sm" id="boxVueloVuelta">Vuelo de vuelta elegido <button type="button" class="btn btn-default btn-xs btn-float" id="cancelVueloVuelta"><span class="glyphicon glyphicon-remove"></span></button> </div>
+                                            <div id="lstVuevloVuelta">
+                                                <p class="list-group-item-text">Opciones para el vuelo de vuelta. Vuelos desde destino a origen, saliendo el día dd/mm/yyyy:</p>
+                                                <div class="list-group">
+                                                    <div class="list-group-item" id="sinVuelosVuelta">No hay vuelos disponibles <span class="glyphicon glyphicon-thumbs-down"></span></div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div id="googleMapVuelo" class="map-crea-viaje"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-	                    <div class="modal-footer">
-	                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnViajar">¡Viajar! <span class="glyphicon glyphicon-plane"></span></button>
-	                        <button type="button" class="btn btn-default" data-dismiss="modal" id="btnVolver">Volver</button>
-	                    </div>
-                    <!-- contenido del modal -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnViajar">¡Viajar! <span class="glyphicon glyphicon-plane"></span></button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="btnVolver">Volver</button>
+                        </div>
+                        <!-- contenido del modal -->
+                    </div>
                 </div>
             </div>
-        </div>
-        
+
     </body>
 </html>
