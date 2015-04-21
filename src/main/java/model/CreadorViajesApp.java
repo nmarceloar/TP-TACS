@@ -44,4 +44,23 @@ public class CreadorViajesApp {
         Viaje viaje = new Viaje(pj, trayectos);
         return viaje;
     }
+    
+    // Metodo para retornar la lista de viajes de un usuario por su id
+    public static List<Viaje> getViajesDeUsuarioById(int idUser){
+        List<Viaje> viajes = new ArrayList<>();
+        for (Viaje v : getViajesRegistrados()){
+            if (v.getViajante().getIdUsuario() == idUser){
+                viajes.add(v);
+            }
+        }
+        return viajes;
+    }
+    
+    // Metodo para registrar un usuario. Retorna su id
+    public static int registrarUsuario(String nombre, String apellido){
+        Pasajero pj = new Pasajero();
+        pj.setNombre(nombre);
+        pj.setApellido(apellido);
+        return pj.getIdUsuario();
+    }
 }

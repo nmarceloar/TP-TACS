@@ -1,24 +1,40 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Pasajero {
+    
+    private static int creadorIdUsuarios = 0;
 
     private String nombre;
     private String apellido;
     private long dni;
     private List<Pasajero> amigos;
+    private int idUsuario;
+    private List<Recomendacion> recomRecibidas;
 
     public Pasajero(String nombre, String apellido, long dni, List<Pasajero> amigos) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
         this.amigos = amigos;
+        this.idUsuario = creadorIdUsuarios++;
+        this.recomRecibidas = new ArrayList<>();
     }
 
     public Pasajero() {
+        this.idUsuario = creadorIdUsuarios++;
     }
 
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+    
     public String getNombre() {
         return nombre;
     }
@@ -50,6 +66,14 @@ public class Pasajero {
     public void setAmigos(List<Pasajero> amigos) {
         this.amigos = amigos;
     }
+
+    public List<Recomendacion> getRecomRecibidas() {
+        return recomRecibidas;
+    }
+
+    public void setRecomRecibidas(List<Recomendacion> recomRecibidas) {
+        this.recomRecibidas = recomRecibidas;
+    }
     
     public boolean esAmigo(Pasajero pj){
         boolean resul = false;
@@ -59,6 +83,10 @@ public class Pasajero {
             }
         }
         return resul;
+    }
+    
+    public void aceptarRecomendacion(Recomendacion rec){
+        getRecomRecibidas().add(rec);
     }
 
 }
