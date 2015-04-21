@@ -5,38 +5,43 @@ import java.util.List;
 
 public class Viaje {
 
-	private Pasajero viajante;
-	private List<Trayecto> itinerario;
+    private Pasajero viajante;
+    private List<Trayecto> itinerario;
 
-	public Viaje() {
-	}
+    public Viaje() {
+    }
 
-	public Pasajero getViajante() {
-		return viajante;
-	}
+    public Viaje(Pasajero viajante, List<Trayecto> itinerario) {
+        this.viajante = viajante;
+        this.itinerario = itinerario;
+    }
 
-	public void setViajante(Pasajero viajante) {
-		this.viajante = viajante;
-	}
+    public Pasajero getViajante() {
+        return viajante;
+    }
 
-	public List<Trayecto> getItinerario() {
-		return itinerario;
-	}
+    public void setViajante(Pasajero viajante) {
+        this.viajante = viajante;
+    }
 
-	public void setItinerario(List<Trayecto> itinerario) {
-		this.itinerario = itinerario;
-	}
+    public List<Trayecto> getItinerario() {
+        return itinerario;
+    }
 
-	public Date getFechaSalidaViaje() {
-		return getItinerario().get(0).getFechaSalida();
-	}
+    public void setItinerario(List<Trayecto> itinerario) {
+        this.itinerario = itinerario;
+    }
 
-	public Date getFechaArriboViaje() {
-		return getItinerario().get(itinerario.size() - 1).getFechaArribo();
-	}
-	
-	public void agregarTrayecto(Trayecto tray){
-		getItinerario().add(tray);
-	}
+    public Date getFechaSalidaViaje() {
+        return getItinerario().get(0).getFechaSalida();
+    }
+
+    public Date getFechaArriboViaje() {
+        return getItinerario().get(itinerario.size() - 1).getFechaArribo();
+    }
+
+    public void agregarTrayecto(Trayecto tray) {
+        getItinerario().add(tray);
+    }
 
 }
