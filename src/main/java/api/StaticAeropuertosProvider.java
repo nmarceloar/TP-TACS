@@ -4,45 +4,54 @@
 
 package api;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * @author nmarcelo.ar
- *
- */
 public class StaticAeropuertosProvider implements AeropuertosProvider {
 	
 	private static Aeropuertos aeropuertos;
 	
 	static {
 		
+		final InputStream is =
+		    StaticAeropuertosProvider.class.getClassLoader()
+		        .getResourceAsStream("aeropuertos.final.json");
+		
 		final ObjectMapper mapper = new ObjectMapper();
 		
-		final URL mockData;
-		final InputStream is;
 		try {
 			
-			mockData =
-			    new URL(
-			        "https://raw.githubusercontent.com/nmarceloar/mockdata/master/aeropuertos.final.json");
+			StaticAeropuertosProvider.aeropuertos =
+			    mapper.readValue(is, Aeropuertos.class);
 			
-			is = mockData.openStream();
-			StaticAeropuertosProvider.aeropuertos = mapper
-			                .readValue(is, Aeropuertos.class);
+		} catch (JsonParseException ex) {
+			
+			ex.printStackTrace();
+			
+		} catch (JsonMappingException ex) {
+			
+			ex.printStackTrace();
+			
+		} catch (IOException ex) {
+			
+			ex.printStackTrace();
+			
+		}
+		
+		try {
 			
 			is.close();
 			
-		} catch (final Exception ex) {
+		} catch (IOException ex) {
 			
-			Logger.getLogger("StaticAeropuertosProvider").info(
-			    "Fallo durante la init estatica" + ex
-			                    .getMessage());
+			ex.printStackTrace();
 			
 		}
 		
@@ -57,13 +66,11 @@ public class StaticAeropuertosProvider implements AeropuertosProvider {
 			
 			// ojo con esto -- pueden ser muchos
 			// restringir a busquedas de 3 o 4 caracteres como minimo
-			return StaticAeropuertosProvider.aeropuertos
-			                .getAeropuertos();
+			return StaticAeropuertosProvider.aeropuertos.getAeropuertos();
 			
 		}
 		
-		for (final Aeropuerto aeropuerto : StaticAeropuertosProvider.aeropuertos
-		                .getAeropuertos()) {
+		for (final Aeropuerto aeropuerto : StaticAeropuertosProvider.aeropuertos.getAeropuertos()) {
 			
 			if (aeropuerto.cityNameLike(cityName)) {
 				
@@ -79,8 +86,7 @@ public class StaticAeropuertosProvider implements AeropuertosProvider {
 	
 	public List<Aeropuerto> getAll() {
 	
-		return StaticAeropuertosProvider.aeropuertos
-		                .getAeropuertos();
+		return StaticAeropuertosProvider.aeropuertos.getAeropuertos();
 		
 	}
 	

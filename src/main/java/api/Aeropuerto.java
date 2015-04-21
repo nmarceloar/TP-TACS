@@ -250,7 +250,8 @@ public class Aeropuerto {
 	@Override
 	public String toString() {
 	
-		return ToStringBuilder.reflectionToString(this);
+		return ToStringBuilder
+		                .reflectionToString(this);
 	}
 	
 	@JsonAnyGetter
@@ -262,7 +263,8 @@ public class Aeropuerto {
 	@JsonAnySetter
 	public void setAdditionalProperty(String name, Object value) {
 	
-		this.additionalProperties.put(name, value);
+		this.additionalProperties
+		                .put(name, value);
 	}
 	
 	public boolean cityNameLike(String cityName) {

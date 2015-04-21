@@ -4,13 +4,14 @@
 
 package tests;
 
+import integracion.despegar.Despegar;
+
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 
-import api.Despegar;
 import api.OpcionDeViaje;
 
 /**
@@ -28,12 +29,7 @@ public class DespegarTest {
 		DateTime fechaVuelta = fechaIda.plusDays(30);
 		
 		List<OpcionDeViaje> opciones =
-		    despegar.findOpcionesDeViaje(
-		        "BUE",
-		        "MIA",
-		        fechaIda,
-		        fechaVuelta
-		                    );
+		    despegar.findOpcionesDeViaje("BUE", "MIA", fechaIda, fechaVuelta);
 		
 		Assert.assertNotNull(opciones);
 		Assert.assertTrue(opciones.size() > 0);

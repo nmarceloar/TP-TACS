@@ -20,6 +20,8 @@ public class AeropuertosResource {
 		
 	}
 	
+	
+	
 	@GET
 	@Produces("application/json")
 	public List<Aeropuerto> findAeropuertosByCityName(

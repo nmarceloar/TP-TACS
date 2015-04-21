@@ -182,7 +182,8 @@ public class Segment {
 	@Override
 	public String toString() {
 	
-		return ToStringBuilder.reflectionToString(this);
+		return ToStringBuilder
+		                .reflectionToString(this);
 	}
 	
 }

@@ -32,27 +32,22 @@ public class AeropuertosResourceTest extends JerseyTest {
 	
 		// create target
 		
-		final WebTarget target = this
-		                .target("/aeropuertos")
-		                .queryParam("cityName", "buenos");
+		final WebTarget target =
+		    this.target("/aeropuertos").queryParam("cityName", "buenos");
 		
 		// create request
 		
 		final Invocation.Builder invocationBuilder =
-		    target
-		                    .request()
-		                    .accept(MediaType.APPLICATION_JSON)
-		                    .header("X-ApiKey",
-		                        "19638437094c4892a8af7cdbed49ee43");
+		    target.request()
+		        .accept(MediaType.APPLICATION_JSON)
+		        .header("X-ApiKey", "19638437094c4892a8af7cdbed49ee43");
 		
 		// invoke
 		
-		Response response = invocationBuilder
-		                .get();
+		Response response = invocationBuilder.get();
 		
 		Assert.assertTrue(response != null);
-		Assert.assertTrue(response
-		                .getStatusInfo().getStatusCode() == 200);
+		Assert.assertTrue(response.getStatusInfo().getStatusCode() == 200);
 		
 	}
 }

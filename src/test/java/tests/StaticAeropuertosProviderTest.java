@@ -12,10 +12,6 @@ import org.junit.Test;
 import api.Aeropuerto;
 import api.StaticAeropuertosProvider;
 
-/**
- * @author nmarcelo.ar
- *
- */
 public class StaticAeropuertosProviderTest {
 	
 	/**
@@ -33,8 +29,7 @@ public class StaticAeropuertosProviderTest {
 		final List<Aeropuerto> byName =
 		    provider.findAeropuertosByCity("buenos");
 		
-		Assert.assertTrue(byName
-		                .size() == 1);
+		Assert.assertTrue(byName.size() == 1);
 		
 	}
 	
@@ -49,8 +44,7 @@ public class StaticAeropuertosProviderTest {
 	
 		StaticAeropuertosProvider provider = new StaticAeropuertosProvider();
 		
-		Assert.assertTrue(provider
-		                .hasAeropuertos());
+		Assert.assertTrue(provider.hasAeropuertos());
 		
 	}
 	

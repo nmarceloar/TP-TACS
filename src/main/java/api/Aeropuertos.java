@@ -52,7 +52,8 @@ public class Aeropuertos {
 	@Override
 	public String toString() {
 	
-		return ToStringBuilder.reflectionToString(this);
+		return ToStringBuilder
+		                .reflectionToString(this);
 	}
 	
 	@JsonAnyGetter
@@ -64,7 +65,8 @@ public class Aeropuertos {
 	@JsonAnySetter
 	public void setAdditionalProperty(String name, Object value) {
 	
-		this.additionalProperties.put(name, value);
+		this.additionalProperties
+		                .put(name, value);
 	}
 	
 	public void addAeropuerto(Aeropuerto aero) {

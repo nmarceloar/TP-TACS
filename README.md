@@ -1,19 +1,19 @@
-
 UTN FRBA - TACS 2015 - 1C - GRUPO 1  
-
 
 
 Build: 
 
-    mvn -X clean package
+    mvn -e -DskipTests clean package
+
+
+Test: 
+
+	mvn -X test 
 
 Run: 
 
-    mvn appengine:devserver  
+    mvn -e -DskipTests appengine:devserver  
     
-Deploy al appengine: 
-
- 	mvn appengine:update 
 
 Ayuda: 
 

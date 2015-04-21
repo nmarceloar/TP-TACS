@@ -8,10 +8,6 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
-/**
- * @author nmarcelo.ar
- *
- */
 public interface ViajesProvider {
 	
 	// agregar excepciones --> refactor

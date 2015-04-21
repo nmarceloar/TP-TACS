@@ -2,7 +2,7 @@
  * 
  */
 
-package api;
+package integracion.despegar;
 
 import java.util.List;
 
@@ -17,10 +17,10 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-/**
- * @author nmarcelo.ar
- *
- */
+import api.OpcionDeViaje;
+import api.OpcionesDeViaje;
+import api.ViajesProvider;
+
 public class Despegar implements ViajesProvider {
 	
 	private static final String TARGET =
@@ -35,11 +35,8 @@ public class Despegar implements ViajesProvider {
 	}
 	
 	@Override
-	public List<OpcionDeViaje> findOpcionesDeViaje(
-		String aeroOrigen,
-	    String aeroDestino, 
-	    DateTime fechaIda, 
-	    DateTime fechaVuelta) {
+	public List<OpcionDeViaje> findOpcionesDeViaje(String aeroOrigen,
+	    String aeroDestino, DateTime fechaIda, DateTime fechaVuelta) {
 	
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		
@@ -47,24 +44,22 @@ public class Despegar implements ViajesProvider {
 		
 		WebTarget webTarget =
 		    restClient.target(TARGET)
-		                    .queryParam("site", "ar")
-		                    .queryParam("from", aeroOrigen)
-		                    .queryParam("to", aeroDestino)
-		                    .queryParam("departure_date", fmt.print(fechaIda))
-		                    .queryParam("return_date", fmt.print(fechaVuelta))
-		                    .queryParam("adults", "1");
+		        .queryParam("site", "ar")
+		        .queryParam("from", aeroOrigen)
+		        .queryParam("to", aeroDestino)
+		        .queryParam("departure_date", fmt.print(fechaIda))
+		        .queryParam("return_date", fmt.print(fechaVuelta))
+		        .queryParam("adults", "1");
 		
 		Invocation.Builder invocationBuilder =
-		    webTarget.request(MediaType.APPLICATION_JSON)
-		                    .header("X-ApiKey",
-		                        "19638437094c4892a8af7cdbed49ee43");
+		    webTarget.request(MediaType.APPLICATION_JSON).header("X-ApiKey",
+		        "19638437094c4892a8af7cdbed49ee43");
 		
 		Response response = invocationBuilder.get();
 		
 		if (response.getStatus() == 200) {
 			
-			opcionesDeViaje =
-			    response.readEntity(OpcionesDeViaje.class);
+			opcionesDeViaje = response.readEntity(OpcionesDeViaje.class);
 			
 		}
 		

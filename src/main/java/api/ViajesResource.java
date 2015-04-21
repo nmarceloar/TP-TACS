@@ -1,6 +1,8 @@
 
 package api;
 
+import integracion.despegar.Despegar;
+
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -8,14 +10,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import jersey.repackaged.com.google.common.base.Preconditions;
-
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
-import api.Despegar;
-import api.OpcionDeViaje;
-import api.ViajesProvider;
 
 @Path("/viajes")
 public class ViajesResource {
@@ -37,13 +33,15 @@ public class ViajesResource {
 	    ) {
 	
 		// tener en cuenta el formato en la UI por el momento
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy");
+		DateTimeFormatter fmt = DateTimeFormat
+		                .forPattern("dd/MM/yyyy");
 		
-		return this.proveedorDeViajes.findOpcionesDeViaje(
-		    aeroOrigen,
-		    aeroDestino,
-		    fmt.parseDateTime(fechaIda),
-		    fmt.parseDateTime(fechaVuelta));
+		return this.proveedorDeViajes
+		                .findOpcionesDeViaje(
+		                    aeroOrigen,
+		                    aeroDestino,
+		                    fmt.parseDateTime(fechaIda),
+		                    fmt.parseDateTime(fechaVuelta));
 		
 	}
 	
