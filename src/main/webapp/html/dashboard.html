@@ -1,70 +1,269 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+    "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
-        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="../lib/bootstrap-3.3.4-dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../lib/jquery-ui-1.11.4.custom/jquery-ui.css">
+        <script src="../lib/jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
+        <script src="../lib/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+        <script src="../lib/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
         <script src="http://maps.googleapis.com/maps/api/js"></script>
         <link rel="stylesheet" href="../css/base.css" />
         <script src="../js/dashboard.js"></script>
         <title>TACS por el mundo</title>
     </head>
     <body>
+        <!-- inicio cuerpo del dashboard -->
         <div class="container">
             <!-- header -->
             <div class="jumbotron">
                 <h2>¡Bienvenido a TACS por el mundo!</h2>      
-                <p class="btn-quiero-viajar"><a href="#" class="btn btn-info btn-lg" id="btnNuevoViaje">¿A dónde querés ir hoy? <span class="glyphicon glyphicon-plane"></span></a></p>      
+                <p class="btn-quiero-viajar"><a href="#" class="btn btn-info btn-lg" id="btnNuevoViaje">¿A dónde querés ir hoy? <span class="glyphicon glyphicon-plane"></span></a></p>
+                <div class="dropdown btn-float">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="drpDwnRecomendaciones">Recomendaciones <span class="caret"></span></button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li class="recomendacion-no-leida"><a href="#" role="linkViaje">Juanito quiere que viajes a Madagascar</a></li>
+                        <li><a href="#" role="linkViaje">Lucía quiere que viajes a Mumbai</a></li>
+                        <li><a href="#" role="linkViaje">Makoto quiere que viajes a Kyoto</a></li>
+                        <li><a href="#" role="linkViaje">Dimitri quiere que viajes a San Petersburgo</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" id="verTodasRecomendaciones">Ver todas las recomendaciones</a></li>
+                    </ul>
+                </div>   
             </div>
             
-            <!-- viajes recientes -->
-            <div class="list-group" id="listViajes">
-                <div class="list-group-item active"><h4>Tus viajes</h4></div>
-                <div class="list-group-item" id="itemSinViaje">Todavía no hiciste ningún viaje <span class="glyphicon glyphicon-thumbs-down"></span></div>
-            </div>
-            
-            <!-- Inicio Modal viaje -->
-            <div class="modal fade" id="modNuevoViaje" role="dialog">
-                <div class="modal-dialog modal-lg">
-                    <!-- contenido del modal -->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4>¡Empezá un nuevo viaje!</h4>
-                        </div>  
-						<div class="modal-body">
-						    <div class="container-fluid">
-							    <div class="row">
-								    <div class="col-md-4">
-									    <form role="form" id="frmNuevoViaje">
-					                       <div class="form-group">
-					                           <input type="text" id="ciudadOrigen" placeholder="¿Desde dónde salís?" class="box" />
-					                       </div>
-					                       <div id="orgMapContainer">Mapa origen!!</div>
-					                       <div class="form-group" id="dstContainter">
-					                           <input type="text" id="ciudadDestino" placeholder="¿Hasta dónde querés ir?" class="box" />
-					                       </div>
-					                       <div id="dstMapContainer">Mapa destino!!</div>
-					                   </form>
-					                </div>
-	                                <div class="col-md-8">
-	                                    <div id="googleMap" class="map-crea-viaje"></div>
-	                                </div>
-					            </div>
-					         </div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal" id="btnViajar">Viajar <span class="glyphicon glyphicon-plane"></span></button>
-							<button type="button" class="btn btn-default" data-dismiss="modal" id="btnCancelarViaje">Cancelar</button>
-						</div>
-	                 </div>
-	                 <!-- fin contenido del modal-->
-	            </div>
-	        </div>
-	        <!-- Fin Modal viaje -->
+            <div class="container-fluid">
+               <div class="row">
+                   <div class="col-md-7">
+			            <!-- viajes recientes -->
+			            <div class="list-group" id="listViajes">
+			                <div class="list-group-item active"><h4>Tus viajes</h4></div>
+			                <div class="list-group-item" id="itemSinViaje">Todavía no hiciste ningún viaje <span class="glyphicon glyphicon-thumbs-down"></span></div>
+			            </div>
+			       </div>
+			       <div class="col-md-5">
+			            <!-- viajes de amigos -->
+			            <div class="list-group" id="listViajesAmigos">
+			                <div class="list-group-item active"><h5> Viajes de amigos </h5></div>
+			                <div class="list-group-item" id="itemAmigo"> 
+			                    <h5 class="list-group-item-heading">
+			                        <a href="#" role="linkViaje">Viaje 1 - De mi amigo Luis Desde Roma hasta Buenos Aires</a>
+			                    </h5>
+			                    <p class="list-group-item-text" align="right"><a href="#" role="linkViaje">Ver detalle</a> </p>
+			                </div>
+			                <div class="list-group-item" id="itemAmigo"> 
+			                    <h5 class="list-group-item-heading">
+			                        <a href="#" role="linkViaje">Viaje 2 - De mi amigo Roberto Desde Milano hasta El Cairo</a>
+			                    </h5>
+			                    <p class="list-group-item-text" align="right"><a href="#" role="linkViaje">Ver detalle</a> </p>
+			                </div>
+			                <div class="list-group-item" id="itemAmigo"> 
+			                    <h5 class="list-group-item-heading">
+			                        <a href="#" role="linkViaje">Viaje 3 - De mi amigo Pedro Desde Salta hasta Calafate</a>
+			                    </h5>
+			                    <p class="list-group-item-text" align="right"><a href="#" role="linkViaje">Ver detalle</a> </p>
+			                </div>
+			            </div>
+			       </div>
+			    </div>
+			 </div>
         </div>
+        <!-- fin cuerpo del dashboard -->
+        
+        <!-- Inicio Modal nuevo viaje -->
+        <div class="modal fade" id="modNuevoViaje" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- contenido del modal -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>¡Empezá un nuevo viaje!</h4>
+                    </div>  
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <form role="form" id="frmNuevoViaje">
+                                        <div class="form-group">
+                                            <input type="text" id="ciudadOrigen" placeholder="¿Desde dónde salís?" class="box" />
+                                        </div>
+                                        <div class="form-group" id="fechaDesdeContainer">
+                                            <input type="text" id="fechaDesde" placeholder="¿Cuándo salís?" class="box" />
+                                            <span class="add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                                        </div>
+                                        <div class="form-group" id="dstContainter">
+                                            <input type="text" id="ciudadDestino" placeholder="¿Hasta dónde querés ir?" class="box" />
+                                        </div>
+                                        <div class="form-group" id="fechaHastaContainer">
+                                            <input type="text" id="fechaHasta" placeholder="¿Cuándo volvés?" class="box" />
+                                            <span class="add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-5">
+                                    <div id="googleMapViaje" class="map-crea-viaje"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnBuscarVuelo">Buscar vuelos <span class="glyphicon glyphicon-search"></span></button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="btnCancelarViaje">Cancelar</button>
+                    </div>
+                </div>
+                <!-- fin contenido del modal-->
+            </div>
+        </div>
+        <!-- Fin Modal nuevoviaje -->
+        
+        <!-- Inicio Modal vuelos -->
+        <div class="modal fade" id="modVuelos" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- contenido del modal -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>¡Seleccioná un vuelo!</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <form role="form" id="frmVuelos">
+                                        <div class="well well-sm" id="boxVueloIda">Vuelo de ida elegido <button type="button" class="btn btn-default btn-xs btn-float" id="cancelVueloIda"><span class="glyphicon glyphicon-remove"></span></button> </div>
+                                        <div id="lstVuevloIda">
+                                            <p class="list-group-item-text">Opciones para el vuelo de ida. Desde origen a destino, saliendo el día dd/mm/yyyy:</p>
+                                            <div class="list-group">
+                                                <div class="list-group-item" id="sinVuelosIda">No hay vuelos disponibles <span class="glyphicon glyphicon-thumbs-down"></span></div>
+                                            </div>
+                                        </div>
+                                        <div class="well well-sm" id="boxVueloVuelta">Vuelo de vuelta elegido <button type="button" class="btn btn-default btn-xs btn-float" id="cancelVueloVuelta"><span class="glyphicon glyphicon-remove"></span></button> </div>
+                                        <div id="lstVuevloVuelta">
+                                            <p class="list-group-item-text">Opciones para el vuelo de vuelta. Vuelos desde destino a origen, saliendo el día dd/mm/yyyy:</p>
+                                            <div class="list-group">
+                                                <div class="list-group-item" id="sinVuelosVuelta">No hay vuelos disponibles <span class="glyphicon glyphicon-thumbs-down"></span></div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-5">
+                                    <div id="googleMapVuelo" class="map-crea-viaje"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnViajar">¡Viajar! <span class="glyphicon glyphicon-plane"></span></button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="btnVolver">Volver</button>
+                    </div>
+                    <!-- contenido del modal -->
+                </div>
+            </div>
+        </div>
+        
+        
+        <!-- Inicio Modal detalle de viaje -->
+        <div class="modal fade" id="modDetalleViaje" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- contenido del modal -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>¡Tu viaje desde Buenos Aires a Panamá!</h4>
+                    </div>  
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <p>Salís el 23/04/2015 desde Ezeiza, Buenos Aires a las 14:35 hs y llegás al Aeropuerto Internacional de la ciudad de Panamá a las 23:35 del mismo día</p>
+                                </div>
+                                <div class="col-md-5">
+                                    <div id="googleMapViajeReview" class="map-crea-viaje"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="btnVolverViaje">Volver</button>
+                    </div>
+                </div>
+                <!-- fin contenido del modal-->
+            </div>
+        </div>
+        <!-- Fin Modal detalle de viaje -->
+        
+        <!-- Inicio Modal lista de recomendaciones -->
+        <div class="modal fade" id="modListaRecomendaciones" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- contenido del modal -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>¡Tu viaje desde Buenos Aires a Panamá!</h4>
+                    </div>  
+                    <div class="modal-body">
+                        <p><a href="#" role="linkViaje">Juanito quiere que viajes a Madagascar</a></p>
+                        <p><a href="#" role="linkViaje">Lucía quiere que viajes a Mumbai</a></p>
+                        <p><a href="#" role="linkViaje">Makoto quiere que viajes a Kyoto</a></p>
+                        <p><a href="#" role="linkViaje">Dimitri quiere que viajes a San Petersburgo</a></p>
+                        <p><a href="#" role="linkViaje">Juanito quiere que viajes a Madagascar</a></p>
+                        <p><a href="#" role="linkViaje">Lucía quiere que viajes a Mumbai</a></p>
+                        <p><a href="#" role="linkViaje">Makoto quiere que viajes a Kyoto</a></p>
+                        <p><a href="#" role="linkViaje">Dimitri quiere que viajes a San Petersburgo</a></p>
+                        <p><a href="#" role="linkViaje">Juanito quiere que viajes a Madagascar</a></p>
+                        <p><a href="#" role="linkViaje">Lucía quiere que viajes a Mumbai</a></p>
+                        <p><a href="#" role="linkViaje">Makoto quiere que viajes a Kyoto</a></p>
+                        <p><a href="#" role="linkViaje">Dimitri quiere que viajes a San Petersburgo</a></p>
+                        <p><a href="#" role="linkViaje">Juanito quiere que viajes a Madagascar</a></p>
+                        <p><a href="#" role="linkViaje">Lucía quiere que viajes a Mumbai</a></p>
+                        <p><a href="#" role="linkViaje">Makoto quiere que viajes a Kyoto</a></p>
+                        <p><a href="#" role="linkViaje">Dimitri quiere que viajes a San Petersburgo</a></p>
+                        <p><a href="#" role="linkViaje">Juanito quiere que viajes a Madagascar</a></p>
+                        <p><a href="#" role="linkViaje">Lucía quiere que viajes a Mumbai</a></p>
+                        <p><a href="#" role="linkViaje">Makoto quiere que viajes a Kyoto</a></p>
+                        <p><a href="#" role="linkViaje">Dimitri quiere que viajes a San Petersburgo</a></p>
+                        <p><a href="#" role="linkViaje">Juanito quiere que viajes a Madagascar</a></p>
+                        <p><a href="#" role="linkViaje">Lucía quiere que viajes a Mumbai</a></p>
+                        <p><a href="#" role="linkViaje">Makoto quiere que viajes a Kyoto</a></p>
+                        <p><a href="#" role="linkViaje">Dimitri quiere que viajes a San Petersburgo</a></p>
+                        <p><a href="#" role="linkViaje">Juanito quiere que viajes a Madagascar</a></p>
+                        <p><a href="#" role="linkViaje">Lucía quiere que viajes a Mumbai</a></p>
+                        <p><a href="#" role="linkViaje">Makoto quiere que viajes a Kyoto</a></p>
+                        <p><a href="#" role="linkViaje">Dimitri quiere que viajes a San Petersburgo</a></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnMarcarComoLeidas">Marcar todas como leídas <span class="glyphicon glyphicon-folder-open"></span></button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="btnVolverViaje">Volver</button>
+                    </div>
+                </div>
+                <!-- fin contenido del modal-->
+            </div>
+        </div>
+        <!-- Fin Modal lista de recomendaciones  -->
+        
+        <!-- Inicio Modal recomendar -->
+        <div class="modal fade" id="modRecomendar" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- contenido del modal -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>¡Recomendale el viaje desde Buenos Aires a Panamá a tus amigos!</h4>
+                    </div>  
+                    <div class="modal-body">
+                        <p>Salís el 23/04/2015 desde Ezeiza, Buenos Aires a las 14:35 hs y llegás al Aeropuerto Internacional de la ciudad de Panamá a las 23:35 del mismo día</p>
+                        <p>
+                            <div class="form-group">
+                                <input type="text" id="boxAmigos" placeholder="Elegí amigos" class="box" />
+                            </div>
+                            <div><ul id="amigosList"></ul></div>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnRecomendar">Recomendar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="btnVolverViaje">Volver</button>
+                    </div>
+                </div>
+                <!-- fin contenido del modal-->
+            </div>
+        </div>
+        <!-- Fin Modal recomendar -->
     </body>
 </html>
