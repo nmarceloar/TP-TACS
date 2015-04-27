@@ -57,20 +57,55 @@ $(function () {
         google.maps.event.trigger(map, "resize");
         $("#modNuevoViaje").modal('show');
     });
+    $("#ciudadOrigen").change(function(e){
+    	console.log($(this).val());
+    });
     $("#ciudadOrigen").autocomplete({
-        source: cities,
+    	/*source : function(request, response) {
+			jQuery.getJSON(
+					"http://localhost:8080/api/aeropuertos?cityName="
+							+ request.term, function(data) {
+								console.log(data);
+						response(data);
+					});
+		},*/
+    	/*source: function(request,response){
+            $.ajax({
+	            url: 'http://localhost:8080/api/aeropuertos',
+	            dataType: 'json',
+	            data: {
+	            	'cityName': $("#ciudadOrgien").val()
+	            },
+	            success: function( data ) {
+		            console.log(data);
+		            //response(data);
+		            response($.map(data,function(item){
+			            return {
+				            id: item.icao,
+				            label: item.city,
+				            value: item.iata
+			            }
+		         }));
+	            }
+            });
+        },*/
+    	source: cities,
         select: function (event, ui) {
             $("#fechaDesdeContainer").show();
         }
     });
     $("#fechaDesde").datepicker({
         format: 'dd/mm/yyyy',
-        startDate: 'today',
+        minDate: new Date(),
         todayHighlight: true
     })//.on('changeDate', function(e){
-            .change(function (e) {
-                $("#dstContainter").show();
-            });
+    .change(function (e) {
+        $("#dstContainter").show();
+        //restrinjo la fecha de vuelta teniendo en cuenta la elejida de salida
+        var date2 = $('#fechaDesde').datepicker('getDate');
+        date2.setDate(date2.getDate() + 1);
+        $('#fechaHasta').datepicker('option', 'minDate', date2);
+    });
     $("#ciudadDestino").autocomplete({
         /*source: function(request,response){
          $.ajax({
@@ -106,12 +141,11 @@ $(function () {
     });
     $("#fechaHasta").datepicker({
         format: 'dd/mm/yyyy',
-        startDate: '',
         todayHighlight: true
     })
-            .change(function (e) {
-                $("#btnBuscarVuelo").show();
-            });
+    .change(function (e) {
+        $("#btnBuscarVuelo").show();
+    });
     $("#btnBuscarVuelo").click(function (event) {
         event.preventDefault();
         //TODO validar fechas!
@@ -252,4 +286,10 @@ function initClickDetalle(){
 	}
 	//TODO get detalle de viaje (por api)
 	$("#modDetalleViaje").modal('show');
+}
+
+function getDateFromInput(inputId){
+	var date = $("#"+inputId).datepicker("getDate");
+	console.log(date);
+	return new Date(date.substring(6,9),date.substring(3,4)+1,date.substring(0,1));
 }
