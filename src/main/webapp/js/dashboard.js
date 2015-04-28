@@ -16,6 +16,10 @@ $(function () {
     formResetVuelos();
     
     $("a[role=linkViaje]").click(initClickDetalle);
+    $("#modDetalleViaje").on("shown.bs.modal",function(e){
+    	//hack para que el mapa se dibuje bien
+    	google.maps.event.trigger(mapaReview, "resize");
+    });
     
     // notificaciones de recomendación *******************************
     /* TODO
@@ -178,8 +182,6 @@ $(function () {
     $("#modVuelos").on("shown.bs.modal",function(e){
     	//hack para que el mapa se dibuje bien
     	google.maps.event.trigger(mapaVuelo, "resize");
-    	//posiciono el cursor en la ciudad de origen
-    	$("#ciudadOrigen").focus();
     });
     //**************************************************
 
