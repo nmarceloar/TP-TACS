@@ -1,10 +1,14 @@
-var map;
+var mapaNuevoViaje;
+var mapaVuelo;
+var mapaReview;
+
 $(function () {
     //datos de prueba
     var cities = ['Londres', 'Salta', 'New York', 'Río de Janeiro', 'Beirut'];
     var contViajes = 0;
     //config google maps
     google.maps.event.addDomListener(window, 'load', initialize);
+    
     formResetViaje();
     formResetVuelos();
     
@@ -47,19 +51,17 @@ $(function () {
     // recomendar ****************************************
     
     //modal nuevo viaje ******************************
-    /*$("#modNuevoViaje").on('shown',function() {
-     google.maps.event.trigger(map, "resize");
-     });*/
-
+    $("#modNuevoViaje").on("shown.bs.modal",function(e){
+    	//hack para que el mapa se dibuje bien
+    	google.maps.event.trigger(mapaNuevoViaje, "resize");
+    	//posiciono el cursor en la ciudad de origen
+    	$("#ciudadOrigen").focus();
+    });
+    
     $("#btnNuevoViaje").click(function (event) {
-        event.preventDefault();
-        $("#ciudadOrigen").focus();
-        google.maps.event.trigger(map, "resize");
         $("#modNuevoViaje").modal('show');
     });
-    $("#ciudadOrigen").change(function(e){
-    	console.log($(this).val());
-    });
+    
     $("#ciudadOrigen").autocomplete({
     	/*source : function(request, response) {
 			jQuery.getJSON(
@@ -94,11 +96,12 @@ $(function () {
             $("#fechaDesdeContainer").show();
         }
     });
+    
     $("#fechaDesde").datepicker({
         format: 'dd/mm/yyyy',
         minDate: new Date(),
         todayHighlight: true
-    })//.on('changeDate', function(e){
+    })
     .change(function (e) {
         $("#dstContainter").show();
         //restrinjo la fecha de vuelta teniendo en cuenta la elejida de salida
@@ -106,6 +109,7 @@ $(function () {
         date2.setDate(date2.getDate() + 1);
         $('#fechaHasta').datepicker('option', 'minDate', date2);
     });
+    
     $("#ciudadDestino").autocomplete({
         /*source: function(request,response){
          $.ajax({
@@ -243,9 +247,9 @@ function initialize() {
         zoom: 5,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    map = new google.maps.Map(document.getElementById("googleMapViaje"), mapProp);
-    map = new google.maps.Map(document.getElementById("googleMapVuelo"), mapProp);
-    map = new google.maps.Map(document.getElementById("googleMapViajeReview"), mapProp);
+    mapaNuevoViaje = new google.maps.Map(document.getElementById("googleMapViaje"), mapProp);
+    mapaVuelo = new google.maps.Map(document.getElementById("googleMapVuelo"), mapProp);
+    mapaReview = new google.maps.Map(document.getElementById("googleMapViajeReview"), mapProp);
 }
 
 function initClickIda() {
