@@ -2,6 +2,9 @@ var mapaNuevoViaje;
 var mapaVuelo;
 var mapaReview;
 
+var markerOrigen;
+var markerDestino;
+
 $(function () {
     //datos de prueba
     var cities = ['Londres', 'Salta', 'New York', 'Río de Janeiro', 'Beirut'];
@@ -94,6 +97,12 @@ $(function () {
     	source: cities,
         select: function (event, ui) {
             $("#fechaDesdeContainer").show();
+            //TODO levantar las coordenadas de la ciudad de origen y pasarselas a la siguiente función
+            markerOrigen = setMapMarker(mapaNuevoViaje, -34.599722222222,-58.381944444444);
+            //me centro en el marker
+            mapaNuevoViaje.setCenter(markerOrigen.getPosition());
+        	mapaNuevoViaje.setZoom(10);
+        	$("#fechaDesde").focus();
         }
     });
     
@@ -108,6 +117,7 @@ $(function () {
         var date2 = $('#fechaDesde').datepicker('getDate');
         date2.setDate(date2.getDate() + 1);
         $('#fechaHasta').datepicker('option', 'minDate', date2);
+        $("#ciudadDestino").focus();
     });
     
     $("#ciudadDestino").autocomplete({
@@ -141,6 +151,11 @@ $(function () {
         select: function (event, ui) {
             //destino
             $("#fechaHastaContainer").show();
+            //TODO levantar las coordenadas de la ciudad de destino y pasarselas a la siguiente función
+            markerDestino = setMapMarker(mapaNuevoViaje, 51.507222, -0.1275);
+            //hago zoom out para que se vean los dos puntos marcados
+            setMapBounds(mapaNuevoViaje);
+            $("#fechaHasta").focus();
         }
     });
     $("#fechaHasta").datepicker({
@@ -159,6 +174,12 @@ $(function () {
     });
     $("#btnCancelarViaje").click(function (event) {
         formResetViaje();
+    });
+    $("#modVuelos").on("shown.bs.modal",function(e){
+    	//hack para que el mapa se dibuje bien
+    	google.maps.event.trigger(mapaVuelo, "resize");
+    	//posiciono el cursor en la ciudad de origen
+    	$("#ciudadOrigen").focus();
     });
     //**************************************************
 
@@ -250,6 +271,8 @@ function initialize() {
     mapaNuevoViaje = new google.maps.Map(document.getElementById("googleMapViaje"), mapProp);
     mapaVuelo = new google.maps.Map(document.getElementById("googleMapVuelo"), mapProp);
     mapaReview = new google.maps.Map(document.getElementById("googleMapViajeReview"), mapProp);
+    
+    var markerBounds = new google.maps.LatLngBounds();
 }
 
 function initClickIda() {
@@ -258,12 +281,26 @@ function initClickIda() {
     $("#boxVueloIda").show();
     getVuelos('Vuelta');
     $("a[role=vueloVuelta]").click(initClickVuelta);
+    //TODO levantar las coordenadas de la ciudad de origen y pasarselas a la siguiente función
+    markerOrigen = setMapMarker(mapaVuelo, -34.599722222222,-58.381944444444);
+    //me centro en el marker
+    mapaVuelo.setCenter(markerOrigen.getPosition());
+    mapaVuelo.setZoom(10);
 }
 
 function initClickVuelta() {
     $("#lstVuevloVuelta").hide();
     $("#boxVueloVuelta").show();
     $("#btnViajar").show();
+    markerDestino = setMapMarker(mapaVuelo, 51.507222, -0.1275);
+    setMapBounds(mapaVuelo);
+    flightPath = new google.maps.Polyline({
+        path: [markerOrigen.getPosition(), markerDestino.getPosition()],
+        strokeColor:"#00F",
+        strokeOpacity:0.8,
+        strokeWeight:2,
+        map: mapaVuelo
+     });
 }
 
 function getVuelos(sentido) {
@@ -296,4 +333,20 @@ function getDateFromInput(inputId){
 	var date = $("#"+inputId).datepicker("getDate");
 	console.log(date);
 	return new Date(date.substring(6,9),date.substring(3,4)+1,date.substring(0,1));
+}
+
+function setMapMarker(map, posLat, posLong){
+	var marker = new google.maps.Marker({
+		position: new google.maps.LatLng(posLat, posLong),
+		map: map,
+		title: 'Hello World!'
+	});
+	return marker;
+}
+
+function setMapBounds(map){
+	var latlngbounds = new google.maps.LatLngBounds();
+    latlngbounds.extend(markerOrigen.getPosition());
+    latlngbounds.extend(markerDestino.getPosition());
+    map.fitBounds(latlngbounds);
 }
