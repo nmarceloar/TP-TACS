@@ -6,17 +6,15 @@ var markerOrigen;
 var markerDestino;
 
 var City = function(){
-	this.name = null;
+	this.description = null;
 	this.lat = null;
 	this.lon = null;
-	this.iata = null;
-	this.icao = null;
+	this.code = null;
 	this.setCityInfo = function(item){
-		this.name = item.name;
-		this.iata = item.iata;
-		this.icao = item.icao;
-		this.lat = item.lat;
-		this.lon = item.lon;
+		this.description = item.description;
+		this.code = item.code;
+		//this.lat = item.lat;
+		//this.lon = item.lon;
 	}
 }
 
@@ -90,23 +88,13 @@ $(function () {
     $("#ciudadOrigen").autocomplete({
     	source: function(request,response){
             $.ajax({
-	            url: 'http://localhost:8080/api/aeropuertos',
+	            url: 'http://localhost:8080/api/cities',
 	            dataType: 'json',
 	            data: {
-	            	'cityName': request.term
+	            	'name': request.term
 	            },
 	            success: function( data ) {
-		            response($.map(data,function(item){
-			            return {
-				            id: item.icao,
-				            label: item.city,
-				            value: item.city,
-				            lat: item.lat,
-				            lon: item.lon,
-				            iata: item.iata,
-				            icao: item.icao
-			            }
-		         }));
+	            	autocomplete_processCities(data, response);
 	            }
             });
         },
@@ -115,13 +103,23 @@ $(function () {
             $("#fechaDesdeContainer").show();
             //TODO levantar las coordenadas de la ciudad de origen y pasarselas a la siguiente función
             orgCity.setCityInfo(ui.item);
-            markerOrigen = setMapMarker(mapaNuevoViaje, orgCity.lat,orgCity.lon);
+            //markerOrigen = setMapMarker(mapaNuevoViaje, orgCity.lat,orgCity.lon);
             //me centro en el marker
-            mapaNuevoViaje.setCenter(markerOrigen.getPosition());
-        	mapaNuevoViaje.setZoom(10);
+            //mapaNuevoViaje.setCenter(markerOrigen.getPosition());
+        	//mapaNuevoViaje.setZoom(10);
         	$("#fechaDesde").focus();
         }
-    });
+    })
+    .data("ui-autocomplete")._renderItem = function (ul, item) {
+	    //Add the .ui-state-disabled class and don't wrap in <a> if value is empty
+	    if(item.id ==''){
+	        return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo(ul);
+	    }else{
+	        return $("<li>")
+	        .append("<a>" + item.label + "</a>")
+	        .appendTo(ul);
+	    }
+	};
     
     $("#fechaDesde").datepicker({
         format: 'dd/mm/yyyy',
@@ -140,38 +138,39 @@ $(function () {
     $("#ciudadDestino").autocomplete({
     	source: function(request,response){
             $.ajax({
-	            url: 'http://localhost:8080/api/aeropuertos',
+	            url: 'http://localhost:8080/api/cities',
 	            dataType: 'json',
 	            data: {
-	            	'cityName': request.term
+	            	'name': request.term
 	            },
 	            success: function( data ) {
-		            response($.map(data,function(item){
-			            return {
-				            id: item.icao,
-				            label: item.city,
-				            value: item.city,
-				            lat: item.lat,
-				            lon: item.lon,
-				            iata: item.iata,
-				            icao: item.icao
-			            }
-		         }));
+	            	autocomplete_processCities(data, response);
 	            }
             });
         },
         minLength: 3,
         select: function (event, ui) {
-            //destino
+    		//destino
             $("#fechaHastaContainer").show();
             //TODO levantar las coordenadas de la ciudad de destino y pasarselas a la siguiente función
             dstCity.setCityInfo(ui.item);
-            markerDestino = setMapMarker(mapaNuevoViaje, dstCity.lat,dstCity.lon);
+            //markerDestino = setMapMarker(mapaNuevoViaje, dstCity.lat,dstCity.lon);
             //hago zoom out para que se vean los dos puntos marcados
-            setMapBounds(mapaNuevoViaje);
+            //setMapBounds(mapaNuevoViaje);
             $("#fechaHasta").focus();
         }
-    });
+    })
+    .data("ui-autocomplete")._renderItem = function (ul, item) {
+	    //Add the .ui-state-disabled class and don't wrap in <a> if value is empty
+	    if(item.id ==''){
+	        return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo(ul);
+	    }else{
+	        return $("<li>")
+	        .append("<a>" + item.label + "</a>")
+	        .appendTo(ul);
+	    }
+	};
+    
     $("#fechaHasta").datepicker({
         format: 'dd/mm/yyyy',
         todayHighlight: true
@@ -181,7 +180,6 @@ $(function () {
     });
     $("#btnBuscarVuelo").click(function (event) {
         event.preventDefault();
-        //TODO validar fechas!
         $("#modVuelos").modal('show');
         getVuelos('Ida');
         $("a[role=vueloIda]").click(initClickIda);
@@ -346,6 +344,28 @@ function getDateFromInput(inputId){
 	var date = $("#"+inputId).datepicker("getDate");
 	console.log(date);
 	return new Date(date.substring(6,9),date.substring(3,4)+1,date.substring(0,1));
+}
+
+function autocomplete_processCities(data, response){
+	if(data.length == 0){
+		data.push({
+			'id': '',
+			'label': 'No se encotraron ciudades con este nombre',
+			'value': ''
+		});
+		response(data);
+	}
+	else{
+        response($.map(data,function(item){
+            return {
+	            id: item.code,
+	            label: item.description,
+	            value: item.description,
+	            //lat: item.lat,
+	            //lon: item.lon
+            }
+     }));
+   }
 }
 
 /*
