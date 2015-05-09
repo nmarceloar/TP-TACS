@@ -7,6 +7,7 @@ import integracion.despegar.IATACode;
 
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -30,7 +31,18 @@ public class AirportsResource {
 	@QueryParam("code")
 	final String iataCode) {
 	
-		return this.provider.findByIataCode(IATACode.checkValid(iataCode));
+		try {
+			
+			IATACode.checkValid(iataCode);
+			
+		} catch (RuntimeException ex) {
+			
+			throw new BadRequestException(
+			    "Error en el formato del codigo. ---> [code = ]" + iataCode);
+			
+		}
+		
+		return this.provider.findByIataCode(iataCode);
 		
 	}
 	
