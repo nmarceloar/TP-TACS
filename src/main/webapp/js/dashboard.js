@@ -5,21 +5,25 @@ var mapaReview;
 var markerOrigen;
 var markerDestino;
 
-//guardo los datos de la ciudad de origen
-var orgCity = {
-		name: null,
-		lat: null,
-		lon: null,
-		iata: null,
-		icao: null
+var City = function(){
+	this.description = null;
+	this.lat = null;
+	this.lon = null;
+	this.code = null;
+	this.setCityInfo = function(item){
+		this.description = item.description;
+		this.code = item.code;
+		//this.lat = item.lat;
+		//this.lon = item.lon;
+	}
 }
 
+//guardo los datos de la ciudad de origen
+var orgCity = new City();
 //guardo los datos de la ciudad de destino
-var dstCity = orgCity;
+var dstCity = new City();
 
 $(function () {
-    //datos de prueba
-    var cities = ['Londres', 'Salta', 'New York', 'Río de Janeiro', 'Beirut'];
     var contViajes = 0;
     //config google maps
     google.maps.event.addDomListener(window, 'load', initialize);
@@ -84,23 +88,13 @@ $(function () {
     $("#ciudadOrigen").autocomplete({
     	source: function(request,response){
             $.ajax({
-	            url: 'http://localhost:8080/api/aeropuertos',
+	            url: 'http://localhost:8080/api/cities',
 	            dataType: 'json',
 	            data: {
-	            	'cityName': request.term
+	            	'name': request.term
 	            },
 	            success: function( data ) {
-		            response($.map(data,function(item){
-			            return {
-				            id: item.icao,
-				            label: item.city,
-				            value: item.city,
-				            lat: item.lat,
-				            lon: item.lon,
-				            iata: item.iata,
-				            icao: item.icao
-			            }
-		         }));
+	            	autocomplete_processCities(data, response);
 	            }
             });
         },
@@ -108,14 +102,24 @@ $(function () {
         select: function (event, ui) {
             $("#fechaDesdeContainer").show();
             //TODO levantar las coordenadas de la ciudad de origen y pasarselas a la siguiente función
-            setCityInfo(orgCity,ui.item);
-            markerOrigen = setMapMarker(mapaNuevoViaje, orgCity.lat,orgCity.lon);
+            orgCity.setCityInfo(ui.item);
+            //markerOrigen = setMapMarker(mapaNuevoViaje, orgCity.lat,orgCity.lon);
             //me centro en el marker
-            mapaNuevoViaje.setCenter(markerOrigen.getPosition());
-        	mapaNuevoViaje.setZoom(10);
+            //mapaNuevoViaje.setCenter(markerOrigen.getPosition());
+        	//mapaNuevoViaje.setZoom(10);
         	$("#fechaDesde").focus();
         }
-    });
+    })
+    .data("ui-autocomplete")._renderItem = function (ul, item) {
+	    //Add the .ui-state-disabled class and don't wrap in <a> if value is empty
+	    if(item.id ==''){
+	        return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo(ul);
+	    }else{
+	        return $("<li>")
+	        .append("<a>" + item.label + "</a>")
+	        .appendTo(ul);
+	    }
+	};
     
     $("#fechaDesde").datepicker({
         format: 'dd/mm/yyyy',
@@ -134,38 +138,39 @@ $(function () {
     $("#ciudadDestino").autocomplete({
     	source: function(request,response){
             $.ajax({
-	            url: 'http://localhost:8080/api/aeropuertos',
+	            url: 'http://localhost:8080/api/cities',
 	            dataType: 'json',
 	            data: {
-	            	'cityName': request.term
+	            	'name': request.term
 	            },
 	            success: function( data ) {
-		            response($.map(data,function(item){
-			            return {
-				            id: item.icao,
-				            label: item.city,
-				            value: item.city,
-				            lat: item.lat,
-				            lon: item.lon,
-				            iata: item.iata,
-				            icao: item.icao
-			            }
-		         }));
+	            	autocomplete_processCities(data, response);
 	            }
             });
         },
         minLength: 3,
         select: function (event, ui) {
-            //destino
+    		//destino
             $("#fechaHastaContainer").show();
             //TODO levantar las coordenadas de la ciudad de destino y pasarselas a la siguiente función
-            setCityInfo(dstCity,ui.item);
-            markerDestino = setMapMarker(mapaNuevoViaje, dstCity.lat,dstCity.lon);
+            dstCity.setCityInfo(ui.item);
+            //markerDestino = setMapMarker(mapaNuevoViaje, dstCity.lat,dstCity.lon);
             //hago zoom out para que se vean los dos puntos marcados
-            setMapBounds(mapaNuevoViaje);
+            //setMapBounds(mapaNuevoViaje);
             $("#fechaHasta").focus();
         }
-    });
+    })
+    .data("ui-autocomplete")._renderItem = function (ul, item) {
+	    //Add the .ui-state-disabled class and don't wrap in <a> if value is empty
+	    if(item.id ==''){
+	        return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo(ul);
+	    }else{
+	        return $("<li>")
+	        .append("<a>" + item.label + "</a>")
+	        .appendTo(ul);
+	    }
+	};
+    
     $("#fechaHasta").datepicker({
         format: 'dd/mm/yyyy',
         todayHighlight: true
@@ -175,7 +180,6 @@ $(function () {
     });
     $("#btnBuscarVuelo").click(function (event) {
         event.preventDefault();
-        //TODO validar fechas!
         $("#modVuelos").modal('show');
         getVuelos('Ida');
         $("a[role=vueloIda]").click(initClickIda);
@@ -342,6 +346,28 @@ function getDateFromInput(inputId){
 	return new Date(date.substring(6,9),date.substring(3,4)+1,date.substring(0,1));
 }
 
+function autocomplete_processCities(data, response){
+	if(data.length == 0){
+		data.push({
+			'id': '',
+			'label': 'No se encotraron ciudades con este nombre',
+			'value': ''
+		});
+		response(data);
+	}
+	else{
+        response($.map(data,function(item){
+            return {
+	            id: item.code,
+	            label: item.description,
+	            value: item.description,
+	            //lat: item.lat,
+	            //lon: item.lon
+            }
+     }));
+   }
+}
+
 /*
  * gmaps functions *******************************************************************
  */
@@ -364,10 +390,3 @@ function setMapBounds(map){
  * gmaps functions *******************************************************************
  */
 
-function setCityInfo(city,item){
-	city.name = item.name;
-	city.iata = item.iata;
-	city.icao = item.icao;
-	city.lat = item.lat;
-	city.lon = item.lon;
-}
