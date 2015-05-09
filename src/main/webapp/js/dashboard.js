@@ -5,21 +5,27 @@ var mapaReview;
 var markerOrigen;
 var markerDestino;
 
-//guardo los datos de la ciudad de origen
-var orgCity = {
-		name: null,
-		lat: null,
-		lon: null,
-		iata: null,
-		icao: null
+var City = function(){
+	this.name = null;
+	this.lat = null;
+	this.lon = null;
+	this.iata = null;
+	this.icao = null;
+	this.setCityInfo = function(item){
+		this.name = item.name;
+		this.iata = item.iata;
+		this.icao = item.icao;
+		this.lat = item.lat;
+		this.lon = item.lon;
+	}
 }
 
+//guardo los datos de la ciudad de origen
+var orgCity = new City();
 //guardo los datos de la ciudad de destino
-var dstCity = orgCity;
+var dstCity = new City();
 
 $(function () {
-    //datos de prueba
-    var cities = ['Londres', 'Salta', 'New York', 'Río de Janeiro', 'Beirut'];
     var contViajes = 0;
     //config google maps
     google.maps.event.addDomListener(window, 'load', initialize);
@@ -108,7 +114,7 @@ $(function () {
         select: function (event, ui) {
             $("#fechaDesdeContainer").show();
             //TODO levantar las coordenadas de la ciudad de origen y pasarselas a la siguiente función
-            setCityInfo(orgCity,ui.item);
+            orgCity.setCityInfo(ui.item);
             markerOrigen = setMapMarker(mapaNuevoViaje, orgCity.lat,orgCity.lon);
             //me centro en el marker
             mapaNuevoViaje.setCenter(markerOrigen.getPosition());
@@ -159,7 +165,7 @@ $(function () {
             //destino
             $("#fechaHastaContainer").show();
             //TODO levantar las coordenadas de la ciudad de destino y pasarselas a la siguiente función
-            setCityInfo(dstCity,ui.item);
+            dstCity.setCityInfo(ui.item);
             markerDestino = setMapMarker(mapaNuevoViaje, dstCity.lat,dstCity.lon);
             //hago zoom out para que se vean los dos puntos marcados
             setMapBounds(mapaNuevoViaje);
@@ -364,10 +370,3 @@ function setMapBounds(map){
  * gmaps functions *******************************************************************
  */
 
-function setCityInfo(city,item){
-	city.name = item.name;
-	city.iata = item.iata;
-	city.icao = item.icao;
-	city.lat = item.lat;
-	city.lon = item.lon;
-}
