@@ -42,7 +42,7 @@ public class AirportsResource {
 			
 		}
 		
-		return this.provider.findByIataCode(IATACode.checkValid(iataCode));
+		return this.provider.findByIataCode(iataCode);
 		
 	}
 	
