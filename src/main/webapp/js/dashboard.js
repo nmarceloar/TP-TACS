@@ -1,14 +1,37 @@
-var map;
+var mapaNuevoViaje;
+var mapaVuelo;
+var mapaReview;
+
+var markerOrigen;
+var markerDestino;
+
+//guardo los datos de la ciudad de origen
+var orgCity = {
+		name: null,
+		lat: null,
+		lon: null,
+		iata: null,
+		icao: null
+}
+
+//guardo los datos de la ciudad de destino
+var dstCity = orgCity;
+
 $(function () {
     //datos de prueba
     var cities = ['Londres', 'Salta', 'New York', 'Río de Janeiro', 'Beirut'];
     var contViajes = 0;
     //config google maps
     google.maps.event.addDomListener(window, 'load', initialize);
+    
     formResetViaje();
     formResetVuelos();
     
     $("a[role=linkViaje]").click(initClickDetalle);
+    $("#modDetalleViaje").on("shown.bs.modal",function(e){
+    	//hack para que el mapa se dibuje bien
+    	google.maps.event.trigger(mapaReview, "resize");
+    });
     
     // notificaciones de recomendación *******************************
     /* TODO
@@ -47,71 +70,109 @@ $(function () {
     // recomendar ****************************************
     
     //modal nuevo viaje ******************************
-    /*$("#modNuevoViaje").on('shown',function() {
-     google.maps.event.trigger(map, "resize");
-     });*/
-
+    $("#modNuevoViaje").on("shown.bs.modal",function(e){
+    	//hack para que el mapa se dibuje bien
+    	google.maps.event.trigger(mapaNuevoViaje, "resize");
+    	//posiciono el cursor en la ciudad de origen
+    	$("#ciudadOrigen").focus();
+    });
+    
     $("#btnNuevoViaje").click(function (event) {
-        event.preventDefault();
-        $("#ciudadOrigen").focus();
-        google.maps.event.trigger(map, "resize");
         $("#modNuevoViaje").modal('show');
     });
+    
     $("#ciudadOrigen").autocomplete({
-        source: cities,
+    	source: function(request,response){
+            $.ajax({
+	            url: 'http://localhost:8080/api/aeropuertos',
+	            dataType: 'json',
+	            data: {
+	            	'cityName': request.term
+	            },
+	            success: function( data ) {
+		            response($.map(data,function(item){
+			            return {
+				            id: item.icao,
+				            label: item.city,
+				            value: item.city,
+				            lat: item.lat,
+				            lon: item.lon,
+				            iata: item.iata,
+				            icao: item.icao
+			            }
+		         }));
+	            }
+            });
+        },
+        minLength: 3,
         select: function (event, ui) {
             $("#fechaDesdeContainer").show();
+            //TODO levantar las coordenadas de la ciudad de origen y pasarselas a la siguiente función
+            setCityInfo(orgCity,ui.item);
+            markerOrigen = setMapMarker(mapaNuevoViaje, orgCity.lat,orgCity.lon);
+            //me centro en el marker
+            mapaNuevoViaje.setCenter(markerOrigen.getPosition());
+        	mapaNuevoViaje.setZoom(10);
+        	$("#fechaDesde").focus();
         }
     });
+    
     $("#fechaDesde").datepicker({
         format: 'dd/mm/yyyy',
-        startDate: 'today',
+        minDate: new Date(),
         todayHighlight: true
-    })//.on('changeDate', function(e){
-            .change(function (e) {
-                $("#dstContainter").show();
-            });
+    })
+    .change(function (e) {
+        $("#dstContainter").show();
+        //restrinjo la fecha de vuelta teniendo en cuenta la elejida de salida
+        var date2 = $('#fechaDesde').datepicker('getDate');
+        date2.setDate(date2.getDate() + 1);
+        $('#fechaHasta').datepicker('option', 'minDate', date2);
+        $("#ciudadDestino").focus();
+    });
+    
     $("#ciudadDestino").autocomplete({
-        /*source: function(request,response){
-         $.ajax({
-         url: 'https://api.despegar.com/v3/autocomplete',
-         headers: { 'X-ApiKey': '19638437094c4892a8af7cdbed49ee43' },
-         //beforeSend: function(xhr){xhr.setRequestHeader('X-ApiKey', '19638437094c4892a8af7cdbed49ee43');},
-         //url: 'http://gd.geobytes.com/AutoCompleteCity',
-         dataType: 'jsonp',
-         data: {
-         'query': $("#ciudadDestino").val(),
-         'locale': 'es_AR',
-         'city_result': 5
-         },
-         success: function( data ) {
-         //console.log(data);
-         //response(data);
-         response($.map(data,function(item){
-         return {
-         id: item.code,
-         label: item.description,
-         value: item.id
-         }
-         }));
-         }
-         });
-         },*/
-        source: cities,
+    	source: function(request,response){
+            $.ajax({
+	            url: 'http://localhost:8080/api/aeropuertos',
+	            dataType: 'json',
+	            data: {
+	            	'cityName': request.term
+	            },
+	            success: function( data ) {
+		            response($.map(data,function(item){
+			            return {
+				            id: item.icao,
+				            label: item.city,
+				            value: item.city,
+				            lat: item.lat,
+				            lon: item.lon,
+				            iata: item.iata,
+				            icao: item.icao
+			            }
+		         }));
+	            }
+            });
+        },
         minLength: 3,
         select: function (event, ui) {
             //destino
             $("#fechaHastaContainer").show();
+            //TODO levantar las coordenadas de la ciudad de destino y pasarselas a la siguiente función
+            setCityInfo(dstCity,ui.item);
+            markerDestino = setMapMarker(mapaNuevoViaje, dstCity.lat,dstCity.lon);
+            //hago zoom out para que se vean los dos puntos marcados
+            setMapBounds(mapaNuevoViaje);
+            $("#fechaHasta").focus();
         }
     });
     $("#fechaHasta").datepicker({
         format: 'dd/mm/yyyy',
-        startDate: '',
         todayHighlight: true
     })
-            .change(function (e) {
-                $("#btnBuscarVuelo").show();
-            });
+    .change(function (e) {
+        $("#btnBuscarVuelo").show();
+    });
     $("#btnBuscarVuelo").click(function (event) {
         event.preventDefault();
         //TODO validar fechas!
@@ -121,6 +182,10 @@ $(function () {
     });
     $("#btnCancelarViaje").click(function (event) {
         formResetViaje();
+    });
+    $("#modVuelos").on("shown.bs.modal",function(e){
+    	//hack para que el mapa se dibuje bien
+    	google.maps.event.trigger(mapaVuelo, "resize");
     });
     //**************************************************
 
@@ -166,6 +231,7 @@ $(function () {
     });
     //**************************************************
 });
+
 function getViajeHTML(idViaje, origen, destino, desde, hasta) {
     return '<div class="list-group-item" id="' + idViaje + '">'
             + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje 1. Desde '
@@ -209,9 +275,11 @@ function initialize() {
         zoom: 5,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    map = new google.maps.Map(document.getElementById("googleMapViaje"), mapProp);
-    map = new google.maps.Map(document.getElementById("googleMapVuelo"), mapProp);
-    map = new google.maps.Map(document.getElementById("googleMapViajeReview"), mapProp);
+    mapaNuevoViaje = new google.maps.Map(document.getElementById("googleMapViaje"), mapProp);
+    mapaVuelo = new google.maps.Map(document.getElementById("googleMapVuelo"), mapProp);
+    mapaReview = new google.maps.Map(document.getElementById("googleMapViajeReview"), mapProp);
+    
+    var markerBounds = new google.maps.LatLngBounds();
 }
 
 function initClickIda() {
@@ -220,12 +288,26 @@ function initClickIda() {
     $("#boxVueloIda").show();
     getVuelos('Vuelta');
     $("a[role=vueloVuelta]").click(initClickVuelta);
+    //TODO levantar las coordenadas de la ciudad de origen y pasarselas a la siguiente función
+    markerOrigen = setMapMarker(mapaVuelo, -34.599722222222,-58.381944444444);
+    //me centro en el marker
+    mapaVuelo.setCenter(markerOrigen.getPosition());
+    mapaVuelo.setZoom(10);
 }
 
 function initClickVuelta() {
     $("#lstVuevloVuelta").hide();
     $("#boxVueloVuelta").show();
     $("#btnViajar").show();
+    markerDestino = setMapMarker(mapaVuelo, 51.507222, -0.1275);
+    setMapBounds(mapaVuelo);
+    flightPath = new google.maps.Polyline({
+        path: [markerOrigen.getPosition(), markerDestino.getPosition()],
+        strokeColor:"#00F",
+        strokeOpacity:0.8,
+        strokeWeight:2,
+        map: mapaVuelo
+     });
 }
 
 function getVuelos(sentido) {
@@ -252,4 +334,40 @@ function initClickDetalle(){
 	}
 	//TODO get detalle de viaje (por api)
 	$("#modDetalleViaje").modal('show');
+}
+
+function getDateFromInput(inputId){
+	var date = $("#"+inputId).datepicker("getDate");
+	console.log(date);
+	return new Date(date.substring(6,9),date.substring(3,4)+1,date.substring(0,1));
+}
+
+/*
+ * gmaps functions *******************************************************************
+ */
+function setMapMarker(map, posLat, posLong){
+	var marker = new google.maps.Marker({
+		position: new google.maps.LatLng(posLat, posLong),
+		map: map,
+		title: 'Hello World!'
+	});
+	return marker;
+}
+
+function setMapBounds(map){
+	var latlngbounds = new google.maps.LatLngBounds();
+    latlngbounds.extend(markerOrigen.getPosition());
+    latlngbounds.extend(markerDestino.getPosition());
+    map.fitBounds(latlngbounds);
+}
+/*
+ * gmaps functions *******************************************************************
+ */
+
+function setCityInfo(city,item){
+	city.name = item.name;
+	city.iata = item.iata;
+	city.icao = item.icao;
+	city.lat = item.lat;
+	city.lon = item.lon;
 }
