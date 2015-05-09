@@ -7,16 +7,23 @@ var markerDestino;
 
 var City = function(){
 	this.description = null;
-	this.lat = null;
-	this.lon = null;
+	this.geolocation = null;
 	this.code = null;
 	this.setCityInfo = function(item){
-		this.description = item.description;
-		this.code = item.code;
-		//this.lat = item.lat;
-		//this.lon = item.lon;
+		this.description = item.label;
+		this.code = item.id;
+		this.geolocation = item.geolocation;
 	}
 }
+
+var Trip = function(org,dst,start,end){
+	this.fromCity = org;
+	this.toCity = dst;
+	this.startDate = start;
+	this.endDate = end;
+}
+
+var currentTrip = null;
 
 //guardo los datos de la ciudad de origen
 var orgCity = new City();
@@ -103,26 +110,17 @@ $(function () {
             $("#fechaDesdeContainer").show();
             //TODO levantar las coordenadas de la ciudad de origen y pasarselas a la siguiente función
             orgCity.setCityInfo(ui.item);
-            //markerOrigen = setMapMarker(mapaNuevoViaje, orgCity.lat,orgCity.lon);
+            markerOrigen = setMapMarker(mapaNuevoViaje, orgCity.geolocation, orgCity.description);
             //me centro en el marker
-            //mapaNuevoViaje.setCenter(markerOrigen.getPosition());
-        	//mapaNuevoViaje.setZoom(10);
+            mapaNuevoViaje.setCenter(markerOrigen.getPosition());
+        	mapaNuevoViaje.setZoom(10);
         	$("#fechaDesde").focus();
         }
     })
-    .data("ui-autocomplete")._renderItem = function (ul, item) {
-	    //Add the .ui-state-disabled class and don't wrap in <a> if value is empty
-	    if(item.id ==''){
-	        return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo(ul);
-	    }else{
-	        return $("<li>")
-	        .append("<a>" + item.label + "</a>")
-	        .appendTo(ul);
-	    }
-	};
+    .data("ui-autocomplete")._renderItem = renderItemCiudades;
     
     $("#fechaDesde").datepicker({
-        format: 'dd/mm/yyyy',
+    	dateFormat: 'dd/mm/yy',
         minDate: new Date(),
         todayHighlight: true
     })
@@ -154,25 +152,16 @@ $(function () {
             $("#fechaHastaContainer").show();
             //TODO levantar las coordenadas de la ciudad de destino y pasarselas a la siguiente función
             dstCity.setCityInfo(ui.item);
-            //markerDestino = setMapMarker(mapaNuevoViaje, dstCity.lat,dstCity.lon);
+            markerDestino = setMapMarker(mapaNuevoViaje, dstCity.geolocation, dstCity.description);
             //hago zoom out para que se vean los dos puntos marcados
-            //setMapBounds(mapaNuevoViaje);
+            setMapBounds(mapaNuevoViaje);
             $("#fechaHasta").focus();
         }
     })
-    .data("ui-autocomplete")._renderItem = function (ul, item) {
-	    //Add the .ui-state-disabled class and don't wrap in <a> if value is empty
-	    if(item.id ==''){
-	        return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo(ul);
-	    }else{
-	        return $("<li>")
-	        .append("<a>" + item.label + "</a>")
-	        .appendTo(ul);
-	    }
-	};
+    .data("ui-autocomplete")._renderItem = renderItemCiudades;
     
     $("#fechaHasta").datepicker({
-        format: 'dd/mm/yyyy',
+    	dateFormat: 'dd/mm/yy',
         todayHighlight: true
     })
     .change(function (e) {
@@ -181,7 +170,8 @@ $(function () {
     $("#btnBuscarVuelo").click(function (event) {
         event.preventDefault();
         $("#modVuelos").modal('show');
-        getVuelos('Ida');
+        currentTrip = new Trip(orgCity,dstCity,$("#fechaDesde").val(),$("#fechaHasta").val());
+        getVuelos('Ida',currentTrip);
         $("a[role=vueloIda]").click(initClickIda);
     });
     $("#btnCancelarViaje").click(function (event) {
@@ -316,12 +306,28 @@ function initClickVuelta() {
 
 function getVuelos(sentido) {
 //TODO $.ajax a nuestra api
-//bucle json
-    $("#sinVuelos" + sentido).hide();
-    $("#lstVuevlo" + sentido + " .list-group").html('');
-    for (i = 1; i <= 4; i++) {
-        $("#lstVuevlo" + sentido + " .list-group").append(templateVuelo(sentido, i, "aeropuerto origen", "aeropuerto destino", "12:45", "aerolinea"));
-    }
+	$.ajax({
+        url: 'http://localhost:8080/api/trip-options',
+        dataType: 'json',
+        //fromCity=LON&toCity=MIA&startDate=20/06/2015&endDate=30/06/2015
+        data: {
+        	'fromCity': currentTrip.fromCity.code,
+        	'toCity': currentTrip.toCity.code,
+        	'startDate': currentTrip.startDate,
+        	'endDate': currentTrip.endDate
+        },
+        success: function( data ) {
+        	//autocomplete_processCities(data, response);
+        	console.log(data);
+        	if(data.length > 0){
+        		$("#sinVuelos" + sentido).hide();
+        	    $("#lstVuevlo" + sentido + " .list-group").html('');
+        	    for (i = 1; i <= 4; i++) {
+        	        $("#lstVuevlo" + sentido + " .list-group").append(templateVuelo(sentido, i, "aeropuerto origen", "aeropuerto destino", "12:45", "aerolinea"));
+        	    }
+        	}
+        }
+    });
 }
 
 function templateVuelo(sentido, idVuelo, aeropuertoOrigen, aeropuertoDestion, horarioSalida, aerolinea, horarioLlegada) {
@@ -361,21 +367,32 @@ function autocomplete_processCities(data, response){
 	            id: item.code,
 	            label: item.description,
 	            value: item.description,
-	            //lat: item.lat,
-	            //lon: item.lon
+	            geolocation: item.geolocation
             }
      }));
    }
 }
 
+var renderItemCiudades = function (ul, item) {
+    //Add the .ui-state-disabled class and don't wrap in <a> if value is empty
+    if(item.id ==''){
+        return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo(ul);
+    }else{
+        return $("<li>")
+        .append("<a>" + item.label + "</a>")
+        .appendTo(ul);
+    }
+};
+
+
 /*
  * gmaps functions *******************************************************************
  */
-function setMapMarker(map, posLat, posLong){
+function setMapMarker(map, geolocation, description){
 	var marker = new google.maps.Marker({
-		position: new google.maps.LatLng(posLat, posLong),
+		position: new google.maps.LatLng(geolocation.latitude, geolocation.longitude),
 		map: map,
-		title: 'Hello World!'
+		title: description
 	});
 	return marker;
 }
