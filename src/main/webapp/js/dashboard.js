@@ -24,6 +24,7 @@ var Trip = function(org,dst,start,end){
 }
 
 var currentTrip = null;
+var opcionesViaje = Array();
 
 //guardo los datos de la ciudad de origen
 var orgCity = new City();
@@ -117,7 +118,7 @@ $(function () {
         	$("#fechaDesde").focus();
         }
     })
-    .data("ui-autocomplete")._renderItem = renderItemCiudades;
+    .data("ui-autocomplete")._renderItem = autocomplete_renderItemCiudades;
     
     $("#fechaDesde").datepicker({
     	dateFormat: 'dd/mm/yy',
@@ -158,7 +159,7 @@ $(function () {
             $("#fechaHasta").focus();
         }
     })
-    .data("ui-autocomplete")._renderItem = renderItemCiudades;
+    .data("ui-autocomplete")._renderItem = autocomplete_renderItemCiudades;
     
     $("#fechaHasta").datepicker({
     	dateFormat: 'dd/mm/yy',
@@ -171,7 +172,7 @@ $(function () {
         event.preventDefault();
         $("#modVuelos").modal('show');
         currentTrip = new Trip(orgCity,dstCity,$("#fechaDesde").val(),$("#fechaHasta").val());
-        getVuelos('Ida',currentTrip);
+        getVuelos();
         $("a[role=vueloIda]").click(initClickIda);
     });
     $("#btnCancelarViaje").click(function (event) {
@@ -260,6 +261,7 @@ function formResetVuelos() {
     $("#lstVuevloVuelta").hide();
     $("#boxVueloIda").hide();
     $("#boxVueloVuelta").hide();
+    opcionesViaje = Array();
 }
 
 // init de google maps
@@ -280,7 +282,7 @@ function initClickIda() {
     $("#lstVuevloVuelta").show();
     $("#lstVuevloIda").hide();
     $("#boxVueloIda").show();
-    getVuelos('Vuelta');
+    getVuelos();
     $("a[role=vueloVuelta]").click(initClickVuelta);
     //TODO levantar las coordenadas de la ciudad de origen y pasarselas a la siguiente función
     markerOrigen = setMapMarker(mapaVuelo, -34.599722222222,-58.381944444444);
@@ -304,7 +306,7 @@ function initClickVuelta() {
      });
 }
 
-function getVuelos(sentido) {
+function getVuelos() {
 //TODO $.ajax a nuestra api
 	$.ajax({
         url: 'http://localhost:8080/api/trip-options',
@@ -318,23 +320,38 @@ function getVuelos(sentido) {
         },
         success: function( data ) {
         	//autocomplete_processCities(data, response);
-        	console.log(data);
-        	if(data.length > 0){
-        		$("#sinVuelos" + sentido).hide();
-        	    $("#lstVuevlo" + sentido + " .list-group").html('');
-        	    for (i = 1; i <= 4; i++) {
+        	//console.log(data);
+    	    var datalen = data.length;
+        	if(datalen > 0){
+        		$("#sinVuelos").hide();
+        	    $("#lstVuelos .list-group").html('');
+        	    /*for (i = 1; i <= 4; i++) {
         	        $("#lstVuevlo" + sentido + " .list-group").append(templateVuelo(sentido, i, "aeropuerto origen", "aeropuerto destino", "12:45", "aerolinea"));
+        	    }*/
+        	    opcionesViaje = data;
+        	    var i = 0;
+        	    var line;
+        	    for(i = 0; i < datalen; i++){
+        	    	line = 'Opcion ' + 1 + ' precio: ' + data[i].price_detail.total + ' ' + data[i].price_detail.currency;
+        	    	line += ' ' + data[i].inbound_choices.length + ' escalas de ida ';
+        	    	line += ' ' + data[i].outbound_choices.length + ' escalas de vuelt.';
+        	    	console.log(line);
+        	    	$("#lstVuelos .list-group").append(templateVuelo(i,data[i]))
         	    }
         	}
         }
     });
 }
 
-function templateVuelo(sentido, idVuelo, aeropuertoOrigen, aeropuertoDestion, horarioSalida, aerolinea, horarioLlegada) {
-    return '<a href="#" class="list-group-item" role="vuelo' + sentido + '" id="' + idVuelo + '">' +
+function templateVuelo(idVuelo, vuelo) {
+    /*return '<a href="#" class="list-group-item" role="vuelo" id="' + idVuelo + '">' +
             '<h4 class="list-group-item-heading">Vuelo ' + idVuelo + ' de ' + aerolinea + ' de las ' + horarioSalida + ' horas.</h4>' +
             '<p class="list-group-item-text">Saliendo desde el aeropuerto ' + aeropuertoOrigen + ' llegando al aeropuerto ' + aeropuertoDestion + ' a las ' + horarioLlegada + '</p>' +
-            '</a>';
+            '</a>';*/
+	return '<a href="#" class="list-group-item" role="vuelo" id="' + idVuelo + '">' +
+		    '<h4 class="list-group-item-heading">Vuelo ' + idVuelo + ' que sale ' + vuelo.price_detail.total+ vuelo.price_detail.currency + '</h4>' +
+		    '<p class="list-group-item-text">Escalas ida: ' + vuelo.inbound_choices.length + ', y vuelta: ' + vuelo.outbound_choices.length + '</p>' +
+		    '</a>';
 }
 
 function initClickDetalle(){
@@ -373,7 +390,7 @@ function autocomplete_processCities(data, response){
    }
 }
 
-var renderItemCiudades = function (ul, item) {
+var autocomplete_renderItemCiudades = function (ul, item) {
     //Add the .ui-state-disabled class and don't wrap in <a> if value is empty
     if(item.id ==''){
         return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo(ul);
