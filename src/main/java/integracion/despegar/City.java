@@ -10,6 +10,8 @@ public class City {
 	
 	private String description;
 	
+	private Geolocation geolocation;
+	
 	public City() {
 	
 		// TODO Auto-generated constructor stub
@@ -33,6 +35,16 @@ public class City {
 	public void setDescription(final String description) {
 	
 		this.description = description;
+	}
+	
+	public Geolocation getGeolocation() {
+	
+		return this.geolocation;
+	}
+	
+	public void setGeolocation(Geolocation geolocation) {
+	
+		this.geolocation = geolocation;
 	}
 	
 }

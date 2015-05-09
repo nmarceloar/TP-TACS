@@ -2,7 +2,10 @@
 package integracion.despegar;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -27,6 +30,21 @@ public class Itinerary {
 	public void setSegments(final List<Segment> segments) {
 	
 		this.segments = segments;
+		
+	}
+	
+	public Set<String> getAirportCodesAsSet() {
+	
+		Set<String> set = new HashSet<>();
+		
+		for (Segment s : this.segments) {
+			
+			set.add(s.getFrom());
+			set.add(s.getTo());
+			
+		}
+		
+		return set;
 		
 	}
 	
