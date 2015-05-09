@@ -14,47 +14,50 @@ public class Viaje {
 	
 	}
 	
-	public Viaje(Pasajero viajante, List<Trayecto> itinerario) {
+	public Viaje(final Pasajero viajante, final List<Trayecto> itinerario) {
 	
 		this.viajante = viajante;
 		this.itinerario = itinerario;
 	}
 	
-	public Pasajero getViajante() {
+	public void agregarTrayecto(final Trayecto tray) {
 	
-		return viajante;
-	}
-	
-	public void setViajante(Pasajero viajante) {
-	
-		this.viajante = viajante;
-	}
-	
-	public List<Trayecto> getItinerario() {
-	
-		return itinerario;
-	}
-	
-	public void setItinerario(List<Trayecto> itinerario) {
-	
-		this.itinerario = itinerario;
-	}
-	
-	public Date getFechaSalidaViaje() {
-	
-		return getItinerario()
-		                .get(0).getFechaSalida();
+		this.getItinerario()
+		    .add(tray);
 	}
 	
 	public Date getFechaArriboViaje() {
 	
-		return getItinerario()
-		                .get(itinerario.size() - 1).getFechaArribo();
+		return this.getItinerario()
+		    .get(this.itinerario.size() - 1)
+		    .getFechaArribo();
 	}
 	
-	public void agregarTrayecto(Trayecto tray) {
+	public Date getFechaSalidaViaje() {
 	
-		getItinerario().add(tray);
+		return this.getItinerario()
+		    .get(0)
+		    .getFechaSalida();
+	}
+	
+	public List<Trayecto> getItinerario() {
+	
+		return this.itinerario;
+	}
+	
+	public Pasajero getViajante() {
+	
+		return this.viajante;
+	}
+	
+	public void setItinerario(final List<Trayecto> itinerario) {
+	
+		this.itinerario = itinerario;
+	}
+	
+	public void setViajante(final Pasajero viajante) {
+	
+		this.viajante = viajante;
 	}
 	
 }

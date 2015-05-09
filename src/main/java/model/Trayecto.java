@@ -15,7 +15,8 @@ public class Trayecto {
 	
 	}
 	
-	public Trayecto(Aeropuerto origen, Aeropuerto destino, Vuelo infoVuelo) {
+	public Trayecto(final Aeropuerto origen, final Aeropuerto destino,
+	    final Vuelo infoVuelo) {
 	
 		super();
 		this.origen = origen;
@@ -23,46 +24,46 @@ public class Trayecto {
 		this.infoVuelo = infoVuelo;
 	}
 	
-	public Aeropuerto getOrigen() {
-	
-		return origen;
-	}
-	
-	public void setOrigen(Aeropuerto origen) {
-	
-		this.origen = origen;
-	}
-	
 	public Aeropuerto getDestino() {
 	
-		return destino;
-	}
-	
-	public void setDestino(Aeropuerto destino) {
-	
-		this.destino = destino;
-	}
-	
-	public Vuelo getInfoVuelo() {
-	
-		return infoVuelo;
-	}
-	
-	public void setInfoVuelo(Vuelo infoVuelo) {
-	
-		this.infoVuelo = infoVuelo;
-	}
-	
-	public Date getFechaSalida() {
-	
-		return getInfoVuelo()
-		                .getFechaSalida();
+		return this.destino;
 	}
 	
 	public Date getFechaArribo() {
 	
-		return getInfoVuelo()
-		                .getFechaArribo();
+		return this.getInfoVuelo()
+		    .getFechaArribo();
+	}
+	
+	public Date getFechaSalida() {
+	
+		return this.getInfoVuelo()
+		    .getFechaSalida();
+	}
+	
+	public Vuelo getInfoVuelo() {
+	
+		return this.infoVuelo;
+	}
+	
+	public Aeropuerto getOrigen() {
+	
+		return this.origen;
+	}
+	
+	public void setDestino(final Aeropuerto destino) {
+	
+		this.destino = destino;
+	}
+	
+	public void setInfoVuelo(final Vuelo infoVuelo) {
+	
+		this.infoVuelo = infoVuelo;
+	}
+	
+	public void setOrigen(final Aeropuerto origen) {
+	
+		this.origen = origen;
 	}
 	
 }

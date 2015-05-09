@@ -9,7 +9,7 @@ public class ObjectFactory {
 	/**
 	 * Create a new ObjectFactory that can be used to create new instances of
 	 * schema derived classes for package: integracion.geobytes
-	 * 
+	 *
 	 */
 	public ObjectFactory() {
 	
@@ -17,7 +17,7 @@ public class ObjectFactory {
 	
 	/**
 	 * Create an instance of {@link String }
-	 * 
+	 *
 	 */
 	public String createString() {
 	
@@ -26,7 +26,7 @@ public class ObjectFactory {
 	
 	/**
 	 * Create an instance of {@link String.Airports }
-	 * 
+	 *
 	 */
 	public String.Airports createStringNewDataSet() {
 	
@@ -35,7 +35,7 @@ public class ObjectFactory {
 	
 	/**
 	 * Create an instance of {@link String.Airports.Airport }
-	 * 
+	 *
 	 */
 	public String.Airports.Airport createStringNewDataSetTable() {
 	

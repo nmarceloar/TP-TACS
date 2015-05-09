@@ -6,12 +6,14 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for anonymous complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -23,40 +25,39 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "getAirportInformationByAirportCodeResult"
+	"getAirportInformationByAirportCodeResult"
 })
 @XmlRootElement(name = "getAirportInformationByAirportCodeResponse")
 public class GetAirportInformationByAirportCodeResponse {
-
-    protected String getAirportInformationByAirportCodeResult;
-
-    /**
-     * Gets the value of the getAirportInformationByAirportCodeResult property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getGetAirportInformationByAirportCodeResult() {
-        return getAirportInformationByAirportCodeResult;
-    }
-
-    /**
-     * Sets the value of the getAirportInformationByAirportCodeResult property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setGetAirportInformationByAirportCodeResult(String value) {
-        this.getAirportInformationByAirportCodeResult = value;
-    }
-
+	
+	protected String getAirportInformationByAirportCodeResult;
+	
+	/**
+	 * Gets the value of the getAirportInformationByAirportCodeResult property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getGetAirportInformationByAirportCodeResult() {
+	
+		return this.getAirportInformationByAirportCodeResult;
+	}
+	
+	/**
+	 * Sets the value of the getAirportInformationByAirportCodeResult property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setGetAirportInformationByAirportCodeResult(final String value) {
+	
+		this.getAirportInformationByAirportCodeResult = value;
+	}
+	
 }

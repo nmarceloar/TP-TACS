@@ -13,7 +13,8 @@ public class Aeropuerto {
 	
 	}
 	
-	public Aeropuerto(String codigo, String pais, String ciudad) {
+	public Aeropuerto(final String codigo, final String pais,
+	    final String ciudad) {
 	
 		super();
 		
@@ -23,34 +24,34 @@ public class Aeropuerto {
 		
 	}
 	
-	public String getCodigo() {
+	public String getCiudad() {
 	
-		return codigo;
+		return this.ciudad;
 	}
 	
-	public void setCodigo(String codigo) {
+	public String getCodigo() {
 	
-		this.codigo = codigo;
+		return this.codigo;
 	}
 	
 	public String getPais() {
 	
-		return pais;
+		return this.pais;
 	}
 	
-	public void setPais(String pais) {
-	
-		this.pais = pais;
-	}
-	
-	public String getCiudad() {
-	
-		return ciudad;
-	}
-	
-	public void setCiudad(String ciudad) {
+	public void setCiudad(final String ciudad) {
 	
 		this.ciudad = ciudad;
+	}
+	
+	public void setCodigo(final String codigo) {
+	
+		this.codigo = codigo;
+	}
+	
+	public void setPais(final String pais) {
+	
+		this.pais = pais;
 	}
 	
 }

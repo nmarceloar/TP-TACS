@@ -20,8 +20,8 @@ public class Vuelo {
 		super();
 	}
 	
-	public Vuelo(String aerolinea, String nroVuelo, String avion,
-	    Date fechaSalida, Date fechaArribo) {
+	public Vuelo(final String aerolinea, final String nroVuelo,
+	    final String avion, final Date fechaSalida, final Date fechaArribo) {
 	
 		super();
 		this.aerolinea = aerolinea;
@@ -33,60 +33,60 @@ public class Vuelo {
 	
 	public String getAerolinea() {
 	
-		return aerolinea;
-	}
-	
-	public void setAerolinea(String aerolinea) {
-	
-		this.aerolinea = aerolinea;
-	}
-	
-	public String getNroVuelo() {
-	
-		return nroVuelo;
-	}
-	
-	public void setNroVuelo(String nroVuelo) {
-	
-		this.nroVuelo = nroVuelo;
+		return this.aerolinea;
 	}
 	
 	public String getAvion() {
 	
-		return avion;
-	}
-	
-	public void setAvion(String avion) {
-	
-		this.avion = avion;
-	}
-	
-	public Date getFechaSalida() {
-	
-		return fechaSalida;
-	}
-	
-	public void setFechaSalida(Date fechaSalida) {
-	
-		this.fechaSalida = fechaSalida;
+		return this.avion;
 	}
 	
 	public Date getFechaArribo() {
 	
-		return fechaArribo;
+		return this.fechaArribo;
 	}
 	
-	public void setFechaArribo(Date fechaArribo) {
+	public Date getFechaSalida() {
+	
+		return this.fechaSalida;
+	}
+	
+	public String getNroVuelo() {
+	
+		return this.nroVuelo;
+	}
+	
+	public void setAerolinea(final String aerolinea) {
+	
+		this.aerolinea = aerolinea;
+	}
+	
+	public void setAvion(final String avion) {
+	
+		this.avion = avion;
+	}
+	
+	public void setFechaArribo(final Date fechaArribo) {
 	
 		this.fechaArribo = fechaArribo;
+	}
+	
+	public void setFechaSalida(final Date fechaSalida) {
+	
+		this.fechaSalida = fechaSalida;
+	}
+	
+	public void setNroVuelo(final String nroVuelo) {
+	
+		this.nroVuelo = nroVuelo;
 	}
 	
 	@Override
 	public String toString() {
 	
-		return "Vuelo " + getNroVuelo() + " de " + getAerolinea()
-		    + " - Desde: " + getFechaSalida() + " hasta "
-		    + getFechaArribo();
+		return "Vuelo " + this.getNroVuelo() + " de " + this.getAerolinea()
+		    + " - Desde: " + this.getFechaSalida() + " hasta "
+		    + this.getFechaArribo();
 	}
 	
 }

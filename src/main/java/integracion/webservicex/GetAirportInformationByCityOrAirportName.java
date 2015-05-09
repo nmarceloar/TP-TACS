@@ -6,12 +6,14 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for anonymous complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -23,40 +25,39 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "cityOrAirportName"
+	"cityOrAirportName"
 })
 @XmlRootElement(name = "getAirportInformationByCityOrAirportName")
 public class GetAirportInformationByCityOrAirportName {
-
-    protected String cityOrAirportName;
-
-    /**
-     * Gets the value of the cityOrAirportName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getCityOrAirportName() {
-        return cityOrAirportName;
-    }
-
-    /**
-     * Sets the value of the cityOrAirportName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setCityOrAirportName(String value) {
-        this.cityOrAirportName = value;
-    }
-
+	
+	protected String cityOrAirportName;
+	
+	/**
+	 * Gets the value of the cityOrAirportName property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getCityOrAirportName() {
+	
+		return this.cityOrAirportName;
+	}
+	
+	/**
+	 * Sets the value of the cityOrAirportName property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setCityOrAirportName(final String value) {
+	
+		this.cityOrAirportName = value;
+	}
+	
 }

@@ -7,12 +7,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for anonymous complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -24,41 +26,40 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "countryAbbrviation"
+	"countryAbbrviation"
 })
 @XmlRootElement(name = "getAirportInformationByISOCountryCode")
 public class GetAirportInformationByISOCountryCode {
-
-    @XmlElement(name = "CountryAbbrviation")
-    protected String countryAbbrviation;
-
-    /**
-     * Gets the value of the countryAbbrviation property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getCountryAbbrviation() {
-        return countryAbbrviation;
-    }
-
-    /**
-     * Sets the value of the countryAbbrviation property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setCountryAbbrviation(String value) {
-        this.countryAbbrviation = value;
-    }
-
+	
+	@XmlElement(name = "CountryAbbrviation")
+	protected String countryAbbrviation;
+	
+	/**
+	 * Gets the value of the countryAbbrviation property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getCountryAbbrviation() {
+	
+		return this.countryAbbrviation;
+	}
+	
+	/**
+	 * Sets the value of the countryAbbrviation property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setCountryAbbrviation(final String value) {
+	
+		this.countryAbbrviation = value;
+	}
+	
 }

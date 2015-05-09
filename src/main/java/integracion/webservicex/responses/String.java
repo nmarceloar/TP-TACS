@@ -3,6 +3,7 @@ package integracion.webservicex.responses;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -12,11 +13,11 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * <p>
  * Java class for anonymous complex type.
- * 
+ *
  * <p>
  * The following schema fragment specifies the expected content contained within
  * this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -63,8 +64,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -73,40 +74,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "string")
 public class String {
 	
-	@XmlElement(name = "Airports", required = true)
-	protected String.Airports airportsDataSet;
-	
-	/**
-	 * Gets the value of the airportsDataSet property.
-	 * 
-	 * @return possible object is {@link String.Airports }
-	 * 
-	 */
-	public String.Airports getNewDataSet() {
-	
-		return airportsDataSet;
-	}
-	
-	/**
-	 * Sets the value of the airportsDataSet property.
-	 * 
-	 * @param value
-	 *            allowed object is {@link String.Airports }
-	 * 
-	 */
-	public void setNewDataSet(String.Airports value) {
-	
-		this.airportsDataSet = value;
-	}
-	
 	/**
 	 * <p>
 	 * Java class for anonymous complex type.
-	 * 
+	 *
 	 * <p>
 	 * The following schema fragment specifies the expected content contained
 	 * within this class.
-	 * 
+	 *
 	 * <pre>
 	 * &lt;complexType>
 	 *   &lt;complexContent>
@@ -143,8 +118,8 @@ public class String {
 	 *   &lt;/complexContent>
 	 * &lt;/complexType>
 	 * </pre>
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "", propOrder = {
@@ -152,48 +127,14 @@ public class String {
 	})
 	public static class Airports {
 		
-		@XmlElement(name = "WebServiceX")
-		protected List<String.Airports.Airport> airports;
-		
-		/**
-		 * Gets the value of the airports property.
-		 * 
-		 * <p>
-		 * This accessor method returns a reference to the live list, not a
-		 * snapshot. Therefore any modification you make to the returned list
-		 * will be present inside the JAXB object. This is why there is not a
-		 * <CODE>set</CODE> method for the airports property.
-		 * 
-		 * <p>
-		 * For example, to add a new item, do as follows:
-		 * 
-		 * <pre>
-		 * getTable().add(newItem);
-		 * </pre>
-		 * 
-		 * 
-		 * <p>
-		 * Objects of the following type(s) are allowed in the list
-		 * {@link String.Airports.Airport }
-		 * 
-		 * 
-		 */
-		public List<String.Airports.Airport> getTable() {
-		
-			if (airports == null) {
-				airports = new ArrayList<String.Airports.Airport>();
-			}
-			return this.airports;
-		}
-		
 		/**
 		 * <p>
 		 * Java class for anonymous complex type.
-		 * 
+		 *
 		 * <p>
 		 * The following schema fragment specifies the expected content
 		 * contained within this class.
-		 * 
+		 *
 		 * <pre>
 		 * &lt;complexType>
 		 *   &lt;complexContent>
@@ -220,8 +161,8 @@ public class String {
 		 *   &lt;/complexContent>
 		 * &lt;/complexType>
 		 * </pre>
-		 * 
-		 * 
+		 *
+		 *
 		 */
 		@XmlAccessorType(XmlAccessType.FIELD)
 		@XmlType(name = "", propOrder = {
@@ -284,324 +225,384 @@ public class String {
 			
 			/**
 			 * Gets the value of the airportCode property.
-			 * 
+			 *
 			 * @return possible object is {@link java.lang.String }
-			 * 
+			 *
 			 */
 			public java.lang.String getAirportCode() {
 			
-				return airportCode;
+				return this.airportCode;
+			}
+			
+			/**
+			 * Gets the value of the cityOrAirportName property.
+			 *
+			 * @return possible object is {@link java.lang.String }
+			 *
+			 */
+			public java.lang.String getCityOrAirportName() {
+			
+				return this.cityOrAirportName;
+			}
+			
+			/**
+			 * Gets the value of the country property.
+			 *
+			 * @return possible object is {@link java.lang.String }
+			 *
+			 */
+			public java.lang.String getCountry() {
+			
+				return this.country;
+			}
+			
+			/**
+			 * Gets the value of the countryAbbrviation property.
+			 *
+			 * @return possible object is {@link java.lang.String }
+			 *
+			 */
+			public java.lang.String getCountryAbbrviation() {
+			
+				return this.countryAbbrviation;
+			}
+			
+			/**
+			 * Gets the value of the countryCode property.
+			 *
+			 */
+			public short getCountryCode() {
+			
+				return this.countryCode;
+			}
+			
+			/**
+			 * Gets the value of the gmtOffset property.
+			 *
+			 */
+			public byte getGMTOffset() {
+			
+				return this.gmtOffset;
+			}
+			
+			/**
+			 * Gets the value of the latitudeDegree property.
+			 *
+			 */
+			public byte getLatitudeDegree() {
+			
+				return this.latitudeDegree;
+			}
+			
+			/**
+			 * Gets the value of the latitudeMinute property.
+			 *
+			 */
+			public byte getLatitudeMinute() {
+			
+				return this.latitudeMinute;
+			}
+			
+			/**
+			 * Gets the value of the latitudeNpeerS property.
+			 *
+			 * @return possible object is {@link java.lang.String }
+			 *
+			 */
+			public java.lang.String getLatitudeNpeerS() {
+			
+				return this.latitudeNpeerS;
+			}
+			
+			/**
+			 * Gets the value of the latitudeSecond property.
+			 *
+			 */
+			public byte getLatitudeSecond() {
+			
+				return this.latitudeSecond;
+			}
+			
+			/**
+			 * Gets the value of the longitudeDegree property.
+			 *
+			 */
+			public byte getLongitudeDegree() {
+			
+				return this.longitudeDegree;
+			}
+			
+			/**
+			 * Gets the value of the longitudeEperW property.
+			 *
+			 * @return possible object is {@link java.lang.String }
+			 *
+			 */
+			public java.lang.String getLongitudeEperW() {
+			
+				return this.longitudeEperW;
+			}
+			
+			/**
+			 * Gets the value of the longitudeMinute property.
+			 *
+			 */
+			public byte getLongitudeMinute() {
+			
+				return this.longitudeMinute;
+			}
+			
+			/**
+			 * Gets the value of the longitudeSeconds property.
+			 *
+			 */
+			public byte getLongitudeSeconds() {
+			
+				return this.longitudeSeconds;
+			}
+			
+			/**
+			 * Gets the value of the runwayElevationFeet property.
+			 *
+			 */
+			public short getRunwayElevationFeet() {
+			
+				return this.runwayElevationFeet;
+			}
+			
+			/**
+			 * Gets the value of the runwayLengthFeet property.
+			 *
+			 */
+			public short getRunwayLengthFeet() {
+			
+				return this.runwayLengthFeet;
 			}
 			
 			/**
 			 * Sets the value of the airportCode property.
-			 * 
+			 *
 			 * @param value
 			 *            allowed object is {@link java.lang.String }
-			 * 
+			 *
 			 */
-			public void setAirportCode(java.lang.String value) {
+			public void setAirportCode(final java.lang.String value) {
 			
 				this.airportCode = value;
 			}
 			
 			/**
-			 * Gets the value of the cityOrAirportName property.
-			 * 
-			 * @return possible object is {@link java.lang.String }
-			 * 
-			 */
-			public java.lang.String getCityOrAirportName() {
-			
-				return cityOrAirportName;
-			}
-			
-			/**
 			 * Sets the value of the cityOrAirportName property.
-			 * 
+			 *
 			 * @param value
 			 *            allowed object is {@link java.lang.String }
-			 * 
+			 *
 			 */
-			public void setCityOrAirportName(java.lang.String value) {
+			public void setCityOrAirportName(final java.lang.String value) {
 			
 				this.cityOrAirportName = value;
 			}
 			
 			/**
-			 * Gets the value of the country property.
-			 * 
-			 * @return possible object is {@link java.lang.String }
-			 * 
-			 */
-			public java.lang.String getCountry() {
-			
-				return country;
-			}
-			
-			/**
 			 * Sets the value of the country property.
-			 * 
+			 *
 			 * @param value
 			 *            allowed object is {@link java.lang.String }
-			 * 
+			 *
 			 */
-			public void setCountry(java.lang.String value) {
+			public void setCountry(final java.lang.String value) {
 			
 				this.country = value;
 			}
 			
 			/**
-			 * Gets the value of the countryAbbrviation property.
-			 * 
-			 * @return possible object is {@link java.lang.String }
-			 * 
-			 */
-			public java.lang.String getCountryAbbrviation() {
-			
-				return countryAbbrviation;
-			}
-			
-			/**
 			 * Sets the value of the countryAbbrviation property.
-			 * 
+			 *
 			 * @param value
 			 *            allowed object is {@link java.lang.String }
-			 * 
+			 *
 			 */
-			public void setCountryAbbrviation(java.lang.String value) {
+			public void setCountryAbbrviation(final java.lang.String value) {
 			
 				this.countryAbbrviation = value;
 			}
 			
 			/**
-			 * Gets the value of the countryCode property.
-			 * 
-			 */
-			public short getCountryCode() {
-			
-				return countryCode;
-			}
-			
-			/**
 			 * Sets the value of the countryCode property.
-			 * 
+			 *
 			 */
-			public void setCountryCode(short value) {
+			public void setCountryCode(final short value) {
 			
 				this.countryCode = value;
 			}
 			
 			/**
-			 * Gets the value of the gmtOffset property.
-			 * 
-			 */
-			public byte getGMTOffset() {
-			
-				return gmtOffset;
-			}
-			
-			/**
 			 * Sets the value of the gmtOffset property.
-			 * 
+			 *
 			 */
-			public void setGMTOffset(byte value) {
+			public void setGMTOffset(final byte value) {
 			
 				this.gmtOffset = value;
 			}
 			
 			/**
-			 * Gets the value of the runwayLengthFeet property.
-			 * 
-			 */
-			public short getRunwayLengthFeet() {
-			
-				return runwayLengthFeet;
-			}
-			
-			/**
-			 * Sets the value of the runwayLengthFeet property.
-			 * 
-			 */
-			public void setRunwayLengthFeet(short value) {
-			
-				this.runwayLengthFeet = value;
-			}
-			
-			/**
-			 * Gets the value of the runwayElevationFeet property.
-			 * 
-			 */
-			public short getRunwayElevationFeet() {
-			
-				return runwayElevationFeet;
-			}
-			
-			/**
-			 * Sets the value of the runwayElevationFeet property.
-			 * 
-			 */
-			public void setRunwayElevationFeet(short value) {
-			
-				this.runwayElevationFeet = value;
-			}
-			
-			/**
-			 * Gets the value of the latitudeDegree property.
-			 * 
-			 */
-			public byte getLatitudeDegree() {
-			
-				return latitudeDegree;
-			}
-			
-			/**
 			 * Sets the value of the latitudeDegree property.
-			 * 
+			 *
 			 */
-			public void setLatitudeDegree(byte value) {
+			public void setLatitudeDegree(final byte value) {
 			
 				this.latitudeDegree = value;
 			}
 			
 			/**
-			 * Gets the value of the latitudeMinute property.
-			 * 
-			 */
-			public byte getLatitudeMinute() {
-			
-				return latitudeMinute;
-			}
-			
-			/**
 			 * Sets the value of the latitudeMinute property.
-			 * 
+			 *
 			 */
-			public void setLatitudeMinute(byte value) {
+			public void setLatitudeMinute(final byte value) {
 			
 				this.latitudeMinute = value;
 			}
 			
 			/**
-			 * Gets the value of the latitudeSecond property.
-			 * 
-			 */
-			public byte getLatitudeSecond() {
-			
-				return latitudeSecond;
-			}
-			
-			/**
-			 * Sets the value of the latitudeSecond property.
-			 * 
-			 */
-			public void setLatitudeSecond(byte value) {
-			
-				this.latitudeSecond = value;
-			}
-			
-			/**
-			 * Gets the value of the latitudeNpeerS property.
-			 * 
-			 * @return possible object is {@link java.lang.String }
-			 * 
-			 */
-			public java.lang.String getLatitudeNpeerS() {
-			
-				return latitudeNpeerS;
-			}
-			
-			/**
 			 * Sets the value of the latitudeNpeerS property.
-			 * 
+			 *
 			 * @param value
 			 *            allowed object is {@link java.lang.String }
-			 * 
+			 *
 			 */
-			public void setLatitudeNpeerS(java.lang.String value) {
+			public void setLatitudeNpeerS(final java.lang.String value) {
 			
 				this.latitudeNpeerS = value;
 			}
 			
 			/**
-			 * Gets the value of the longitudeDegree property.
-			 * 
+			 * Sets the value of the latitudeSecond property.
+			 *
 			 */
-			public byte getLongitudeDegree() {
+			public void setLatitudeSecond(final byte value) {
 			
-				return longitudeDegree;
+				this.latitudeSecond = value;
 			}
 			
 			/**
 			 * Sets the value of the longitudeDegree property.
-			 * 
+			 *
 			 */
-			public void setLongitudeDegree(byte value) {
+			public void setLongitudeDegree(final byte value) {
 			
 				this.longitudeDegree = value;
 			}
 			
 			/**
-			 * Gets the value of the longitudeMinute property.
-			 * 
+			 * Sets the value of the longitudeEperW property.
+			 *
+			 * @param value
+			 *            allowed object is {@link java.lang.String }
+			 *
 			 */
-			public byte getLongitudeMinute() {
+			public void setLongitudeEperW(final java.lang.String value) {
 			
-				return longitudeMinute;
+				this.longitudeEperW = value;
 			}
 			
 			/**
 			 * Sets the value of the longitudeMinute property.
-			 * 
+			 *
 			 */
-			public void setLongitudeMinute(byte value) {
+			public void setLongitudeMinute(final byte value) {
 			
 				this.longitudeMinute = value;
 			}
 			
 			/**
-			 * Gets the value of the longitudeSeconds property.
-			 * 
-			 */
-			public byte getLongitudeSeconds() {
-			
-				return longitudeSeconds;
-			}
-			
-			/**
 			 * Sets the value of the longitudeSeconds property.
-			 * 
+			 *
 			 */
-			public void setLongitudeSeconds(byte value) {
+			public void setLongitudeSeconds(final byte value) {
 			
 				this.longitudeSeconds = value;
 			}
 			
 			/**
-			 * Gets the value of the longitudeEperW property.
-			 * 
-			 * @return possible object is {@link java.lang.String }
-			 * 
+			 * Sets the value of the runwayElevationFeet property.
+			 *
 			 */
-			public java.lang.String getLongitudeEperW() {
+			public void setRunwayElevationFeet(final short value) {
 			
-				return longitudeEperW;
+				this.runwayElevationFeet = value;
 			}
 			
 			/**
-			 * Sets the value of the longitudeEperW property.
-			 * 
-			 * @param value
-			 *            allowed object is {@link java.lang.String }
-			 * 
+			 * Sets the value of the runwayLengthFeet property.
+			 *
 			 */
-			public void setLongitudeEperW(java.lang.String value) {
+			public void setRunwayLengthFeet(final short value) {
 			
-				this.longitudeEperW = value;
+				this.runwayLengthFeet = value;
 			}
 			
 		}
 		
+		@XmlElement(name = "WebServiceX")
+		protected List<String.Airports.Airport> airports;
+		
+		/**
+		 * Gets the value of the airports property.
+		 *
+		 * <p>
+		 * This accessor method returns a reference to the live list, not a
+		 * snapshot. Therefore any modification you make to the returned list
+		 * will be present inside the JAXB object. This is why there is not a
+		 * <CODE>set</CODE> method for the airports property.
+		 *
+		 * <p>
+		 * For example, to add a new item, do as follows:
+		 *
+		 * <pre>
+		 * getTable().add(newItem);
+		 * </pre>
+		 *
+		 *
+		 * <p>
+		 * Objects of the following type(s) are allowed in the list
+		 * {@link String.Airports.Airport }
+		 *
+		 *
+		 */
+		public List<String.Airports.Airport> getTable() {
+		
+			if (this.airports == null) {
+				this.airports = new ArrayList<String.Airports.Airport>();
+			}
+			return this.airports;
+		}
+		
+	}
+	
+	@XmlElement(name = "Airports", required = true)
+	protected String.Airports airportsDataSet;
+	
+	/**
+	 * Gets the value of the airportsDataSet property.
+	 *
+	 * @return possible object is {@link String.Airports }
+	 *
+	 */
+	public String.Airports getNewDataSet() {
+	
+		return this.airportsDataSet;
+	}
+	
+	/**
+	 * Sets the value of the airportsDataSet property.
+	 *
+	 * @param value
+	 *            allowed object is {@link String.Airports }
+	 *
+	 */
+	public void setNewDataSet(final String.Airports value) {
+	
+		this.airportsDataSet = value;
 	}
 	
 }

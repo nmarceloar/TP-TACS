@@ -6,12 +6,14 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for anonymous complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -23,40 +25,39 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "airportCode"
+	"airportCode"
 })
 @XmlRootElement(name = "getAirportInformationByAirportCode")
 public class GetAirportInformationByAirportCode {
-
-    protected String airportCode;
-
-    /**
-     * Gets the value of the airportCode property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAirportCode() {
-        return airportCode;
-    }
-
-    /**
-     * Sets the value of the airportCode property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAirportCode(String value) {
-        this.airportCode = value;
-    }
-
+	
+	protected String airportCode;
+	
+	/**
+	 * Gets the value of the airportCode property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getAirportCode() {
+	
+		return this.airportCode;
+	}
+	
+	/**
+	 * Sets the value of the airportCode property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setAirportCode(final String value) {
+	
+		this.airportCode = value;
+	}
+	
 }

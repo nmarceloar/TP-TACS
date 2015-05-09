@@ -6,12 +6,14 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for anonymous complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -23,40 +25,42 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "getAirportInformationByISOCountryCodeResult"
+	"getAirportInformationByISOCountryCodeResult"
 })
 @XmlRootElement(name = "getAirportInformationByISOCountryCodeResponse")
 public class GetAirportInformationByISOCountryCodeResponse {
-
-    protected String getAirportInformationByISOCountryCodeResult;
-
-    /**
-     * Gets the value of the getAirportInformationByISOCountryCodeResult property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getGetAirportInformationByISOCountryCodeResult() {
-        return getAirportInformationByISOCountryCodeResult;
-    }
-
-    /**
-     * Sets the value of the getAirportInformationByISOCountryCodeResult property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setGetAirportInformationByISOCountryCodeResult(String value) {
-        this.getAirportInformationByISOCountryCodeResult = value;
-    }
-
+	
+	protected String getAirportInformationByISOCountryCodeResult;
+	
+	/**
+	 * Gets the value of the getAirportInformationByISOCountryCodeResult
+	 * property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getGetAirportInformationByISOCountryCodeResult() {
+	
+		return this.getAirportInformationByISOCountryCodeResult;
+	}
+	
+	/**
+	 * Sets the value of the getAirportInformationByISOCountryCodeResult
+	 * property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setGetAirportInformationByISOCountryCodeResult(
+	    final String value) {
+	
+		this.getAirportInformationByISOCountryCodeResult = value;
+	}
+	
 }
