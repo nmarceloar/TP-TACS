@@ -2,8 +2,9 @@
  *
  */
 
-package integracion.despegar;
+package apis;
 
+import integracion.despegar.TripOption;
 import java.util.List;
 
 import org.joda.time.DateTime;

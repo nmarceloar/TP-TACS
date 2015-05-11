@@ -2,7 +2,7 @@
 package api.rest;
 
 import integracion.despegar.TripOption;
-import integracion.despegar.TripOptionsProvider;
+import apis.TripOptionsProvider;
 
 import java.util.List;
 

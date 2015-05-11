@@ -2,7 +2,7 @@
 package api.rest;
 
 import integracion.despegar.City;
-import integracion.despegar.CityProvider;
+import apis.CityProvider;
 
 import java.util.List;
 

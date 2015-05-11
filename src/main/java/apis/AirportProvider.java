@@ -1,5 +1,7 @@
 
-package integracion.despegar;
+package apis;
+
+import integracion.despegar.Airport;
 
 public interface AirportProvider {
 	

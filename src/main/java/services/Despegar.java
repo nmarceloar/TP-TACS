@@ -2,7 +2,7 @@
  *
  */
 
-package integracion.despegar;
+package services;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,7 +23,17 @@ import org.joda.time.format.DateTimeFormatter;
 import com.fasterxml.jackson.datatype.joda.JodaMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.google.common.base.Preconditions;
+import integracion.despegar.Airport;
+import integracion.despegar.City;
+import integracion.despegar.IATACode;
+import integracion.despegar.TripOption;
+import integracion.despegar.TripOptions;
+import org.springframework.stereotype.Service;
+import apis.AirportProvider;
+import apis.TripOptionsProvider;
+import apis.CityProvider;
 
+@Service
 public class Despegar
     implements TripOptionsProvider, AirportProvider, CityProvider {
 	

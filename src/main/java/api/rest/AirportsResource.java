@@ -2,7 +2,7 @@
 package api.rest;
 
 import integracion.despegar.Airport;
-import integracion.despegar.AirportProvider;
+import apis.AirportProvider;
 import integracion.despegar.IATACode;
 
 import javax.inject.Inject;
