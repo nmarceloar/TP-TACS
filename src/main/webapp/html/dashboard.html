@@ -81,7 +81,7 @@
                     <div class="modal-body">
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <form role="form" id="frmNuevoViaje">
                                         <div class="form-group">
                                             <input type="text" id="ciudadOrigen" placeholder="¿Desde dónde salís?" class="box" />
@@ -126,15 +126,18 @@
                     <div class="modal-body">
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <form role="form" id="frmVuelos">
                                         <div id="lstVuelos">
-                                            <p class="list-group-item-text">Opciones para el vuelo de ida. Desde origen a destino, saliendo el día dd/mm/yyyy:</p>
-                                            <div class="list-group">
+                                            <p class="list-group-item-text">Estas son las opciones para tu viaje desde <span id="desc-origen"></span> hasta <span id="desc-destino"></span>:</p>
+                                            <div id="listaVuelos" class="list-group">
                                                 <div class="list-group-item" id="sinVuelos">No hay vuelos disponibles <span class="glyphicon glyphicon-thumbs-down"></span></div>
                                             </div>
                                         </div>
-                                        <div class="well well-sm" id="boxVueloIda">Vuelo de ida elegido <button type="button" class="btn btn-default btn-xs btn-float" id="cancelVueloIda"><span class="glyphicon glyphicon-remove"></span></button> </div>
+                                        <div id="cargandoVuelos">
+                                            <p class="list-group-item-text">Estamos buscando las mejores opciones para tu viaje <img src="../img/loading_0.gif" /></p>
+                                        </div>
+                                        <div class="well well-sm" id="boxVuelo">Vuelo de ida elegido <button type="button" class="btn btn-default btn-xs btn-float" id="cancelVueloIda"><span class="glyphicon glyphicon-remove"></span></button> </div>
                                     </form>
                                 </div>
                                 <div class="col-md-5">
@@ -164,7 +167,7 @@
                     <div class="modal-body">
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <p>Salís el 23/04/2015 desde Ezeiza, Buenos Aires a las 14:35 hs y llegás al Aeropuerto Internacional de la ciudad de Panamá a las 23:35 del mismo día</p>
                                 </div>
                                 <div class="col-md-5">

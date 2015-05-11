@@ -109,8 +109,8 @@ $(function () {
         minLength: 3,
         select: function (event, ui) {
             $("#fechaDesdeContainer").show();
-            //TODO levantar las coordenadas de la ciudad de origen y pasarselas a la siguiente función
             orgCity.setCityInfo(ui.item);
+            $("#desc-origen").html(orgCity.description);
             markerOrigen = setMapMarker(mapaNuevoViaje, orgCity.geolocation, orgCity.description);
             //me centro en el marker
             mapaNuevoViaje.setCenter(markerOrigen.getPosition());
@@ -151,8 +151,8 @@ $(function () {
         select: function (event, ui) {
     		//destino
             $("#fechaHastaContainer").show();
-            //TODO levantar las coordenadas de la ciudad de destino y pasarselas a la siguiente función
             dstCity.setCityInfo(ui.item);
+            $("#desc-destino").html(dstCity.description);
             markerDestino = setMapMarker(mapaNuevoViaje, dstCity.geolocation, dstCity.description);
             //hago zoom out para que se vean los dos puntos marcados
             setMapBounds(mapaNuevoViaje);
@@ -186,21 +186,13 @@ $(function () {
 
     //modal selección de vuelos ************************
     $("#lstVuevloVuelta").hide();
-    $("#boxVueloIda").hide();
-    $("#boxVueloVuelta").hide();
+    $("#boxVuelo").hide();
 
     $("#cancelVueloIda").click(function (event) {
         event.preventDefault();
         $("#boxVueloIda").hide();
         $("#lstVuevloVuelta").hide();
         $("#lstVuevloIda").show();
-    });
-    $("a[role=vueloVuelta]").click(function (event) {
-        event.preventDefault();
-        console.log($(this).attr("id"));
-        $("#lstVuevloVuelta").hide();
-        $("#boxVueloVuelta").show();
-        $("#btnViajar").show();
     });
     $("#cancelVueloVuelta").click(function (event) {
         event.preventDefault();
@@ -255,33 +247,18 @@ function formResetViaje() {
 function formResetVuelos() {
     $("#frmVuelos")[0].reset();
     $("#btnViajar").hide();
-    $("#sinVuelosIda").show();
-    $("#sinVuelosVuelta").show();
-    $("#lstVuevloIda").show();
-    $("#lstVuevloVuelta").hide();
-    $("#boxVueloIda").hide();
-    $("#boxVueloVuelta").hide();
+    $("#sinVuelos").hide();
+    $("#boxVuelo").hide();
+    $("#lstVuelos").hide();
+    $("#cargandoVuelos").show();
     opcionesViaje = Array();
 }
 
-// init de google maps
-function initialize() {
-    var mapProp = {
-        center: new google.maps.LatLng(51.508742, -0.120850),
-        zoom: 5,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    mapaNuevoViaje = new google.maps.Map(document.getElementById("googleMapViaje"), mapProp);
-    mapaVuelo = new google.maps.Map(document.getElementById("googleMapVuelo"), mapProp);
-    mapaReview = new google.maps.Map(document.getElementById("googleMapViajeReview"), mapProp);
-    
-    var markerBounds = new google.maps.LatLngBounds();
-}
 
 function initClickIda() {
     $("#lstVuevloVuelta").show();
     $("#lstVuevloIda").hide();
-    $("#boxVueloIda").show();
+    $("#boxVuelo").show();
     getVuelos();
     $("a[role=vueloVuelta]").click(initClickVuelta);
     //TODO levantar las coordenadas de la ciudad de origen y pasarselas a la siguiente función
@@ -307,11 +284,9 @@ function initClickVuelta() {
 }
 
 function getVuelos() {
-//TODO $.ajax a nuestra api
 	$.ajax({
         url: 'http://localhost:8080/api/trip-options',
         dataType: 'json',
-        //fromCity=LON&toCity=MIA&startDate=20/06/2015&endDate=30/06/2015
         data: {
         	'fromCity': currentTrip.fromCity.code,
         	'toCity': currentTrip.toCity.code,
@@ -321,37 +296,75 @@ function getVuelos() {
         success: function( data ) {
         	//autocomplete_processCities(data, response);
         	//console.log(data);
+        	$("#cargandoVuelos").hide();
     	    var datalen = data.length;
         	if(datalen > 0){
         		$("#sinVuelos").hide();
+        		$("#lstVuelos").show();
         	    $("#lstVuelos .list-group").html('');
-        	    /*for (i = 1; i <= 4; i++) {
-        	        $("#lstVuevlo" + sentido + " .list-group").append(templateVuelo(sentido, i, "aeropuerto origen", "aeropuerto destino", "12:45", "aerolinea"));
-        	    }*/
         	    opcionesViaje = data;
         	    var i = 0;
         	    var line;
-        	    for(i = 0; i < datalen; i++){
-        	    	line = 'Opcion ' + 1 + ' precio: ' + data[i].price_detail.total + ' ' + data[i].price_detail.currency;
-        	    	line += ' ' + data[i].inbound_choices.length + ' escalas de ida ';
-        	    	line += ' ' + data[i].outbound_choices.length + ' escalas de vuelt.';
-        	    	console.log(line);
-        	    	$("#lstVuelos .list-group").append(templateVuelo(i,data[i]))
+        	    //TODO limito yo???
+        	    if(datalen > 5){
+        	    	datalen = 5;
         	    }
+        	    for(i = 0; i < datalen; i++){
+        	    	$("#listaVuelos").append(templateVuelo(i,data[i]));
+        	    }
+        	    $("div[role=opciones-vuelo]").hide();
+    	    	$("a[role=ver-detalle-vuelo]").click(function(event){
+    	    		//$(this).parent().children("div[role=opciones-vuelo]").toggle();
+    	    		$("div[role=opciones-vuelo][vuelo="+$(this).attr("vuelo")+"]").toggle();
+    	    	});
+        	}
+        	else{
+        		$("#lstVuelos").show();
+        		$("#sinVuelos").show();
         	}
         }
     });
 }
 
-function templateVuelo(idVuelo, vuelo) {
-    /*return '<a href="#" class="list-group-item" role="vuelo" id="' + idVuelo + '">' +
-            '<h4 class="list-group-item-heading">Vuelo ' + idVuelo + ' de ' + aerolinea + ' de las ' + horarioSalida + ' horas.</h4>' +
-            '<p class="list-group-item-text">Saliendo desde el aeropuerto ' + aeropuertoOrigen + ' llegando al aeropuerto ' + aeropuertoDestion + ' a las ' + horarioLlegada + '</p>' +
-            '</a>';*/
-	return '<a href="#" class="list-group-item" role="vuelo" id="' + idVuelo + '">' +
-		    '<h4 class="list-group-item-heading">Vuelo ' + idVuelo + ' que sale ' + vuelo.price_detail.total+ vuelo.price_detail.currency + '</h4>' +
-		    '<p class="list-group-item-text">Escalas ida: ' + vuelo.inbound_choices.length + ', y vuelta: ' + vuelo.outbound_choices.length + '</p>' +
-		    '</a>';
+var Viaje = function(){
+	this.pricedetail = null;
+	this.ida = null;
+	this.vuelta = null;
+}
+
+function getTitleViaje(vuelo){
+	var canttramos = vuelo.segments.length;
+	return ' el ' + vuelo.segments[0].departure_datetime +
+		' y llegando el ' + vuelo.segments[(canttramos - 1)].arrival_datetime +
+		((canttramos > 1)? ' en ' + canttramos + ' escalas': '') + '.';
+}
+
+function getDescripcionViaje(viaje){
+	var canttramos = viaje.segments.length;
+	var desc = '<a href="#" class="list-group-item" role="opcion-vuelo">';
+	for(var i = 0; i < canttramos; i++){
+		desc += '<li alternativa="i">Vuelo ' + viaje.segments[i].flight_id + ' de ' + viaje.segments[i].airline + ' ' +
+			'saliendo de ' + viaje.segments[i].from + ' a las ' + viaje.segments[i].departure_datetime + ' ' +
+			'llegando a ' + viaje.segments[i].to + ' a las ' + viaje.segments[i].arrival_datetime + '.</li>';
+	}
+	return desc + '</a>';
+}
+
+function templateVuelo(posData, vuelo) {
+	var i, j, titleida, titlevuelta, descripcionida, descripcionvuelta;
+	for(i = 0; i < vuelo.outbound_choices.length; i++){
+		//titleida = 'Saliendo ' + getTitleViaje(vuelo.outbound_choices[i]);
+		descripcionida = getDescripcionViaje(vuelo.outbound_choices[i]);
+	}
+	for(j = 0; j < vuelo.inbound_choices.length; j++){
+		//titlevuelta = 'Volviendo ' + getTitleViaje(vuelo.inbound_choices[j]);
+		descripcionvuelta = getDescripcionViaje(vuelo.inbound_choices[j]);
+	}
+	return '<div class="list-group-item" role="vuelo" vuelo="' + posData + '">' +
+		    '<a href="#" role="ver-detalle-vuelo" vuelo="' + posData + '"><h4 class="list-group-item-heading">Volá por ' + vuelo.price_detail.total + vuelo.price_detail.currency + '</h4></a>' +
+		    '<div class="list-group" role="opciones-vuelo" vuelo="' + posData + '">' + descripcionida + '</div>' +
+		    '<div class="list-group" role="opciones-vuelo" vuelo="' + posData + '">' + descripcionvuelta + '</div>' +
+		    '</div>';
 }
 
 function initClickDetalle(){
@@ -369,6 +382,7 @@ function getDateFromInput(inputId){
 	return new Date(date.substring(6,9),date.substring(3,4)+1,date.substring(0,1));
 }
 
+//helpers autocomplete ******************************************************************
 function autocomplete_processCities(data, response){
 	if(data.length == 0){
 		data.push({
@@ -400,11 +414,25 @@ var autocomplete_renderItemCiudades = function (ul, item) {
         .appendTo(ul);
     }
 };
-
+//*************************************************************************************
 
 /*
  * gmaps functions *******************************************************************
  */
+//init de google maps
+function initialize() {
+ var mapProp = {
+     center: new google.maps.LatLng(51.508742, -0.120850),
+     zoom: 5,
+     mapTypeId: google.maps.MapTypeId.ROADMAP
+ };
+ mapaNuevoViaje = new google.maps.Map(document.getElementById("googleMapViaje"), mapProp);
+ mapaVuelo = new google.maps.Map(document.getElementById("googleMapVuelo"), mapProp);
+ mapaReview = new google.maps.Map(document.getElementById("googleMapViajeReview"), mapProp);
+ 
+ var markerBounds = new google.maps.LatLngBounds();
+}
+
 function setMapMarker(map, geolocation, description){
 	var marker = new google.maps.Marker({
 		position: new google.maps.LatLng(geolocation.latitude, geolocation.longitude),
