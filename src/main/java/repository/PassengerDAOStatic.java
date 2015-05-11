@@ -30,7 +30,7 @@ public class PassengerDAOStatic implements PassengerDAO {
         Passenger pasajero7 = new Passenger("pasajero7", "apellido7", 777777, new ArrayList());
 
         pasajero1.agregarAmigo(pasajero3);
-        pasajero1.setRecomendaciones(Arrays.asList(1));
+        pasajero1.setRecommendations(Arrays.asList(1));
         pasajero1.agregarAmigo(pasajero5);
         pasajero2.agregarAmigosPorPasajeros(Arrays.asList(pasajero4, pasajero6, pasajero7));
 
@@ -68,7 +68,7 @@ public class PassengerDAOStatic implements PassengerDAO {
         List<Passenger> amigos = new ArrayList();
         for (Passenger psj : getListaPasajeros()) {
             if (psj.getIdUser() == id) {
-                for (Integer idPas : psj.getAmigos()) {
+                for (Integer idPas : psj.getFriends()) {
                     amigos.add(getPasajeroById(idPas));
                 }
                 return amigos;
@@ -81,7 +81,7 @@ public class PassengerDAOStatic implements PassengerDAO {
     public List<Integer> getIdsAmigos(int id) {
         for (Passenger psj : getListaPasajeros()) {
             if (psj.getIdUser() == id) {
-                return psj.getAmigos();
+                return psj.getFriends();
             }
         }
         return null;
@@ -91,7 +91,7 @@ public class PassengerDAOStatic implements PassengerDAO {
     public List<Integer> getRecomendacionesDeUsuario(int pas) {
          for (Passenger psj : getListaPasajeros()) {
             if (psj.getIdUser() == pas) {
-                return psj.getRecomendaciones();
+                return psj.getRecommendations();
             }
         }
         return null;

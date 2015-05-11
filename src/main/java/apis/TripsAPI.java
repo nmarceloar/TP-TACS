@@ -6,7 +6,7 @@
 package apis;
 
 import java.util.List;
-import model.Viaje;
+import model.Trip;
 
 /**
  *
@@ -14,8 +14,8 @@ import model.Viaje;
  */
 public interface TripsAPI {
     
-    public List<Viaje> getViajesDePasajero(int id);
+    public List<Trip> getTripsOfPassenger(int id);
     
-    public void guardarViaje(Viaje v);
+    public void saveTrip(Trip v);
     
 }

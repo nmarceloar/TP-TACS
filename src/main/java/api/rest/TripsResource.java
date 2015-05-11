@@ -16,7 +16,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import model.Viaje;
+import model.Trip;
 
 /**
  *
@@ -36,20 +36,20 @@ public class TripsResource {
     @GET
     @Path("{id}")
     @Produces("application/json")
-    public List<Viaje> getViajesPorPasajero(@PathParam("id") String id) {
-        return vjSrv.getViajesDePasajero(Integer.parseInt(id));
+    public List<Trip> getViajesPorPasajero(@PathParam("id") String id) {
+        return vjSrv.getTripsOfPassenger(Integer.parseInt(id));
     }
 
     @POST
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response guardarViaje(Viaje v) {
-        vjSrv.guardarViaje(v);
+    public Response guardarViaje(Trip v) {
+        vjSrv.saveTrip(v);
         String result = "Guardado: " + v.getIdViaje()
-                + " " + v.getItinerario().get(0).getOrigen().getCiudad()
+                + " " + v.getItinerario().get(0).getOrigen().getCity()
                 + " - "
                 + v.getItinerario().get(v.getItinerario().size() - 1)
-                .getDestino().getCiudad();
+                .getDestino().getCity();
 
         return Response.status(201)
                 .entity(result).build();

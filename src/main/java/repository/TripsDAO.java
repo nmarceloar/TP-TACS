@@ -6,7 +6,7 @@
 package repository;
 
 import java.util.List;
-import model.Viaje;
+import model.Trip;
 
 /**
  *
@@ -14,11 +14,11 @@ import model.Viaje;
  */
 public interface TripsDAO {
     
-    public void guardarViaje(Viaje v);
+    public void guardarViaje(Trip v);
     
-    public Viaje buscarViajePorId(int id);
+    public Trip buscarViajePorId(int id);
     
-    public List<Viaje> getViajesDePasajero(int id);
+    public List<Trip> getViajesDePasajero(int id);
     
 //    public void asignarRecomendacion(Recomendacion rec, Pasajero p);
     

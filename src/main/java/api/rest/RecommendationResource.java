@@ -34,7 +34,7 @@ public class RecommendationResource {
     @Path("{userId}")
     @Produces("application/json")
     public List<Recommendation> getRecomendacionesDelUsuario(@PathParam("userId") String id){
-        return srvRecom.getRecomendacionesDeUsario(Integer.parseInt(id));
+        return srvRecom.getRecommendationsOfUser(Integer.parseInt(id));
     }
     
 }

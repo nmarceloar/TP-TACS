@@ -11,8 +11,8 @@ import java.util.Date;
 import java.util.List;
 import model.Aeropuerto;
 import model.Trayecto;
-import model.Viaje;
-import model.Vuelo;
+import model.Trip;
+import model.Flight;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -22,29 +22,29 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class TripsDAOStatic implements TripsDAO {
 
-    private final List<Viaje> listaViajes;
+    private final List<Trip> listaViajes;
 
     public TripsDAOStatic() {
         Trayecto tray1 = new Trayecto(new Aeropuerto("BUE", "Argentina", "Buenos Aires"),
                 new Aeropuerto("GRU", "Brasil", "Sao Paulo"),
-                new Vuelo("LAN", "L01", "Airbus", new Date(2015, 1, 2), new Date(2015, 1, 30)));
-        Viaje viaje1 = new Viaje(0, Arrays.asList(tray1));
+                new Flight("LAN", "L01", "Airbus", new Date(2015, 1, 2), new Date(2015, 1, 30)));
+        Trip viaje1 = new Trip(0, Arrays.asList(tray1));
         listaViajes = Arrays.asList(viaje1);
     }
 
-    public List<Viaje> getListaViajes() {
+    public List<Trip> getListaViajes() {
         return listaViajes;
     }
 
     @Override
-    public void guardarViaje(Viaje v) {
+    public void guardarViaje(Trip v) {
         getListaViajes().add(v);
     }
 
     @Override
-    public Viaje buscarViajePorId(int id) {
-        Viaje buscado = null;
-        for (Viaje v : getListaViajes()) {
+    public Trip buscarViajePorId(int id) {
+        Trip buscado = null;
+        for (Trip v : getListaViajes()) {
             if (v.getIdViaje() == id) {
                 buscado = v;
             }
@@ -53,9 +53,9 @@ public class TripsDAOStatic implements TripsDAO {
     }
 
     @Override
-    public List<Viaje> getViajesDePasajero(int id) {
-        List<Viaje> lista = new ArrayList<>();
-        for (Viaje v : getListaViajes()) {
+    public List<Trip> getViajesDePasajero(int id) {
+        List<Trip> lista = new ArrayList<>();
+        for (Trip v : getListaViajes()) {
             if (v.getIdViajante() == id) {
                 lista.add(v);
             }

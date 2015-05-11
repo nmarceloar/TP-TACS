@@ -15,12 +15,12 @@ import model.Passenger;
 
 public interface PassengerAPI {
     
-    public List<Passenger> getListado();
+    public List<Passenger> getListOfPassengers();
     
-    public void crearPassenger(Passenger p);
+    public void createPassenger(Passenger p);
     
-    public List<Passenger> getAmigosDePassenger(int id);
+    public List<Passenger> getFriendsOfPassenger(int id);
     
-    public Passenger getPassengerPorId(int id);
+    public Passenger getPassengerById(int id);
     
 }

@@ -14,7 +14,7 @@ import java.util.List;
 import model.Passenger;
 import model.Recommendation;
 import org.springframework.stereotype.Service;
-import model.Viaje;
+import model.Trip;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import repository.PassengerDAO;
@@ -41,27 +41,27 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     }
 
     @Override
-    public List<Passenger> getListado() {
+    public List<Passenger> getListOfPassengers() {
         return psjDao.getTodosLosPasajeros();
     }
 
     @Override
-    public void crearPassenger(Passenger p) {
+    public void createPassenger(Passenger p) {
         psjDao.guardarPasajero(p);
     }
 
     @Override
-    public List<Passenger> getAmigosDePassenger(int idPsj) {
+    public List<Passenger> getFriendsOfPassenger(int idPsj) {
         return psjDao.getAmigos(idPsj);
     }
 
     @Override
-    public Passenger getPassengerPorId(int id) {
+    public Passenger getPassengerById(int id) {
         return psjDao.getPasajeroById(id);
     }
 
     @Override
-    public List<Recommendation> getRecomendacionesDeUsario(int id) {
+    public List<Recommendation> getRecommendationsOfUser(int id) {
         return recDao.getRecomendacionesPorId(
                 psjDao.getRecomendacionesDeUsuario(id));
     }
@@ -70,18 +70,18 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     public String getRecommendationToString(int id) {
         Recommendation rec = recDao.getRecomendacionPorId(id);
         Passenger pass = psjDao.getPasajeroById(rec.getIdUsuarioRecom());
-        return pass.getNombre() + " " + pass.getApellido()
+        return pass.getName() + " " + pass.getSurname()
                 + " te recomienda viajar de " + rec.getCiudadOrig()
                 + " a " + rec.getCiudadDest();
     }
 
     @Override
-    public List<Viaje> getViajesDePasajero(int id) {
+    public List<Trip> getTripsOfPassenger(int id) {
         return viajeDao.getViajesDePasajero(id);
     }
 
     @Override
-    public void guardarViaje(Viaje v) {
+    public void saveTrip(Trip v) {
         viajeDao.guardarViaje(v);
     }
 

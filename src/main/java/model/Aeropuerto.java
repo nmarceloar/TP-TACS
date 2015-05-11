@@ -6,46 +6,48 @@ import java.io.Serializable;
 public class Aeropuerto implements Serializable {
 
     @JsonProperty("codigo")
-    private String codigo;
+    private String code;
 
     @JsonProperty("pais")
-    private String pais;
+    private String country;
 
     @JsonProperty("ciudad")
-    private String ciudad;
+    private String city;
 
     public Aeropuerto() {
 
     }
 
     public Aeropuerto(String codigo, String pais, String ciudad) {
-        this.codigo = codigo;
-        this.pais = pais;
-        this.ciudad = ciudad;
+        this.code = codigo;
+        this.country = pais;
+        this.city = ciudad;
     }
 
-    public String getCodigo() {
-        return codigo;
+    public String getCode() {
+        return code;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getPais() {
-        return pais;
+    public String getCountry() {
+        return country;
     }
 
-    public void setPais(String pais) {
-        this.pais = pais;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
-    public String getCiudad() {
-        return ciudad;
+    public String getCity() {
+        return city;
     }
 
-    public void setCiudad(String ciudad) {
-        this.ciudad = ciudad;
+    public void setCity(String city) {
+        this.city = city;
     }
 
+    
+    
 }

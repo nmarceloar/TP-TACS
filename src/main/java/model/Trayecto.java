@@ -13,13 +13,13 @@ public class Trayecto implements Serializable {
     private Aeropuerto destino;
 
     @JsonProperty("vuelo")
-    private Vuelo infoVuelo;
+    private Flight infoVuelo;
 
     public Trayecto() {
 
     }
 
-    public Trayecto(Aeropuerto origen, Aeropuerto destino, Vuelo infoVuelo) {
+    public Trayecto(Aeropuerto origen, Aeropuerto destino, Flight infoVuelo) {
         this.origen = origen;
         this.destino = destino;
         this.infoVuelo = infoVuelo;
@@ -41,22 +41,22 @@ public class Trayecto implements Serializable {
         this.destino = destino;
     }
 
-    public Vuelo getInfoVuelo() {
+    public Flight getInfoVuelo() {
         return infoVuelo;
     }
 
-    public void setInfoVuelo(Vuelo infoVuelo) {
+    public void setInfoVuelo(Flight infoVuelo) {
         this.infoVuelo = infoVuelo;
     }
 
     public Date getFechaSalida() {
         return getInfoVuelo()
-                .getFechaSalida();
+                .getDepartureDate();
     }
 
     public Date getFechaArribo() {
         return getInfoVuelo()
-                .getFechaArribo();
+                .getArrivalDate();
     }
 
 }

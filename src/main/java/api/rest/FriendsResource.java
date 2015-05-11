@@ -36,7 +36,7 @@ public class FriendsResource {
     @Path("{id}")
     @Produces("application/json")
     public List<Passenger> getAmigosDeUsuario(@PathParam("id") String id) {
-        return pjSrv.getAmigosDePassenger(Integer.parseInt(id));
+        return pjSrv.getFriendsOfPassenger(Integer.parseInt(id));
     }
     
 }

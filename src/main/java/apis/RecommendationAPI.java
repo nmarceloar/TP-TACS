@@ -14,7 +14,7 @@ import model.Recommendation;
  */
 public interface RecommendationAPI {
     
-    public List<Recommendation> getRecomendacionesDeUsario(int id);
+    public List<Recommendation> getRecommendationsOfUser(int id);
     
     public String getRecommendationToString(int id);
 }

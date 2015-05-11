@@ -36,14 +36,14 @@ public class PassengerResource {
     @GET
     @Produces("application/json")
     public List<Passenger> getPasajeros() {
-        return pjSrv.getListado();
+        return pjSrv.getListOfPassengers();
     }
     
     @GET
     @Path("{userId}")
     @Produces("application/json")
     public Passenger getPasajeroPorId(@PathParam("userId") String id){
-        return pjSrv.getPassengerPorId(Integer.parseInt(id));
+        return pjSrv.getPassengerById(Integer.parseInt(id));
     }
 
     /**
@@ -56,7 +56,7 @@ public class PassengerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response guardarPasajero(Passenger psj) {
-        pjSrv.crearPassenger(psj);
+        pjSrv.createPassenger(psj);
         return Response.status(201)
                 .entity("Creado nuevo pasajero " + psj.getIdUser())
                 .build();
