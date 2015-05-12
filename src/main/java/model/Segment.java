@@ -31,6 +31,9 @@ public class Segment {
     @JsonProperty("flight_id")
     private String flightId;
 
+    public Segment(){
+    }
+    
     /**
      * Constructor con parametros
      *
@@ -52,12 +55,13 @@ public class Segment {
         this.airline = airline;
         this.flightId = flightId;
     }
+    
 
     /**
      *
      * @return The from
      */
-    @JsonProperty("from")
+//    @JsonProperty("from")
     public String getFrom() {
 
         return from;
@@ -67,7 +71,7 @@ public class Segment {
      *
      * @param from The from
      */
-    @JsonProperty("from")
+//    @JsonProperty("from")
     public void setFrom(String from) {
 
         this.from = from;
@@ -77,7 +81,7 @@ public class Segment {
      *
      * @return The to
      */
-    @JsonProperty("to")
+//    @JsonProperty("to")
     public String getTo() {
 
         return to;
@@ -87,7 +91,7 @@ public class Segment {
      *
      * @param to The to
      */
-    @JsonProperty("to")
+//    @JsonProperty("to")
     public void setTo(String to) {
 
         this.to = to;
@@ -97,7 +101,7 @@ public class Segment {
      *
      * @return The departureDatetime
      */
-    @JsonProperty("departure_datetime")
+//    @JsonProperty("departure_datetime")
     public String getDepartureDatetime() {
 
         return departureDatetime;
@@ -107,7 +111,7 @@ public class Segment {
      *
      * @param departureDatetime The departure_datetime
      */
-    @JsonProperty("departure_datetime")
+//    @JsonProperty("departure_datetime")
     public void setDepartureDatetime(String departureDatetime) {
 
         this.departureDatetime = departureDatetime;
@@ -117,7 +121,7 @@ public class Segment {
      *
      * @return The arrivalDatetime
      */
-    @JsonProperty("arrival_datetime")
+//    @JsonProperty("arrival_datetime")
     public String getArrivalDatetime() {
 
         return arrivalDatetime;
@@ -127,7 +131,7 @@ public class Segment {
      *
      * @param arrivalDatetime The arrival_datetime
      */
-    @JsonProperty("arrival_datetime")
+//    @JsonProperty("arrival_datetime")
     public void setArrivalDatetime(String arrivalDatetime) {
 
         this.arrivalDatetime = arrivalDatetime;
@@ -137,7 +141,7 @@ public class Segment {
      *
      * @return The duration
      */
-    @JsonProperty("duration")
+//    @JsonProperty("duration")
     public String getDuration() {
 
         return duration;
@@ -147,7 +151,7 @@ public class Segment {
      *
      * @param duration The duration
      */
-    @JsonProperty("duration")
+//    @JsonProperty("duration")
     public void setDuration(String duration) {
 
         this.duration = duration;
@@ -157,7 +161,7 @@ public class Segment {
      *
      * @return The airline
      */
-    @JsonProperty("airline")
+//    @JsonProperty("airline")
     public String getAirline() {
 
         return airline;
@@ -167,7 +171,7 @@ public class Segment {
      *
      * @param airline The airline
      */
-    @JsonProperty("airline")
+//    @JsonProperty("airline")
     public void setAirline(String airline) {
 
         this.airline = airline;
@@ -177,7 +181,7 @@ public class Segment {
      *
      * @return The flightId
      */
-    @JsonProperty("flight_id")
+//    @JsonProperty("flight_id")
     public String getFlightId() {
 
         return flightId;
@@ -187,7 +191,7 @@ public class Segment {
      *
      * @param flightId The flight_id
      */
-    @JsonProperty("flight_id")
+//    @JsonProperty("flight_id")
     public void setFlightId(String flightId) {
 
         this.flightId = flightId;

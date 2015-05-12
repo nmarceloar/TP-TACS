@@ -28,7 +28,8 @@ public class TripsDAOStatic implements TripsDAO {
                 DateTime.now().plusDays(30).toString(),
                 Integer.toString(25), "LAN", "A01");
         Trip viaje1 = new Trip(0, Arrays.asList(seg1));
-        listaViajes = Arrays.asList(viaje1);
+        listaViajes = new ArrayList<>();
+        listaViajes.add(viaje1);
     }
     
     public List<Trip> getTripList() {
@@ -37,7 +38,7 @@ public class TripsDAOStatic implements TripsDAO {
     
     @Override
     public void saveTrip(Trip v) {
-        getTripList().add(v);
+        listaViajes.add(v);
     }
     
     @Override
