@@ -94,6 +94,8 @@ public interface AirportSoap {
 	public
 	    String
 	    getAirportInformationByISOCountryCode(
-	        @WebParam(name = "CountryAbbrviation", targetNamespace = "http://www.webserviceX.NET") String countryAbbrviation);
+
+	       @WebParam(name = "CountryAbbrviation", targetNamespace = "http://www.webserviceX.NET") String countryAbbrviation);
+
 	
 }

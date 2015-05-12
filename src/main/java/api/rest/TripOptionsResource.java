@@ -1,8 +1,11 @@
 
 package api.rest;
 
+
+import integracion.despegar.TripOption;
+import apis.TripOptionsProvider;
 import integracion.despegar.TripOptions;
-import integracion.despegar.TripOptionsProvider;
+
 
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;

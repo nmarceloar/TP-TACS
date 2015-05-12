@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class TripOptions {
 	
 	private List<TripOption> items;
+        private Paging paging;
 	
 	private Paging paging;
 	
@@ -30,6 +31,16 @@ public class TripOptions {
 	
 		this.items = items;
 		
+	}
+        
+        public Paging getPaging() {
+	
+		return this.paging;
+	}
+	
+	public void setPaging(Paging paging) {
+	
+		this.paging = paging;
 	}
 	
 	public Paging getPaging() {

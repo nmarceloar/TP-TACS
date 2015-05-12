@@ -1,6 +1,7 @@
 
-package integracion.despegar;
+package apis;
 
+import integracion.despegar.City;
 import java.util.List;
 
 public interface CityProvider {
