@@ -84,9 +84,9 @@ public class Vuelo {
 	@Override
 	public String toString() {
 	
-		return "Vuelo " + this.getNroVuelo() + " de " + this.getAerolinea()
-		    + " - Desde: " + this.getFechaSalida() + " hasta "
-		    + this.getFechaArribo();
+		return "Vuelo " + this.getNroVuelo() + " de " + this.getAerolinea() +
+		    " - Desde: " + this.getFechaSalida() + " hasta " +
+		    this.getFechaArribo();
 	}
 	
 }

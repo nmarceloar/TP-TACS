@@ -5,13 +5,17 @@ import integracion.despegar.Airport;
 import integracion.despegar.AirportProvider;
 import integracion.despegar.IATACode;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 
 @Path("/airports")
 public class AirportsResource {
@@ -27,22 +31,19 @@ public class AirportsResource {
 	
 	@GET
 	@Produces("application/json")
-	public Airport getAirportByIATACode(@NotNull
-	@QueryParam("code")
-	final String iataCode) {
+	public
+	    List<Airport>
+	    getAirportByIATACode(
+	        @NotNull @QueryParam("code") @Size(min = 1) final List<String> iataCodes)
+	        throws Exception {
 	
-		try {
+		if (iataCodes == null || iataCodes.isEmpty()) {
 			
-			IATACode.checkValid(iataCode);
-			
-		} catch (RuntimeException ex) {
-			
-			throw new BadRequestException(
-			    "Error en el formato del codigo. ---> [code = ]" + iataCode);
+			throw new BadRequestException("Error en el formato de la consulta");
 			
 		}
 		
-		return this.provider.findByIataCode(iataCode);
+		return this.provider.findByIataCode(iataCodes);
 		
 	}
 	

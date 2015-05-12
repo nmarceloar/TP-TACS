@@ -39,8 +39,7 @@ public class Pasajero {
 	
 	public void aceptarRecomendacion(final Recomendacion rec) {
 	
-		this.getRecomendaciones()
-		    .add(rec);
+		this.getRecomendaciones().add(rec);
 	}
 	
 	public boolean esAmigo(final Pasajero pj) {

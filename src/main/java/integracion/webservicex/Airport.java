@@ -16,10 +16,9 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  *
  */
-@WebServiceClient(name = "airport",
-    targetNamespace = "http://www.webserviceX.NET",
-    wsdlLocation = "http://www.webservicex.com/airport.asmx?wsdl")
-public class Airport extends Service {
+@WebServiceClient(name = "airport", targetNamespace = "http://www.webserviceX.NET", wsdlLocation = "http://www.webservicex.com/airport.asmx?wsdl")
+public class Airport
+    extends Service {
 	
 	private final static URL AIRPORT_WSDL_LOCATION;
 	

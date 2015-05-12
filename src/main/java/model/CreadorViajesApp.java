@@ -15,8 +15,7 @@ public class CreadorViajesApp {
 	public static List<Viaje> viajesRegistrados;
 	
 	// Metodo que instancia y retorna un viaje
-	public static Viaje crearViaje(
-	    final Pasajero pj,
+	public static Viaje crearViaje(final Pasajero pj,
 	    final List<Trayecto> trayectos) {
 	
 		final Viaje viaje = new Viaje(pj, trayectos);
@@ -28,8 +27,7 @@ public class CreadorViajesApp {
 	
 		final List<Viaje> viajes = new ArrayList<>();
 		for (final Viaje v : CreadorViajesApp.getViajesRegistrados()) {
-			if (v.getViajante()
-			    .getIdUser() == idUser) {
+			if (v.getViajante().getIdUser() == idUser) {
 				viajes.add(v);
 			}
 		}
@@ -43,8 +41,7 @@ public class CreadorViajesApp {
 	}
 	
 	// Metodo para registrar un usuario. Retorna su id
-	public static int registrarUsuario(
-	    final String nombre,
+	public static int registrarUsuario(final String nombre,
 	    final String apellido) {
 	
 		final Pasajero pj = new Pasajero();
@@ -56,12 +53,10 @@ public class CreadorViajesApp {
 	// Metodo para grabar en la lista de persistencia un viaje instanciado
 	public static void registrarViaje(final Viaje viaje) {
 	
-		CreadorViajesApp.getViajesRegistrados()
-		    .add(viaje);
+		CreadorViajesApp.getViajesRegistrados().add(viaje);
 	}
 	
-	public static
-	    void
+	public static void
 	    setViajesRegistrados(final List<Viaje> viajesRegistrados) {
 	
 		CreadorViajesApp.viajesRegistrados = viajesRegistrados;
@@ -72,8 +67,7 @@ public class CreadorViajesApp {
 	
 		final List<Viaje> viajesAmigo = new ArrayList<>();
 		for (final Viaje v : viajesAmigo) {
-			if (v.getViajante()
-			    .esAmigo(passenger)) {
+			if (v.getViajante().esAmigo(passenger)) {
 				viajesAmigo.add(v);
 			}
 		}

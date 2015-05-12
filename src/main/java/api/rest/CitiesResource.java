@@ -26,9 +26,8 @@ public class CitiesResource {
 	
 	@GET
 	@Produces("application/json")
-	public List<City> getByCityName(@NotNull
-	@QueryParam("name")
-	final String name) {
+	public List<City> getByCityName(
+	    @NotNull @QueryParam("name") final String name) {
 	
 		return this.provider.findByName(name);
 		

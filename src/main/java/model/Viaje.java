@@ -22,8 +22,7 @@ public class Viaje {
 	
 	public void agregarTrayecto(final Trayecto tray) {
 	
-		this.getItinerario()
-		    .add(tray);
+		this.getItinerario().add(tray);
 	}
 	
 	public Date getFechaArriboViaje() {
@@ -35,9 +34,7 @@ public class Viaje {
 	
 	public Date getFechaSalidaViaje() {
 	
-		return this.getItinerario()
-		    .get(0)
-		    .getFechaSalida();
+		return this.getItinerario().get(0).getFechaSalida();
 	}
 	
 	public List<Trayecto> getItinerario() {

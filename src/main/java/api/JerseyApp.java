@@ -14,7 +14,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 
-public class JerseyApp extends ResourceConfig {
+public class JerseyApp
+    extends ResourceConfig {
 	
 	private static final Logger LOGGER =
 	    Logger.getLogger(JerseyApp.class.getCanonicalName());
@@ -30,12 +31,9 @@ public class JerseyApp extends ResourceConfig {
 			@Override
 			protected void configure() {
 			
-				this.bind(Despegar.class)
-				    .to(TripOptionsProvider.class);
-				this.bind(Despegar.class)
-				    .to(AirportProvider.class);
-				this.bind(Despegar.class)
-				    .to(CityProvider.class);
+				this.bind(Despegar.class).to(TripOptionsProvider.class);
+				this.bind(Despegar.class).to(AirportProvider.class);
+				this.bind(Despegar.class).to(CityProvider.class);
 				
 			}
 		});

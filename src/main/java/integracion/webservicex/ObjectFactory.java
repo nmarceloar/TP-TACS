@@ -36,8 +36,7 @@ public class ObjectFactory {
 	 * Create an instance of {@link GetAirportInformationByAirportCode }
 	 * 
 	 */
-	public
-	    GetAirportInformationByAirportCode
+	public GetAirportInformationByAirportCode
 	    createGetAirportInformationByAirportCode() {
 	
 		return new GetAirportInformationByAirportCode();
@@ -47,8 +46,7 @@ public class ObjectFactory {
 	 * Create an instance of {@link GetAirportInformationByAirportCodeResponse }
 	 * 
 	 */
-	public
-	    GetAirportInformationByAirportCodeResponse
+	public GetAirportInformationByAirportCodeResponse
 	    createGetAirportInformationByAirportCodeResponse() {
 	
 		return new GetAirportInformationByAirportCodeResponse();
@@ -58,8 +56,7 @@ public class ObjectFactory {
 	 * Create an instance of {@link GetAirportInformationByCityOrAirportName }
 	 * 
 	 */
-	public
-	    GetAirportInformationByCityOrAirportName
+	public GetAirportInformationByCityOrAirportName
 	    createGetAirportInformationByCityOrAirportName() {
 	
 		return new GetAirportInformationByCityOrAirportName();
@@ -70,8 +67,7 @@ public class ObjectFactory {
 	 * {@link GetAirportInformationByCityOrAirportNameResponse }
 	 * 
 	 */
-	public
-	    GetAirportInformationByCityOrAirportNameResponse
+	public GetAirportInformationByCityOrAirportNameResponse
 	    createGetAirportInformationByCityOrAirportNameResponse() {
 	
 		return new GetAirportInformationByCityOrAirportNameResponse();
@@ -81,8 +77,7 @@ public class ObjectFactory {
 	 * Create an instance of {@link GetAirportInformationByCountry }
 	 * 
 	 */
-	public
-	    GetAirportInformationByCountry
+	public GetAirportInformationByCountry
 	    createGetAirportInformationByCountry() {
 	
 		return new GetAirportInformationByCountry();
@@ -92,8 +87,7 @@ public class ObjectFactory {
 	 * Create an instance of {@link GetAirportInformationByCountryResponse }
 	 * 
 	 */
-	public
-	    GetAirportInformationByCountryResponse
+	public GetAirportInformationByCountryResponse
 	    createGetAirportInformationByCountryResponse() {
 	
 		return new GetAirportInformationByCountryResponse();
@@ -103,8 +97,7 @@ public class ObjectFactory {
 	 * Create an instance of {@link GetAirportInformationByISOCountryCode }
 	 * 
 	 */
-	public
-	    GetAirportInformationByISOCountryCode
+	public GetAirportInformationByISOCountryCode
 	    createGetAirportInformationByISOCountryCode() {
 	
 		return new GetAirportInformationByISOCountryCode();
@@ -115,8 +108,7 @@ public class ObjectFactory {
 	 * {@link GetAirportInformationByISOCountryCodeResponse }
 	 * 
 	 */
-	public
-	    GetAirportInformationByISOCountryCodeResponse
+	public GetAirportInformationByISOCountryCodeResponse
 	    createGetAirportInformationByISOCountryCodeResponse() {
 	
 		return new GetAirportInformationByISOCountryCodeResponse();

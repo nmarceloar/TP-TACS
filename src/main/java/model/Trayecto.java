@@ -31,14 +31,12 @@ public class Trayecto {
 	
 	public Date getFechaArribo() {
 	
-		return this.getInfoVuelo()
-		    .getFechaArribo();
+		return this.getInfoVuelo().getFechaArribo();
 	}
 	
 	public Date getFechaSalida() {
 	
-		return this.getInfoVuelo()
-		    .getFechaSalida();
+		return this.getInfoVuelo().getFechaSalida();
 	}
 	
 	public Vuelo getInfoVuelo() {

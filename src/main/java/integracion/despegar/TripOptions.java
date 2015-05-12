@@ -11,6 +11,8 @@ public class TripOptions {
 	
 	private List<TripOption> items;
 	
+	private Paging paging;
+	
 	public TripOptions() {
 	
 		super();
@@ -28,6 +30,16 @@ public class TripOptions {
 	
 		this.items = items;
 		
+	}
+	
+	public Paging getPaging() {
+	
+		return this.paging;
+	}
+	
+	public void setPaging(Paging paging) {
+	
+		this.paging = paging;
 	}
 	
 }

@@ -1,8 +1,11 @@
 
 package integracion.despegar;
 
+import java.util.List;
+
 public interface AirportProvider {
 	
-	public Airport findByIataCode(final String Code);
+	public List<Airport> findByIataCode(final List<String> iataCodes)
+	    throws Exception;
 	
 }
