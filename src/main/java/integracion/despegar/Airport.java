@@ -18,8 +18,7 @@ public class Airport {
 	
 	public boolean codeEqualsTo(final String iataCode) {
 	
-		return (iataCode != null) && this.getCode()
-		    .equalsIgnoreCase(iataCode);
+		return (iataCode != null) && this.getCode().equalsIgnoreCase(iataCode);
 		
 	}
 	

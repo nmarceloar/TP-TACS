@@ -10,13 +10,11 @@ import api.rest.TripsResource;
 
 import java.util.logging.Logger;
 
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import org.glassfish.jersey.jackson.JacksonFeature;
 
 public class JerseyApp extends ResourceConfig {
 
