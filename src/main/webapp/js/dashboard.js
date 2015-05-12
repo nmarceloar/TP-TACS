@@ -176,36 +176,50 @@ $(function () {
      */
 
 
+    /**
+     * Lleno mis viajes anteriores
+     */
     $.ajax({
         url: 'http://localhost:8080/api/trips/1',
         dataType: 'json',
-//        data: {
-//            'name': request.term
-//        },
         success: function (data) {
             $("#itemSinViaje").hide();
-            for (var i = 0; i < data.length; i++) {
-                $("#listViajes").append(getViajesPropiosHTML(i,data[i]));
-                $("div[id=" + i + "] a[role=linkViaje]").click(initClickDetalle);
-            }
+            $.each(data, function (index, value) {
+                $("#listViajes").append(getViajesPropiosHTML(value));
+            });
         }
-    });
+    }
+    );
 
 
+    /**
+     * LLeno los viajes de los amigos
+     */
     $.ajax({
-        url: 'http://localhost:8080/trips/friends/1',
+        url: 'http://localhost:8080/api/trips/friends/1',
         dataType: 'json',
-//        data: {
-//            'name': request.term
-//        },
         success: function (data) {
-            for (var i = 0; i < data.length; i++) {
-                $("#itemAmigo").append("<div class=\"list-group-item\" id=\"itemAmigo\"> <h5> Hola </h5> </div>");
-                $("div[id=" + i + "] a[role=linkViaje]").click(initClickDetalle);
-            }
+            $.each(data, function (index, value) {
+                $("#listViajesAmigos").append(getViajesDeAmigosHTML(value));
+                $("div a[role=linkViaje]").click(initClickDetalle);
+            });
         }
     });
 
+    /**
+     * Lleno con las recomendaciones que me hicieron
+     */
+    $.ajax({
+        url: 'http://localhost:8080/api/recommendations/1',
+        dataType: 'json',
+        success: function (data) {
+            $.each(data, function (index, value) {
+                $("#listRecomendaciones").append(getRecomendacionesDeAmigosHTML(value));
+            });
+            $("#listRecomendaciones").append("<li class=\"divider\"></li>");
+            $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
+        }
+    });
 
 
 //#############################################################
@@ -287,20 +301,60 @@ function getViajeHTML(idViaje) {
             + '</div>';
 }
 
-function getViajesPropiosHTML(nroViaje, data) {
-    return '<div class="list-group-item" id="' + nroViaje + '">'
-            + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje 1. Desde '
-            + data.fromCity.description
+function getUsuarioPorId(id) {
+    var nombre;
+    $.ajax({
+        url: 'http://localhost:8080/api/passengers/' + id,
+        dataType: 'json',
+        success: function (data) {
+            nombre = data.nombre + ' ' + data.apellido;
+        }
+    });
+    return nombre;
+}
+
+function getViajesPropiosHTML(data) {
+    return '<div class="list-group-item" id="itemViaje">'
+            + '<h3><a href="#" role="linkViaje">Viaje 1. Desde '
+            + data.itinerary[0].from
             + ' a '
-            + data.toCity.description
+            + data.itinerary[data.itinerary.length - 1].to
             + ' saliendo el d&iacute;a '
-            + data.outbound.segments[0].departure_datetime
+            + data.tripDepartureDate
             + ' y volviendo el d&iacute;a '
-            + data.inbound.segments[(data.inbound.segments.length - 1)].arrival_datetime
+            + data.tripArrivalDate
             + '</a></h3>'
             + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#">Compartir</a> <a href="#">Eliminar</a></p>'
             + '</div>';
 }
+
+function getViajesDeAmigosHTML(data) {
+    return '<div class="list-group-item" id="itemAmigo">'
+            + '<h3><a href="#" role="linkViaje">Viaje Desde '
+            + data.itinerary[0].from
+            + ' a '
+            + data.itinerary[data.itinerary.length - 1].to
+            + ' saliendo el d&iacute;a '
+            + data.tripDepartureDate
+            + ' y volviendo el d&iacute;a '
+            + data.tripArrivalDate
+            + '</a></h3>'
+            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#">Compartir</a> <a href="#">Eliminar</a></p>'
+            + '</div>';
+}
+
+function getRecomendacionesDeAmigosHTML(data) {
+    return '<li class="recomendacion-no-leida"><a href="#" role="linkViaj">'
+            + 'El amigo '
+//            + getUsuarioPorId(data.Usuario)
+            + getUsuarioPorId(data.Usuario)
+            + ' te recomienda viajar desde '
+            + data.origen
+            + ' a '
+            + data.destino
+            + '</a> </li>';
+}
+
 
 function formResetViaje() {
     $("#frmNuevoViaje")[0].reset();
