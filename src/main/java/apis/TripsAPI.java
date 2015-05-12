@@ -20,4 +20,6 @@ public interface TripsAPI {
     
     public Trip getTrip(int id);
     
+    public List<Trip> getTripsOfFriendsOfUser(int id);
+    
 }

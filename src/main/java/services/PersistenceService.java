@@ -10,6 +10,7 @@ import apis.RecommendationAPI;
 import apis.TripsAPI;
 import integracion.despegar.TripOption;
 import apis.TripOptionsProvider;
+import java.util.ArrayList;
 import java.util.List;
 import model.Passenger;
 import model.Recommendation;
@@ -103,6 +104,20 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     @Override
     public Trip getTrip(int id) {
         return viajeDao.searchTripById(id);
+    }
+
+    @Override
+    public List<Trip> getTripsOfFriendsOfUser(int id) {
+        List<Integer> amigos = psjDao.getIdsAmigos(id);
+        List<Trip> viajes = new ArrayList<>();
+        if (amigos.isEmpty()) {
+            return viajes;
+        } else {
+            for (Integer fr : amigos) {
+                viajes.addAll(viajeDao.searchTripByPassenger(fr));
+            }
+        }
+        return viajes;
     }
 
 }

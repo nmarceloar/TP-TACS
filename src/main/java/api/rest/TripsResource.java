@@ -47,7 +47,14 @@ public class TripsResource {
     public Trip getTripById(@NotNull @PathParam("idTrip") String id){
         return vjSrv.getTrip(Integer.parseInt(id));
     }
-
+    
+    @GET
+    @Path("friends/{id}")
+    @Produces("application/json")
+    public List<Trip> getTripsOfFriends(@PathParam("id") String id) {
+        return vjSrv.getTripsOfFriendsOfUser(Integer.parseInt(id));
+    }
+    
     @POST
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)

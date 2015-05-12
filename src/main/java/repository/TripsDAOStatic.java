@@ -23,13 +23,21 @@ public class TripsDAOStatic implements TripsDAO {
     private final List<Trip> listaViajes;
     
     public TripsDAOStatic() {
+        listaViajes = new ArrayList<>();
+        
         Segment seg1 = new Segment("Buenos Aires", "San Pablo",
                 DateTime.now().plusDays(5).toString(),
                 DateTime.now().plusDays(30).toString(),
                 Integer.toString(25), "LAN", "A01");
-        Trip viaje1 = new Trip(0, Arrays.asList(seg1));
-        listaViajes = new ArrayList<>();
+        Trip viaje1 = new Trip(1, Arrays.asList(seg1));
         listaViajes.add(viaje1);
+        
+        Segment seg2 = new Segment("Roma", "Paris",
+                DateTime.now().plusDays(15).toString(),
+                DateTime.now().plusDays(45).toString(),
+                Integer.toString(25), "AA", "AA-054");
+        Trip viaje2 = new Trip(2, Arrays.asList(seg2));
+        listaViajes.add(viaje2);
     }
     
     public List<Trip> getTripList() {
