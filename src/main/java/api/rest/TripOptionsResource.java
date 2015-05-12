@@ -1,11 +1,8 @@
 
 package api.rest;
 
-import integracion.despegar.TripOption;
 import integracion.despegar.TripOptions;
 import integracion.despegar.TripOptionsProvider;
-
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
@@ -38,14 +35,16 @@ public class TripOptionsResource {
 	        @NotNull @QueryParam("toCity") final String toCity,
 	        @NotNull @QueryParam("startDate") final String startDate,
 	        @NotNull @QueryParam("endDate") final String endDate,
-	        @NotNull @DefaultValue(value = "0") @QueryParam("offset") final int offset)
+	        @NotNull @DefaultValue(value = "0") @QueryParam("offset") final int offset,
+	        @NotNull @DefaultValue(value = "1") @QueryParam("limit") final int limit)
 	        throws Exception {
 	
 		// tener en cuenta el formato en la UI por el momento
 		final DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy");
 		
 		return this.provider.findTripOptions(fromCity, toCity,
-		    fmt.parseDateTime(startDate), fmt.parseDateTime(endDate), offset);
+		    fmt.parseDateTime(startDate), fmt.parseDateTime(endDate), offset,
+		    limit);
 		
 	}
 }

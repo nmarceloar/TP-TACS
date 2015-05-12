@@ -10,6 +10,8 @@ public class Paging {
 	
 	private int total;
 	
+	private int limit;
+	
 	public Paging() {
 	
 	}
@@ -32,6 +34,16 @@ public class Paging {
 	public void setTotal(int total) {
 	
 		this.total = total;
+	}
+	
+	public int getLimit() {
+	
+		return this.limit;
+	}
+	
+	public void setLimit(int limit) {
+	
+		this.limit = limit;
 	}
 	
 }

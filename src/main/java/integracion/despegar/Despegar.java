@@ -111,7 +111,7 @@ public class Despegar
 	@Override
 	public TripOptions findTripOptions(final String fromCity,
 	    final String toCity, final DateTime startDate, final DateTime endDate,
-	    int offset) {
+	    int offset, int limit) {
 	
 		Preconditions.checkNotNull(fromCity);
 		Preconditions.checkNotNull(toCity);
@@ -125,6 +125,7 @@ public class Despegar
 		    startDate, endDate);
 		
 		Preconditions.checkArgument(offset >= 0);
+		Preconditions.checkArgument(limit >= 1);
 		
 		final DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		
@@ -140,7 +141,7 @@ public class Despegar
 		        .queryParam("return_date", fmt.print(endDate))
 		        .queryParam("adults", "1")
 		        .queryParam("offset", offset)
-		        .queryParam("limit", 1);
+		        .queryParam("limit", limit);
 		
 		final List<Future<TripOptions>> options;
 		
