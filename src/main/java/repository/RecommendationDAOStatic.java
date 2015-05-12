@@ -51,4 +51,9 @@ public class RecommendationDAOStatic implements RecommendationDAO {
         return null;
     }
 
+    @Override
+    public void saveRecommendation(Recommendation rec) {
+        listaRecomendaciones.add(rec);
+    }
+
 }

@@ -77,12 +77,32 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
 
     @Override
     public List<Trip> getTripsOfPassenger(int id) {
-        return viajeDao.getViajesDePasajero(id);
+        return viajeDao.searchTripByPassenger(id);
     }
 
     @Override
     public void saveTrip(Trip v) {
-        viajeDao.guardarViaje(v);
+        viajeDao.saveTrip(v);
+    }
+
+    @Override
+    public Recommendation getRecommendationById(int id) {
+        return recDao.getRecomendacionPorId(id);
+    }
+
+    @Override
+    public void saveRecommendation(Recommendation rec) {
+        recDao.saveRecommendation(rec);
+    }
+
+    @Override
+    public void assignFriend(int idUser, int idFriend) {
+        psjDao.assignFriend(idUser, idFriend);
+    }
+
+    @Override
+    public Trip getTrip(int id) {
+        return viajeDao.searchTripById(id);
     }
 
 }

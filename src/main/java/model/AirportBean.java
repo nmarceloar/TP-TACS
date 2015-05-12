@@ -3,7 +3,7 @@ package model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 
-public class Aeropuerto implements Serializable {
+public class AirportBean implements Serializable {
 
     @JsonProperty("codigo")
     private String code;
@@ -14,11 +14,11 @@ public class Aeropuerto implements Serializable {
     @JsonProperty("ciudad")
     private String city;
 
-    public Aeropuerto() {
+    public AirportBean() {
 
     }
 
-    public Aeropuerto(String codigo, String pais, String ciudad) {
+    public AirportBean(String codigo, String pais, String ciudad) {
         this.code = codigo;
         this.country = pais;
         this.city = ciudad;

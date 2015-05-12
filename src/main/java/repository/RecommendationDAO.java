@@ -18,4 +18,6 @@ public interface RecommendationDAO {
     
     public Recommendation getRecomendacionPorId(Integer id);
     
+    public void saveRecommendation(Recommendation rec);
+    
 }

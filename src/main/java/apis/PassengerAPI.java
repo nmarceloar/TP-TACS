@@ -23,4 +23,6 @@ public interface PassengerAPI {
     
     public Passenger getPassengerById(int id);
     
+    public void assignFriend(int idUser, int idFriend);
+    
 }

@@ -14,12 +14,10 @@ import model.Trip;
  */
 public interface TripsDAO {
     
-    public void guardarViaje(Trip v);
+    public void saveTrip(Trip v);
     
-    public Trip buscarViajePorId(int id);
+    public Trip searchTripById(int id);
     
-    public List<Trip> getViajesDePasajero(int id);
-    
-//    public void asignarRecomendacion(Recomendacion rec, Pasajero p);
+    public List<Trip> searchTripByPassenger(int id);
     
 }

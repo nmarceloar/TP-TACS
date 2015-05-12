@@ -7,12 +7,10 @@ package repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import model.Aeropuerto;
-import model.Trayecto;
 import model.Trip;
-import model.Flight;
+import model.Segment;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -21,46 +19,47 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class TripsDAOStatic implements TripsDAO {
-
+    
     private final List<Trip> listaViajes;
-
+    
     public TripsDAOStatic() {
-        Trayecto tray1 = new Trayecto(new Aeropuerto("BUE", "Argentina", "Buenos Aires"),
-                new Aeropuerto("GRU", "Brasil", "Sao Paulo"),
-                new Flight("LAN", "L01", "Airbus", new Date(2015, 1, 2), new Date(2015, 1, 30)));
-        Trip viaje1 = new Trip(0, Arrays.asList(tray1));
+        Segment seg1 = new Segment("Buenos Aires", "San Pablo",
+                DateTime.now().plusDays(5).toString(),
+                DateTime.now().plusDays(30).toString(),
+                Integer.toString(25), "LAN", "A01");
+        Trip viaje1 = new Trip(0, Arrays.asList(seg1));
         listaViajes = Arrays.asList(viaje1);
     }
-
-    public List<Trip> getListaViajes() {
+    
+    public List<Trip> getTripList() {
         return listaViajes;
     }
-
+    
     @Override
-    public void guardarViaje(Trip v) {
-        getListaViajes().add(v);
+    public void saveTrip(Trip v) {
+        getTripList().add(v);
     }
-
+    
     @Override
-    public Trip buscarViajePorId(int id) {
+    public Trip searchTripById(int id) {
         Trip buscado = null;
-        for (Trip v : getListaViajes()) {
-            if (v.getIdViaje() == id) {
+        for (Trip v : getTripList()) {
+            if (v.getIdTrip() == id) {
                 buscado = v;
             }
         }
         return buscado;
     }
-
+    
     @Override
-    public List<Trip> getViajesDePasajero(int id) {
+    public List<Trip> searchTripByPassenger(int id) {
         List<Trip> lista = new ArrayList<>();
-        for (Trip v : getListaViajes()) {
-            if (v.getIdViajante() == id) {
+        for (Trip v : getTripList()) {
+            if (v.getIdPassenger() == id) {
                 lista.add(v);
             }
         }
         return lista;
     }
-
+    
 }

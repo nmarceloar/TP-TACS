@@ -18,4 +18,6 @@ public interface TripsAPI {
     
     public void saveTrip(Trip v);
     
+    public Trip getTrip(int id);
+    
 }

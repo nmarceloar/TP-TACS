@@ -1,65 +1,69 @@
 package model;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Trip implements Serializable {
+    
+    private static int contadorId = 1;
 
-    @JsonProperty("idPasajero")
-    private int idViajante;
+    @JsonProperty("idPassenger")
+    private int idPassenger;
 
-    @JsonProperty("itinerario")
-    private List<Trayecto> itinerario;
+    @JsonProperty("itinerary")
+    private List<Segment> itinerary;
 
-    @JsonProperty("id")
-    private int idViaje;
+    private int idTrip;
 
     public Trip() {
+        idTrip = contadorId++;
     }
 
-    public Trip(int viajante, List<Trayecto> itinerario) {
-        this.idViajante = viajante;
-        this.itinerario = itinerario;
+    public Trip(int idPassenger, List<Segment> itinerary) {
+        this.idPassenger = idPassenger;
+        this.itinerary = itinerary;
+        idTrip = contadorId++;
     }
 
-    public int getIdViajante() {
-        return idViajante;
+    
+
+    public int getIdPassenger() {
+        return idPassenger;
     }
 
-    public int getIdViaje() {
-        return idViaje;
+    public int getIdTrip() {
+        return idTrip;
     }
 
-    public void setIdViaje(int idViaje) {
-        this.idViaje = idViaje;
+    public void setIdTrip(int idTrip) {
+        this.idTrip = idTrip;
     }
 
     public void setViajante(int viajante) {
-        this.idViajante = viajante;
+        this.idPassenger = viajante;
     }
 
-    public List<Trayecto> getItinerario() {
-        return itinerario;
+    public List<Segment> getItinerary() {
+        return itinerary;
     }
 
-    public void setItinerario(List<Trayecto> itinerario) {
-        this.itinerario = itinerario;
+    public void setItinerary(List<Segment> itinerary) {
+        this.itinerary = itinerary;
     }
 
-    public Date getFechaSalidaViaje() {
-        return getItinerario()
-                .get(0).getFechaSalida();
+    public String getTripDepartureDate() {
+        return getItinerary()
+                .get(0).getDepartureDatetime();
     }
 
-    public Date getFechaArriboViaje() {
-        return getItinerario()
-                .get(itinerario.size() - 1).getFechaArribo();
+    public String getTripArrivalDate() {
+        return getItinerary()
+                .get(itinerary.size() - 1).getArrivalDatetime();
     }
 
-    public void agregarTrayecto(Trayecto tray) {
-        getItinerario().add(tray);
+    public void addSegment(Segment tray) {
+        getItinerary().add(tray);
     }
 
 }

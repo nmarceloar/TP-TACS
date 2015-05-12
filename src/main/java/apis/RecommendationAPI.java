@@ -17,4 +17,8 @@ public interface RecommendationAPI {
     public List<Recommendation> getRecommendationsOfUser(int id);
     
     public String getRecommendationToString(int id);
+    
+    public Recommendation getRecommendationById(int id);
+    
+    public void saveRecommendation(Recommendation rec);
 }

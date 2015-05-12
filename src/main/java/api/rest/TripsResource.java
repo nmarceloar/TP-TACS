@@ -8,6 +8,7 @@ package api.rest;
 import apis.TripsAPI;
 import java.util.List;
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -39,17 +40,24 @@ public class TripsResource {
     public List<Trip> getViajesPorPasajero(@PathParam("id") String id) {
         return vjSrv.getTripsOfPassenger(Integer.parseInt(id));
     }
+    
+    @GET
+    @Path("one/{idTrip}")
+    @Produces("application/json")
+    public Trip getTripById(@NotNull @PathParam("idTrip") String id){
+        return vjSrv.getTrip(Integer.parseInt(id));
+    }
 
     @POST
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response guardarViaje(Trip v) {
         vjSrv.saveTrip(v);
-        String result = "Guardado: " + v.getIdViaje()
-                + " " + v.getItinerario().get(0).getOrigen().getCity()
+        String result = "Guardado: " + v.getIdTrip()
+                + " " + v.getItinerary().get(0).getFrom()
                 + " - "
-                + v.getItinerario().get(v.getItinerario().size() - 1)
-                .getDestino().getCity();
+                + v.getItinerary().get(v.getItinerary().size() - 1)
+                .getTo();
 
         return Response.status(201)
                 .entity(result).build();

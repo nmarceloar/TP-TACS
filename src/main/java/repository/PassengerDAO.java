@@ -26,4 +26,6 @@ public interface PassengerDAO {
     
     public List<Integer> getRecomendacionesDeUsuario(int pas);
     
+    public void assignFriend(int idUser, int idFriend);
+    
 }
