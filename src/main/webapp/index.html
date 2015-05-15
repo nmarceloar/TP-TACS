@@ -1,47 +1,76 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <link rel="stylesheet" href="lib/bootstrap-3.3.4-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="lib/jquery-ui-1.11.4.custom/jquery-ui.css">
-    <script src="lib/jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
-    <script src="lib/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
-    <script src="lib/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="css/base.css" />
-    <script src="js/index.js"></script>
-    <title>TACS por el mundo!</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="lib/bootstrap-3.3.4-dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="lib/jquery-ui-1.11.4.custom/jquery-ui.css">
+<link rel="stylesheet" href="css/base.css" />
+<link href="css/cover.css" rel="stylesheet">
+
+<title>TACS por el mundo!</title>
 </head>
 <body>
-    <!-- Inicio Modal Session de FaceBook -->
-    <div
-        class="modal fade"
-        id="fbLoginModal"
-        role="dialog">
-        <div class="modal-dialog">
-            <!-- contenido del modal -->
-            <div class="modal-content">
-                <div class="modal-body">
-                    <p>Para usar TACS por el mundo tenés que iniciar sesión
-                        con tu cuenta de FaceBook.</p>
-                </div>
-                <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-default"
-                        data-dismiss="modal"
-                        id="fbLoginOK">Aceptar</button>
-                    <button
-                        type="button"
-                        class="btn btn-default"
-                        data-dismiss="modal"
-                        id="fbLoginCancelar">Cancelar</button>
-                </div>
-            </div>
-            <!-- fin contenido del modal-->
-        </div>
-    </div>
-    <!-- Fin Modal Session de FaceBook -->
+	<div class="site-wrapper">
 
-    <!--  -->
+		<div class="site-wrapper-inner">
+
+			<div class="cover-container">
+
+				<div class="masthead clearfix">
+					<div class="inner">
+						<h3 class="masthead-brand">Portada</h3>
+						<nav>
+							<ul class="nav masthead-nav">
+								<li class="active"><a href="#">Home</a></li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+
+				<div class="inner cover">
+					<!--
+  Below we include the Login Button social plugin. This button uses
+  the JavaScript SDK to present a graphical Login button that triggers
+  the FB.login() function when clicked.
+	-->
+					<div id="fb-root"></div>
+					<h1 class="cover-heading" style="font-weight: bold;">Tacs por el mundo</h1>
+					<div id="status" class="lead"></div>
+					<div class="fb-login-button"
+							scope="public_profile,email,user_friends" 
+							data-max-rows="0"
+							data-size="xlarge" 
+							data-auto-logout-link="false" 
+							onlogin="checkLoginState();">
+					</div>
+						<!--  -->
+					
+				</div>
+
+				<div class="mastfoot">
+					<div class="inner">
+						<p>
+							Cover template for <a href="http://getbootstrap.com">Bootstrap</a>,
+							by <a href="https://twitter.com/mdo">@mdo</a>.
+						</p>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+
+	<script src="lib/jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
+	<script src="lib/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+	<script src="js/index.js"></script>
+	<script src="lib/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+	
 </body>
 </html>

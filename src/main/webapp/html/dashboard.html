@@ -9,6 +9,8 @@
         <script src="../lib/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
         <script src="http://maps.googleapis.com/maps/api/js"></script>
         <link rel="stylesheet" href="../css/base.css" />
+        <link rel="stylesheet" href="../css/bootstrap-social.css" />
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
         <script src="../js/dashboard.js"></script>
         <title>TACS por el mundo</title>
     </head>
@@ -17,8 +19,18 @@
         <div class="container">
             <!-- header -->
             <div class="jumbotron">
-                <h2>¡Bienvenido a TACS por el mundo!</h2>      
+            	<div id="fb-root"></div>
+           		<div class="pull-right">
+            		<a href="#" id="cerrarSesion" class="btn btn-block btn-social btn-facebook"> 
+					<i class="fa fa-facebook"></i> Cerrar sesión
+					</a>
+			</div>
+                <h2>¡Bienvenido a TACS por el mundo!</h2>   
+                
+                
+                   
                 <p class="btn-quiero-viajar"><a href="#" class="btn btn-info btn-lg" id="btnNuevoViaje">¿A dónde querés ir hoy? <span class="glyphicon glyphicon-plane"></span></a></p>
+                
                 <div class="dropdown btn-float">
                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="drpDwnRecomendaciones">Recomendaciones <span class="caret"></span></button>
                     <ul class="dropdown-menu dropdown-menu-right" id="listRecomendaciones">

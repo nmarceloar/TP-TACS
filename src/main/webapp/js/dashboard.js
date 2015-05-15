@@ -40,6 +40,31 @@ var orgCity = new City();
 var dstCity = new City();
 
 $(function () {
+	
+	$(document).ready(function() {
+		  $.ajaxSetup({ cache: true });
+		  $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
+		    FB.init({
+		      appId: '1586547271608233',
+		      version: 'v2.3' // or v2.0, v2.1, v2.0
+		    });     
+		    $('#loginbutton,#feedbutton').removeAttr('disabled');
+		    FB.getLoginStatus(updateStatusCallback);
+		  });
+	});
+	
+	$("#cerrarSesion").click(function(){
+		
+		FB.logout(function(response) {
+	        // Person is now logged out
+			
+			var url = "/";    
+			$(location).attr('href',url);
+			
+		});
+		
+	});
+	
     var contViajes = 0;
     //config google maps
     google.maps.event.addDomListener(window, 'load', initialize);
@@ -531,7 +556,7 @@ function templateVuelo(posData, vuelo) {
     }
 
     return '<div class="list-group-item" role="vuelo" vuelo="' + posData + '">' +
-            '<a href="#" role="ver-detalle-vuelo" vuelo="' + posData + '"><h4 class="list-group-item-heading">Volá por ' + vuelo.price_detail.total + vuelo.price_detail.currency + '</h4></a>' +
+            '<a href="#" role="ver-detalle-vuelo" vuelo="' + posData + '"><h4 class="list-group-item-heading">Vol\u00e1 por ' + vuelo.price_detail.total + vuelo.price_detail.currency + '</h4></a>' +
             '<div class="list-group" role="opciones-vuelo" vuelo="' + posData + '" type="ida">' + descripcionida + '</div>' +
             '<div class="list-group" role="opciones-vuelo" vuelo="' + posData + '" type="vuelta">' + descripcionvuelta + '</div>' +
             '</div>';
@@ -653,4 +678,9 @@ function getRandomColor() {
 /*
  * gmaps functions *******************************************************************
  */
+function updateStatusCallback(){
+	console.log('updateStatusCallback');
+    
+	   // Your logic here
+	}
 
