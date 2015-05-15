@@ -63,8 +63,10 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
 
     @Override
     public List<Recommendation> getRecommendationsOfUser(int id) {
-        return recDao.getRecomendacionesPorId(
+        List<Recommendation> lista =  recDao.getRecomendacionesPorId(
                 psjDao.getRecomendacionesDeUsuario(id));
+        asignarPasajeroARecomendaciones(lista, id);
+        return lista;
     }
 
     @Override
@@ -118,6 +120,19 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
             }
         }
         return viajes;
+    }
+
+    @Override
+    public void asignarPasajeroARecomendaciones(List<Recommendation> list, Integer pass) {
+        for (Recommendation rec : list){
+            asignarPasajeroARecomendacion(rec, pass);
+        }
+    }
+
+    @Override
+    public void asignarPasajeroARecomendacion(Recommendation rec, Integer pass) {
+        Passenger pj = psjDao.getPasajeroById(pass);
+        rec.setNombreYAp(pj.getName() + " " + pj.getSurname());
     }
 
 }

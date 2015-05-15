@@ -6,6 +6,7 @@
 package apis;
 
 import java.util.List;
+import model.Passenger;
 import model.Recommendation;
 
 /**
@@ -21,4 +22,9 @@ public interface RecommendationAPI {
     public Recommendation getRecommendationById(int id);
     
     public void saveRecommendation(Recommendation rec);
+    
+    public void asignarPasajeroARecomendaciones(List<Recommendation> list, Integer pass);
+    
+    public void asignarPasajeroARecomendacion(Recommendation rec, Integer pass);
+    
 }

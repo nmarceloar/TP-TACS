@@ -214,11 +214,17 @@ $(function () {
         dataType: 'json',
         success: function (data) {
             $.each(data, function (index, value) {
-                $("#listRecomendaciones").append(getRecomendacionesDeAmigosHTML(value));
-            });
+                $("#listRecomendaciones").append(value.nombreyap
+                        + ' quiere que viajes desde '
+                        + value.origen
+                        + ' hasta '
+                        + value.destino);
+
+            })
             $("#listRecomendaciones").append("<li class=\"divider\"></li>");
             $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
         }
+
     });
 
 
@@ -301,18 +307,6 @@ function getViajeHTML(idViaje) {
             + '</div>';
 }
 
-function getUsuarioPorId(id) {
-    var nombre;
-    $.ajax({
-        url: 'http://localhost:8080/api/passengers/' + id,
-        dataType: 'json',
-        success: function (data) {
-            nombre = data.nombre + ' ' + data.apellido;
-        }
-    });
-    return nombre;
-}
-
 function getViajesPropiosHTML(data) {
     return '<div class="list-group-item" id="itemViaje">'
             + '<h3><a href="#" role="linkViaje">Viaje 1. Desde '
@@ -346,8 +340,11 @@ function getViajesDeAmigosHTML(data) {
 function getRecomendacionesDeAmigosHTML(data) {
     return '<li class="recomendacion-no-leida"><a href="#" role="linkViaj">'
             + 'El amigo '
-//            + getUsuarioPorId(data.Usuario)
-            + getUsuarioPorId(data.Usuario)
+            + $.get('http://localhost:8080/api/passengers/1', function (datos) {
+                $("#listRecomendaciones").append(datos.nombre + datos.apellido);
+            })
+
+//    +getUsuarioPorId(data.Usuario)
             + ' te recomienda viajar desde '
             + data.origen
             + ' a '
