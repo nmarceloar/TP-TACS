@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="../css/base.css" />
         <link rel="stylesheet" href="../css/bootstrap-social.css" />
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato">
         <script src="../js/dashboard.js"></script>
         <title>TACS por el mundo</title>
     </head>
@@ -24,13 +25,18 @@
             		<a href="#" id="cerrarSesion" class="btn btn-block btn-social btn-facebook"> 
 					<i class="fa fa-facebook"></i> Cerrar sesión
 					</a>
-			</div>
+					<h4 id="nombreUsuarioFb" style="font-family:Lato; color:#000099; font-weight:bold"></h4>
+					<img id="imagenPerfil" style="margin:0px 0px 1px 0px" align="right">
+					
+				</div>
                 <h2>¡Bienvenido a TACS por el mundo!</h2>   
                 
                 
                    
                 <p class="btn-quiero-viajar"><a href="#" class="btn btn-info btn-lg" id="btnNuevoViaje">¿A dónde querés ir hoy? <span class="glyphicon glyphicon-plane"></span></a></p>
                 
+                <p>&nbsp;</p>
+
                 <div class="dropdown btn-float">
                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="drpDwnRecomendaciones">Recomendaciones <span class="caret"></span></button>
                     <ul class="dropdown-menu dropdown-menu-right" id="listRecomendaciones">

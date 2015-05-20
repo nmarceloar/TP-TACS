@@ -41,6 +41,7 @@ var dstCity = new City();
 
 $(function () {
 	
+// ####################### FACEBOOK #######################################
 	$(document).ready(function() {
 		  $.ajaxSetup({ cache: true });
 		  $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
@@ -49,9 +50,13 @@ $(function () {
 		      version: 'v2.3' // or v2.0, v2.1, v2.0
 		    });     
 		    $('#loginbutton,#feedbutton').removeAttr('disabled');
-		    FB.getLoginStatus(updateStatusCallback);
+		    FB.getLoginStatus(function(response) {
+				updateStatusCallback(response);
+			});
 		  });
 	});
+	
+	
 	
 	$("#cerrarSesion").click(function(){
 		
@@ -64,6 +69,12 @@ $(function () {
 		});
 		
 	});
+	
+	
+	
+	
+	
+// ####################### FACEBOOK #######################################
 	
     var contViajes = 0;
     //config google maps
@@ -678,9 +689,38 @@ function getRandomColor() {
 /*
  * gmaps functions *******************************************************************
  */
-function updateStatusCallback(){
+
+//####################### FACEBOOK #######################################
+function updateStatusCallback(response){
 	console.log('updateStatusCallback');
-    
-	   // Your logic here
+	
+	  // Your logic here
+	
+	
+	console.log("Esta logueado y acepto");
+	
+	console.log("TOKEN");
+	console.log(response.authResponse.accessToken);
+	console.log("EXPIRES IN");
+	console.log(response.authResponse.expiresIn);
+	console.log("ID");
+	console.log(response.authResponse.userID);
+	console.log("API--");
+			FB.api('/me', function(response) {
+	    console.log(JSON.stringify(response));
+	});
+	
+	FB.api('/me', {	fields : 'name'	}, function(response) {
+		$("#nombreUsuarioFb").html(response.name);
+	});
+	
+	FB.api('/me?fields=picture', function(response) {
+		console.log(response.picture.data.url);
+		$("#imagenPerfil").attr("src",response.picture.data.url);
+	});
+
+		 
 	}
+
+//####################### FACEBOOK #######################################
 

@@ -38,14 +38,16 @@ function statusChangeCallback(response) {
 	if (response.status === 'connected') {
 		
 		console.log("Esta logueado y acepto");
-		console.log(response.authResponse.accessToken);
-		console.log(response.authResponse.expiresIn);
-		console.log(response.authResponse.userID);
-		console.log("API--");
-		
-		FB.api('/me', function(response) {
-		    console.log(JSON.stringify(response));
-		});
+//		console.log("TOKEN");
+//		console.log(response.authResponse.accessToken);
+//		console.log("EXPIRES IN");
+//		console.log(response.authResponse.expiresIn);
+//		console.log("ID");
+//		console.log(response.authResponse.userID);
+//		console.log("API--");
+//				FB.api('/me', function(response) {
+//		    console.log(JSON.stringify(response));
+//		});
 		
 		// Logged into your app and Facebook.
 		
