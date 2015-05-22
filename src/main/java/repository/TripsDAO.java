@@ -6,6 +6,7 @@
 package repository;
 
 import java.util.List;
+
 import model.Trip;
 
 /**
@@ -18,6 +19,6 @@ public interface TripsDAO {
     
     public Trip searchTripById(int id);
     
-    public List<Trip> searchTripByPassenger(int id);
+    public List<Trip> searchTripByPassenger(long fr);
     
 }

@@ -14,12 +14,12 @@ import model.Trip;
  */
 public interface TripsAPI {
     
-    public List<Trip> getTripsOfPassenger(int id);
+    public List<Trip> getTripsOfPassenger(long id);
     
     public void saveTrip(Trip v);
     
     public Trip getTrip(int id);
     
-    public List<Trip> getTripsOfFriendsOfUser(int id);
+    public List<Trip> getTripsOfFriendsOfUser(long id);
     
 }

@@ -7,22 +7,20 @@ import java.util.List;
 
 public class Passenger implements Serializable {
 
-    private static int contadorId = 1;
-
     @JsonProperty("nombre")
     private String name;
 
     @JsonProperty("apellido")
     private String surname;
 
-    @JsonProperty("dni")
-    private long dni;
+    @JsonProperty("token")
+    private String token;
 
     @JsonProperty("id")
-    private int idUser;
+    private long idUser;
 
     @JsonProperty("amigos")
-    private List<Integer> friends;
+    private List<Long> friends;
     
     @JsonProperty("recomendaciones")
     private List<Integer> recommendations;
@@ -35,25 +33,25 @@ public class Passenger implements Serializable {
         this.recommendations = recommendations;
     }
 
-    public Passenger(String nombre, String apellido, long dni,
-            List<Integer> amigos) {
+    public Passenger(long id,String nombre, String apellido, String token,
+            List<Long> amigos) {
         this.name = nombre;
         this.surname = apellido;
-        this.dni = dni;
+        this.token = token;
         this.friends = amigos;
         this.recommendations = new ArrayList<>();
-        this.idUser = contadorId++;
+        this.idUser = id;
     }
 
-    public Passenger() {
-        this.idUser = contadorId++;
+    public Passenger(){
+    	
     }
 
-    public int getIdUser() {
+    public long getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(int idUser) {
+    public void setIdUser(long idUser) {
         this.idUser = idUser;
     }
 
@@ -73,25 +71,25 @@ public class Passenger implements Serializable {
         this.surname = surname;
     }
 
-    public long getDni() {
-        return dni;
+    public String getToken() {
+        return token;
     }
 
-    public void setDni(long dni) {
-        this.dni = dni;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public List<Integer> getFriends() {
+    public List<Long> getFriends() {
         return friends;
     }
 
-    public void setFriends(List<Integer> friends) {
+    public void setFriends(List<Long> friends) {
         this.friends = friends;
     }
 
     public boolean esAmigo(Passenger pj) {
         boolean resul = false;
-        for (Integer idAm : getFriends()) {
+        for (Long idAm : getFriends()) {
             if (idAm == pj.getIdUser()) {
                 resul = true;
             }
@@ -99,7 +97,7 @@ public class Passenger implements Serializable {
         return resul;
     }
     
-    public void agregarAmigo(int idAmigo){
+    public void agregarAmigo(Long idAmigo){
         getFriends().add(idAmigo);
     }
     
@@ -107,12 +105,12 @@ public class Passenger implements Serializable {
         getFriends().add(p.getIdUser());
     }
     
-    public void agregarAmigos(List<Integer> amigos){
+    public void agregarAmigos(List<Long> amigos){
         getFriends().addAll(amigos);
     }
     
     public void agregarAmigosPorPasajeros(List<Passenger> amigos){
-        List<Integer> listaIds = new ArrayList<>();
+        List<Long> listaIds = new ArrayList<>();
         for (Passenger p : amigos) {
             listaIds.add(p.getIdUser());
         }

@@ -10,14 +10,20 @@ import apis.RecommendationAPI;
 import apis.TripsAPI;
 import integracion.despegar.TripOption;
 import apis.TripOptionsProvider;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import model.Passenger;
 import model.Recommendation;
+
 import org.springframework.stereotype.Service;
+
 import model.Trip;
+
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import repository.PassengerDAO;
 import repository.RecommendationDAO;
 import repository.TripsDAO;
@@ -52,13 +58,18 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     }
 
     @Override
-    public List<Passenger> getFriendsOfPassenger(int idPsj) {
+    public List<Passenger> getFriendsOfPassenger(long idPsj) {
         return psjDao.getAmigos(idPsj);
     }
 
     @Override
-    public Passenger getPassengerById(int id) {
+    public Passenger getPassengerById(long id) {
         return psjDao.getPasajeroById(id);
+    }
+    
+    @Override
+    public Passenger postPassengerByIdToken(long id, String shortToken) {
+        return psjDao.postPasajeroByIdToken(id,shortToken);
     }
 
     @Override
@@ -77,7 +88,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     }
 
     @Override
-    public List<Trip> getTripsOfPassenger(int id) {
+    public List<Trip> getTripsOfPassenger(long id) {
         return viajeDao.searchTripByPassenger(id);
     }
 
@@ -97,7 +108,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     }
 
     @Override
-    public void assignFriend(int idUser, int idFriend) {
+    public void assignFriend(long idUser, long idFriend) {
         psjDao.assignFriend(idUser, idFriend);
     }
 
@@ -107,13 +118,13 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     }
 
     @Override
-    public List<Trip> getTripsOfFriendsOfUser(int id) {
-        List<Integer> amigos = psjDao.getIdsAmigos(id);
+    public List<Trip> getTripsOfFriendsOfUser(long id) {
+        List<Long> amigos = psjDao.getIdsAmigos(id);
         List<Trip> viajes = new ArrayList<>();
         if (amigos.isEmpty()) {
             return viajes;
         } else {
-            for (Integer fr : amigos) {
+            for (Long fr : amigos) {
                 viajes.addAll(viajeDao.searchTripByPassenger(fr));
             }
         }

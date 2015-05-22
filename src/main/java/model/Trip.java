@@ -9,7 +9,7 @@ public class Trip implements Serializable {
     private static int contadorId = 1;
 
     @JsonProperty("idPassenger")
-    private int idPassenger;
+    private long idPassenger;
 
     @JsonProperty("itinerary")
     private List<Segment> itinerary;
@@ -28,7 +28,7 @@ public class Trip implements Serializable {
 
     
 
-    public int getIdPassenger() {
+    public long getIdPassenger() {
         return idPassenger;
     }
 

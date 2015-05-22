@@ -39,10 +39,17 @@ var orgCity = new City();
 //guardo los datos de la ciudad de destino
 var dstCity = new City();
 
+var token;
+var id;
+
+
 $(function () {
 	
-// ####################### FACEBOOK #######################################
-	$(document).ready(function() {
+	//####################### FACEBOOK #######################################
+
+	//GET DEL TOKEN
+
+	$(function() {
 		  $.ajaxSetup({ cache: true });
 		  $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
 		    FB.init({
@@ -57,7 +64,32 @@ $(function () {
 	});
 	
 	
-	
+	console.log(id);
+//	
+//	 $.ajax({
+//	 url : url ,
+//	 dataType : 'text',
+//	 success : function(data) {
+//		 console.log("LLEGO BIEN");
+//		 console.log(data);
+//		 token=data
+//	 	}
+//	 });
+//	 
+//	 
+//	FB.api('/me', {
+//		fields : 'name',
+//		accessToken : token
+//	}, function(response) {
+//		$("#nombreUsuarioFb").html(response.name);
+//	});
+//	
+//	FB.api('/me?fields=picture&accessToken='+token, function(response) {
+//		
+//		$("#imagenPerfil").attr("src",response.picture.data.url);
+//	});
+
+
 	$("#cerrarSesion").click(function(){
 		
 		FB.logout(function(response) {
@@ -69,12 +101,10 @@ $(function () {
 		});
 		
 	});
-	
-	
-	
-	
-	
-// ####################### FACEBOOK #######################################
+
+
+
+	//####################### FACEBOOK #######################################
 	
     var contViajes = 0;
     //config google maps
@@ -692,35 +722,40 @@ function getRandomColor() {
 
 //####################### FACEBOOK #######################################
 function updateStatusCallback(response){
+	
 	console.log('updateStatusCallback');
-	
-	  // Your logic here
-	
-	
-	console.log("Esta logueado y acepto");
-	
-	console.log("TOKEN");
-	console.log(response.authResponse.accessToken);
-	console.log("EXPIRES IN");
-	console.log(response.authResponse.expiresIn);
-	console.log("ID");
-	console.log(response.authResponse.userID);
-	console.log("API--");
-			FB.api('/me', function(response) {
-	    console.log(JSON.stringify(response));
-	});
-	
-	FB.api('/me', {	fields : 'name'	}, function(response) {
-		$("#nombreUsuarioFb").html(response.name);
-	});
-	
-	FB.api('/me?fields=picture', function(response) {
-		console.log(response.picture.data.url);
-		$("#imagenPerfil").attr("src",response.picture.data.url);
-	});
 
-		 
+	if (response.status === 'connected') {
+
+		
+		console.log("Esta logueado y acepto");
+
+		console.log("TOKEN");
+		console.log(response.authResponse.accessToken);
+		console.log("EXPIRES IN");
+		console.log(response.authResponse.expiresIn);
+		console.log("ID");
+		console.log(response.authResponse.userID);
+		console.log("API--");
+		
+		id=response.authResponse.userID;
+		console.log(id);
+		
+	} else if (response.status === 'not_authorized') {
+		console.log("Esta logueado en face, pero todavia no acepto")
+		// The person is logged into Facebook, but not your app.
+		var url = "/";    
+		$(location).attr('href',url);
+	} else {
+		// The person is not logged into Facebook, so we're not sure if
+		// they are logged into this app or not.
+		console.log("No esta logueado en face")
+		var url = "/";    
+		$(location).attr('href',url);
 	}
+
+	
+}
 
 //####################### FACEBOOK #######################################
 

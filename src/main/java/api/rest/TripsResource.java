@@ -38,7 +38,7 @@ public class TripsResource {
     @Path("{id}")
     @Produces("application/json")
     public List<Trip> getViajesPorPasajero(@PathParam("id") String id) {
-        return vjSrv.getTripsOfPassenger(Integer.parseInt(id));
+        return vjSrv.getTripsOfPassenger(Long.parseLong(id));
     }
     
     @GET
@@ -52,7 +52,7 @@ public class TripsResource {
     @Path("friends/{id}")
     @Produces("application/json")
     public List<Trip> getTripsOfFriends(@PathParam("id") String id) {
-        return vjSrv.getTripsOfFriendsOfUser(Integer.parseInt(id));
+        return vjSrv.getTripsOfFriendsOfUser(Long.parseLong(id));
     }
     
     @POST

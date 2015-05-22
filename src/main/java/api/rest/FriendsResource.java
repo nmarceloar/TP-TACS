@@ -37,14 +37,14 @@ public class FriendsResource {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public List<Passenger> getAmigosDeUsuario(@PathParam("id") String id) {
-        return pjSrv.getFriendsOfPassenger(Integer.parseInt(id));
+        return pjSrv.getFriendsOfPassenger(Long.parseLong(id));
     }
 
     @POST
     @Path("{idUser}/{idFriend}")
     @Consumes("application/json")
-    public Response assignFriend(@PathParam("idUser") int idUser,
-            @PathParam("idFriend") int idFriend) {
+    public Response assignFriend(@PathParam("idUser") long idUser,
+            @PathParam("idFriend") long idFriend) {
         pjSrv.assignFriend(idUser, idFriend);
         pjSrv.assignFriend(idFriend, idUser);
         String result = "El usuario " + idUser

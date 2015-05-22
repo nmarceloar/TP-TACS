@@ -75,7 +75,7 @@ public class TripsDAOStatic implements TripsDAO {
     }
     
     @Override
-    public List<Trip> searchTripByPassenger(int id) {
+    public List<Trip> searchTripByPassenger(long id) {
         List<Trip> lista = new ArrayList<>();
         for (Trip v : getTripList()) {
             if (v.getIdPassenger() == id) {

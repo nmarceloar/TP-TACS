@@ -36,22 +36,39 @@ function statusChangeCallback(response) {
 	// Full docs on the response object can be found in the documentation
 	// for FB.getLoginStatus().
 	if (response.status === 'connected') {
+
 		
 		console.log("Esta logueado y acepto");
-//		console.log("TOKEN");
-//		console.log(response.authResponse.accessToken);
-//		console.log("EXPIRES IN");
-//		console.log(response.authResponse.expiresIn);
-//		console.log("ID");
-//		console.log(response.authResponse.userID);
-//		console.log("API--");
-//				FB.api('/me', function(response) {
-//		    console.log(JSON.stringify(response));
+		console.log("TOKEN");
+		console.log(response.authResponse.accessToken);
+		console.log("EXPIRES IN");
+		console.log(response.authResponse.expiresIn);
+		console.log("ID");
+		console.log(response.authResponse.userID);
+		console.log("API--");
+		
+		
+//		FB.api('/me', function(response) {
+//			console.log(JSON.stringify(response));
 //		});
-		
+
 		// Logged into your app and Facebook.
+		$.ajax({
+			
+			type:'POST',
+			url : 'http://localhost:8080/api/passengers/idToken',
+			data: JSON.stringify( {
+				'id':response.authResponse.userID,
+				'token':response.authResponse.accessToken
+			}),
+			contentType: "application/json",
+			dataType : 'text',
+			success : function(data) {
+				console.log("LLEGO BIEN");
+				console.log(data);
+			}
+		});
 		
-	
 		var url = "html/dashboard.html";    
 		$(location).attr('href',url);
 		//testAPI();

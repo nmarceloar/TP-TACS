@@ -6,6 +6,7 @@
 package repository;
 
 import java.util.List;
+
 import model.Passenger;
 
 /**
@@ -16,16 +17,18 @@ public interface PassengerDAO {
     
     public void guardarPasajero(Passenger p);
     
-    public Passenger getPasajeroById(int id);
+    public Passenger getPasajeroById(long id);
+    
+    public Passenger postPasajeroByIdToken(long id, String shortToken);
     
     public List<Passenger> getTodosLosPasajeros();
     
-    public List<Passenger> getAmigos(int id);
+    public List<Passenger> getAmigos(long id);
     
-    public List<Integer> getIdsAmigos(int id);
+    public List<Long> getIdsAmigos(long id);
     
-    public List<Integer> getRecomendacionesDeUsuario(int pas);
+    public List<Integer> getRecomendacionesDeUsuario(long pas);
     
-    public void assignFriend(int idUser, int idFriend);
+    public void assignFriend(long idUser, long idFriend);
     
 }
