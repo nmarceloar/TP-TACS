@@ -66,11 +66,12 @@ function statusChangeCallback(response) {
 			success : function(data) {
 				console.log("LLEGO BIEN");
 				console.log(data);
+				var url = "html/dashboard.html";    
+				$(location).attr('href',url);
 			}
 		});
+		console.log("esto seguro primero");
 		
-		var url = "html/dashboard.html";    
-		$(location).attr('href',url);
 		//testAPI();
 
 	} else if (response.status === 'not_authorized') {

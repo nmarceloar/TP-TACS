@@ -39,8 +39,10 @@ var orgCity = new City();
 //guardo los datos de la ciudad de destino
 var dstCity = new City();
 
+//###############################VARIABLES DE FACEBOOK#######################
 var id;
-
+var token;
+//###############################VARIABLES DE FACEBOOK#######################
 
 $(function () {
 	
@@ -311,6 +313,32 @@ $(function () {
          */
         contViajes++;
         $("#listViajes").append(getViajeHTML(contViajes));
+        // pruebo las cosas del mapa
+        console.log("https://maps.googleapis.com/maps/api/staticmap?center="+mapaVuelo.getCenter().toUrlValue()+
+    	 		"&zoom="+mapaVuelo.getZoom() +
+    	 		"&maptype="+mapaVuelo.getMapTypeId() +
+    	 		"&size=600x400"+
+    	 		"&markers=color:green%7C"+markerOrigen.getPosition().toString().trim()+
+    	 		"%7C"+markerDestino.getPosition().toString().trim()+
+    	 		"&path=color:red%7C"+markerOrigen.getPosition().toString().trim()+
+    	 		"%7C"+markerDestino.getPosition().toString().trim());
+        // posteo en muro de facebook
+        FB.api('/' + id + '/feed', 'post', {
+        	message : getViajeParaFB(),
+        	picture: "https://maps.googleapis.com/maps/api/staticmap?center="+mapaVuelo.getCenter().toUrlValue()+
+	 		"&zoom="+mapaVuelo.getZoom() +
+	 		"&maptype="+mapaVuelo.getMapTypeId() +
+	 		"&size=600x400"+
+	 		"&markers=color:green%7C"+markerOrigen.getPosition().toString().trim()+
+	 		"%7C"+markerDestino.getPosition().toString().trim()+
+	 		"&path=color:red%7C"+markerOrigen.getPosition().toString().trim()+
+	 		"%7C"+markerDestino.getPosition().toString().trim(),
+        	name : 'TACS POR EL MUNDO',
+        	description : 'viaje',
+        	access_token : token
+				        }, function(data) {
+					console.log(data);
+				});
 
         $("div[id=" + contViajes + "] a[role=linkViaje]").click(initClickDetalle);
         //limpio el form para futuros viajes
@@ -339,6 +367,8 @@ function getViajeHTML(idViaje) {
             + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#">Compartir</a> <a href="#">Eliminar</a></p>'
             + '</div>';
 }
+
+
 
 function getUsuarioPorId(id) {
     var nombre;
@@ -666,7 +696,9 @@ function drawFlightRoute(airportdata) {
         markersVuelos.push(marker);
         latlngbounds.extend(marker.getPosition());
     }
-    map.fitBounds(latlngbounds);
+    console.log("aca erramapa");
+    mapaVuelo.fitBounds(latlngbounds);
+    console.log("salio mapa");
     var path = [];
     for (var i = 0; i < markersVuelos.length; i++) {
         path.push(markersVuelos[i].getPosition());
@@ -714,17 +746,31 @@ function updateStatusCallback(response){
 		id=response.authResponse.userID;
 		console.log(id);
 				 
-		FB.api('/me', {
+		FB.api('/'+id, {
 			fields : 'name'
 		}, function(response) {
 			$("#nombreUsuarioFb").html(response.name);
 		});
 
-		FB.api('/me?fields=picture', function(response) {
+		FB.api('/'+id+'?fields=picture', function(response) {
 
 			$("#imagenPerfil").attr("src", response.picture.data.url);
 		});
 		
+		var url = 'http://localhost:8080/api/passengers/query?id='+id;
+    	console.log("logueo url cambiada posta");
+    	console.log(url);
+    	$(document).ready(function(){
+    		$.ajax({
+    	    	 url : url,
+    	    	 dataType : 'text',
+    	    	 success : function(data) {
+    	    		 console.log("LLEGO BIEN el token");
+    	    		 console.log(data);
+    	    		 token= data;
+    	    	 	}
+    	    	 });
+    	})
 		
 	} else if (response.status === 'not_authorized') {
 		console.log("Esta logueado en face, pero todavia no acepto")
@@ -745,20 +791,21 @@ function updateStatusCallback(response){
 
 
 function dameLongToken(){
-	var url = 'http://localhost:8080/api/passengers/query?id='+id;
-	console.log("logueo url");
-	console.log(url);
-	var token;
-	$.ajax({
-	 url : url,
-	 dataType : 'text',
-	 success : function(data) {
-		 console.log("LLEGO BIEN");
-		 console.log(data);
-		 token=data;
-	 	}
-	 });
+	
 	return token;
+	
+}
+
+
+function getViajeParaFB() {
+    return 'TACS POR EL MUNDO: Viajo desde '
+            + currentTrip.fromCity.description
+            + ' a '
+            + currentTrip.toCity.description
+            + ' saliendo el dia '
+            + currentTrip.outbound.segments[0].departure_datetime
+            + ' y volviendo el dia '
+            + currentTrip.inbound.segments[(currentTrip.inbound.segments.length - 1)].arrival_datetime;
 }
 
 //####################### FACEBOOK #######################################
