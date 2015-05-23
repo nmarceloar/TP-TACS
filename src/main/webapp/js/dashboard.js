@@ -742,7 +742,7 @@ function updateStatusCallback(response){
 	
 }
 
-//####################### FACEBOOK #######################################
+
 
 function dameLongToken(){
 	var url = 'http://localhost:8080/api/passengers/query?id='+id;
@@ -761,3 +761,4 @@ function dameLongToken(){
 	return token;
 }
 
+//####################### FACEBOOK #######################################
