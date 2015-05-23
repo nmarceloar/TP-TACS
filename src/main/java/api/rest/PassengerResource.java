@@ -76,7 +76,7 @@ public class PassengerResource {
     public  String   getTokenById(
     		@NotNull @QueryParam("id") String userId)
     {    	
-    	Passenger pass = pjSrv.getPassengerById(Long.parseLong( userId));
+    	Passenger pass=pjSrv.getPassengerById(Long.parseLong( userId));
     	return pass.getToken();
     	    	
 	}

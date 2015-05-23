@@ -39,7 +39,6 @@ var orgCity = new City();
 //guardo los datos de la ciudad de destino
 var dstCity = new City();
 
-var token;
 var id;
 
 
@@ -59,37 +58,11 @@ $(function () {
 		    $('#loginbutton,#feedbutton').removeAttr('disabled');
 		    FB.getLoginStatus(function(response) {
 				updateStatusCallback(response);
+				
 			});
 		  });
 	});
 	
-	
-	console.log(id);
-//	
-//	 $.ajax({
-//	 url : url ,
-//	 dataType : 'text',
-//	 success : function(data) {
-//		 console.log("LLEGO BIEN");
-//		 console.log(data);
-//		 token=data
-//	 	}
-//	 });
-//	 
-//	 
-//	FB.api('/me', {
-//		fields : 'name',
-//		accessToken : token
-//	}, function(response) {
-//		$("#nombreUsuarioFb").html(response.name);
-//	});
-//	
-//	FB.api('/me?fields=picture&accessToken='+token, function(response) {
-//		
-//		$("#imagenPerfil").attr("src",response.picture.data.url);
-//	});
-
-
 	$("#cerrarSesion").click(function(){
 		
 		FB.logout(function(response) {
@@ -728,7 +701,7 @@ function updateStatusCallback(response){
 	if (response.status === 'connected') {
 
 		
-		console.log("Esta logueado y acepto");
+		
 
 		console.log("TOKEN");
 		console.log(response.authResponse.accessToken);
@@ -740,6 +713,18 @@ function updateStatusCallback(response){
 		
 		id=response.authResponse.userID;
 		console.log(id);
+				 
+		FB.api('/me', {
+			fields : 'name'
+		}, function(response) {
+			$("#nombreUsuarioFb").html(response.name);
+		});
+
+		FB.api('/me?fields=picture', function(response) {
+
+			$("#imagenPerfil").attr("src", response.picture.data.url);
+		});
+		
 		
 	} else if (response.status === 'not_authorized') {
 		console.log("Esta logueado en face, pero todavia no acepto")
@@ -758,4 +743,21 @@ function updateStatusCallback(response){
 }
 
 //####################### FACEBOOK #######################################
+
+function dameLongToken(){
+	var url = 'http://localhost:8080/api/passengers/query?id='+id;
+	console.log("logueo url");
+	console.log(url);
+	var token;
+	$.ajax({
+	 url : url,
+	 dataType : 'text',
+	 success : function(data) {
+		 console.log("LLEGO BIEN");
+		 console.log(data);
+		 token=data;
+	 	}
+	 });
+	return token;
+}
 
