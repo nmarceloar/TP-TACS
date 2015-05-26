@@ -353,15 +353,12 @@ $(function () {
     	$("#itemSinViaje").hide();
 
 
-
-
-
     	$.ajax({
     		//TODO sacar hardcodeo del user
     		type: 'POST',
     		url: 'http://localhost:8080/api/trips',
     		data:JSON.stringify({
-    			"idPassenger":"1",
+    			"idPassenger":id,
     			"itinerary":currentTrip.toJSON()
     		}),
     		contentType: 'application/json',
