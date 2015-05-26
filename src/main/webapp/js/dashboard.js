@@ -38,7 +38,8 @@ var Trip = function (org, dst, start, end) {
     		this.inbound.segments[i].duration = dateDifference(this.inbound.segments[i].departure_datetime, this.inbound.segments[i].arrival_datetime).toString();
     		segments.push(this.inbound.segments[i]);
     	}
-    	return JSON.stringify(segments);
+//    	return JSON.stringify(segments);
+    	return segments
     };
 };
 //** clases **********************************************************
@@ -78,6 +79,7 @@ $(function () {
     formResetViaje();
     formResetVuelos();
 
+    
     $("a[role=linkViaje]").click(initClickDetalle);
     $("#modDetalleViaje").on("shown.bs.modal", function (e) {
         //hack para que el mapa se dibuje bien
@@ -301,19 +303,20 @@ $(function () {
         $("#boxVueloVuelta").hide();
         $("#lstVuevloVuelta").show();
     });
+    
     $("#btnViajar").click(function (event) {
         event.preventDefault();
         $("#itemSinViaje").hide();
-        
         $.ajax({
         	//TODO sacar hardcodeo del user
-        	url: 'http://localhost:8080/api/trips/1',
-        	method: 'POST',
-        	data: {
-        		idPassenger: 1,
-        		itinerary: currentTrip.toJSON()
-        	},
-            dataType: 'json',
+        	type: 'POST',
+        	url: 'http://localhost:8080/api/trips',
+        	data:JSON.stringify({
+        		"idPassenger":"1",
+        		"itinerary":currentTrip.toJSON()
+        	}),
+        	contentType: 'application/json',
+            dataType: 'text',
             success: function (data) {
             	console.log(data);
             	contViajes++;
