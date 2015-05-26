@@ -6,41 +6,22 @@
 package api.rest;
 
 import apis.PassengerAPI;
-import integracion.despegar.Airport;
 
 import java.util.List;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.client.WebTarget;
-
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.jackson.JacksonFeature;
-import org.junit.Assert;
-
-import com.fasterxml.jackson.datatype.joda.JodaMapper;
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 import integracion.facebook.*;
-import services.Despegar;
 import model.Passenger;
 
 /**

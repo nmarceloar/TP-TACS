@@ -8,8 +8,6 @@ package services;
 import apis.PassengerAPI;
 import apis.RecommendationAPI;
 import apis.TripsAPI;
-import integracion.despegar.TripOption;
-import apis.TripOptionsProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import model.Trip;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import repository.PassengerDAO;
