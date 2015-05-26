@@ -39,7 +39,7 @@ var Trip = function (org, dst, start, end) {
     		segments.push(this.inbound.segments[i]);
     	}
 //    	return JSON.stringify(segments);
-    	return segments
+    	return segments;
     };
 };
 //** clases **********************************************************
