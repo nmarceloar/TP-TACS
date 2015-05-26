@@ -359,7 +359,7 @@ function getViajesPropiosHTML(data) {
             + '<h3><a href="#" role="linkViaje">Viaje 1. Desde '
             + data.itinerary[0].from
             + ' a '
-            + data.itinerary[data.itinerary.length - 1].to
+            + data.itinerary[data.itinerary.length - 1].from
             + ' saliendo el d&iacute;a '
             + data.tripDepartureDate
             + ' y volviendo el d&iacute;a '
