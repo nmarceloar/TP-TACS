@@ -123,7 +123,6 @@ $(function () {
     formResetViaje();
     formResetVuelos();
 
-    
     $("a[role=linkViaje]").click(initClickDetalle);
     $("#modDetalleViaje").on("shown.bs.modal", function (e) {
         //hack para que el mapa se dibuje bien
@@ -354,7 +353,6 @@ $(function () {
 
 
     	$.ajax({
-    		//TODO sacar hardcodeo del user
     		type: 'POST',
     		url: 'http://localhost:8080/api/trips',
     		data:JSON.stringify({
@@ -367,33 +365,41 @@ $(function () {
     			console.log(data);
     			contViajes++;
     			$("#listViajes").append(getViajeHTML(contViajes));
+    			
+    			bootbox.confirm("Felicitaciones por tu viaje! Queres publicarlo en tu muro de Facebook?", function(result) {
+    				if(result){
+//  					pruebo las cosas del mapa
+    					console.log("https://maps.googleapis.com/maps/api/staticmap?center="+mapaVuelo.getCenter().toUrlValue()+
+    							"&zoom="+mapaVuelo.getZoom() +
+    							"&maptype="+mapaVuelo.getMapTypeId() +
+    							"&size=600x400"+
+    							"&markers=color:green%7C"+markerOrigen.getPosition().toString().trim()+
+    							"%7C"+markerDestino.getPosition().toString().trim()+
+    							"&path=color:red%7C"+markerOrigen.getPosition().toString().trim()+
+    							"%7C"+markerDestino.getPosition().toString().trim());
+//  					posteo en muro de facebook
+    					FB.api('/' + id + '/feed', 'post', {
+    						message : getViajeParaFB(),
+    						picture: "https://maps.googleapis.com/maps/api/staticmap?center="+mapaVuelo.getCenter().toUrlValue()+
+    						"&zoom="+mapaVuelo.getZoom() +
+    						"&maptype="+mapaVuelo.getMapTypeId() +
+    						"&size=600x400"+
+    						"&markers=color:green%7C"+markerOrigen.getPosition().toString().trim()+
+    						"%7C"+markerDestino.getPosition().toString().trim()+
+    						"&path=color:red%7C"+markerOrigen.getPosition().toString().trim()+
+    						"%7C"+markerDestino.getPosition().toString().trim(),
+    						name : 'TACS POR EL MUNDO',
+    						description : 'viaje',
+    						access_token : token
+    					}, function(data) {
+    						console.log(data);
+    					});
+    					bootbox.alert("Excelente! Tu nuevo viaje ya esta publicado", function() {
+    					});
+    				}
+    			}); 
+    			
 
-//  			pruebo las cosas del mapa
-    			console.log("https://maps.googleapis.com/maps/api/staticmap?center="+mapaVuelo.getCenter().toUrlValue()+
-    					"&zoom="+mapaVuelo.getZoom() +
-    					"&maptype="+mapaVuelo.getMapTypeId() +
-    					"&size=600x400"+
-    					"&markers=color:green%7C"+markerOrigen.getPosition().toString().trim()+
-    					"%7C"+markerDestino.getPosition().toString().trim()+
-    					"&path=color:red%7C"+markerOrigen.getPosition().toString().trim()+
-    					"%7C"+markerDestino.getPosition().toString().trim());
-//  			posteo en muro de facebook
-    			FB.api('/' + id + '/feed', 'post', {
-    				message : getViajeParaFB(),
-    				picture: "https://maps.googleapis.com/maps/api/staticmap?center="+mapaVuelo.getCenter().toUrlValue()+
-    				"&zoom="+mapaVuelo.getZoom() +
-    				"&maptype="+mapaVuelo.getMapTypeId() +
-    				"&size=600x400"+
-    				"&markers=color:green%7C"+markerOrigen.getPosition().toString().trim()+
-    				"%7C"+markerDestino.getPosition().toString().trim()+
-    				"&path=color:red%7C"+markerOrigen.getPosition().toString().trim()+
-    				"%7C"+markerDestino.getPosition().toString().trim(),
-    				name : 'TACS POR EL MUNDO',
-    				description : 'viaje',
-    				access_token : token
-    			}, function(data) {
-    				console.log(data);
-    			});
     			$("div[id=" + contViajes + "] a[role=linkViaje]").click(initClickDetalle);
     			//limpio el form para futuros viajes
     			formResetViaje();
