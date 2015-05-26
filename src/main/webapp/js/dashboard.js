@@ -1,11 +1,9 @@
-var mapaNuevoViaje;
-var mapaVuelo;
-var mapaReview;
-
-var markerOrigen;
-var markerDestino;
-
-var markersVuelos = new Array();
+// ** clases **********************************************************
+var Viaje = function () {
+    this.pricedetail = null;
+    this.ida = null;
+    this.vuelta = null;
+}
 
 var City = function () {
     this.description = null;
@@ -29,20 +27,57 @@ var Trip = function (org, dst, start, end) {
     this.isReady = function () {
         return this.outbound != null && this.inbound != null;
     };
+    //convierto los datos del viaje para ser enviados a la api
+    this.toJSON = function (){
+    	var segments = new Array();
+    	for(var i = 0; i < this.outbound.segments.length; i++){
+    		this.outbound.segments[i].duration = dateDifference(this.outbound.segments[i].departure_datetime, this.outbound.segments[i].arrival_datetime).toString();
+    		segments.push(this.outbound.segments[i]);
+    	}
+    	for(var i = 0; i < this.inbound.segments.length; i++){
+    		this.inbound.segments[i].duration = dateDifference(this.inbound.segments[i].departure_datetime, this.inbound.segments[i].arrival_datetime).toString();
+    		segments.push(this.inbound.segments[i]);
+    	}
+//    	return JSON.stringify(segments);
+    	return segments;
+    };
 };
+//** clases **********************************************************
 
+//** globales ***************************************************************
+//mapas de google maps
+var mapaNuevoViaje; //el de la pantalla de creación de viaje
+var mapaVuelo; //el de la pantalla de selección de vuelos
+var mapaReview; //el de detalle de vuelo
+
+var markerOrigen;
+var markerDestino;
+
+//array con los puntos marcados en el mapa
+var markersVuelos = new Array();
+
+//engloba todo lo del viaje que se está gestando
 var currentTrip = null;
+
 var opcionesViaje = new Array();
+
+//mantengo referencia del viaje actual
+var currentMap = null;
 
 //guardo los datos de la ciudad de origen
 var orgCity = new City();
 //guardo los datos de la ciudad de destino
 var dstCity = new City();
+//** globales ***************************************************************
+
 
 //###############################VARIABLES DE FACEBOOK#######################
 var id;
 var token;
 //###############################VARIABLES DE FACEBOOK#######################
+
+
+//** main *******************************************************************
 
 $(function () {
 	
@@ -88,6 +123,7 @@ $(function () {
     formResetViaje();
     formResetVuelos();
 
+    
     $("a[role=linkViaje]").click(initClickDetalle);
     $("#modDetalleViaje").on("shown.bs.modal", function (e) {
         //hack para que el mapa se dibuje bien
@@ -134,6 +170,7 @@ $(function () {
     $("#modNuevoViaje").on("shown.bs.modal", function (e) {
         //hack para que el mapa se dibuje bien
         google.maps.event.trigger(mapaNuevoViaje, "resize");
+        currentMap = mapaNuevoViaje;
         //posiciono el cursor en la ciudad de origen
         $("#ciudadOrigen").focus();
     });
@@ -167,21 +204,21 @@ $(function () {
             $("#fechaDesde").focus();
         }
     })
-            .data("ui-autocomplete")._renderItem = autocomplete_renderItemCiudades;
+    .data("ui-autocomplete")._renderItem = autocomplete_renderItemCiudades;
 
     $("#fechaDesde").datepicker({
         dateFormat: 'dd/mm/yy',
         minDate: new Date(),
         todayHighlight: true
     })
-            .change(function (e) {
-                $("#dstContainter").show();
-                //restrinjo la fecha de vuelta teniendo en cuenta la elejida de salida
-                var date2 = $('#fechaDesde').datepicker('getDate');
-                date2.setDate(date2.getDate() + 1);
-                $('#fechaHasta').datepicker('option', 'minDate', date2);
-                $("#ciudadDestino").focus();
-            });
+    .change(function (e) {
+        $("#dstContainter").show();
+        //restrinjo la fecha de vuelta teniendo en cuenta la elejida de salida
+        var date2 = $('#fechaDesde').datepicker('getDate');
+        date2.setDate(date2.getDate() + 1);
+        $('#fechaHasta').datepicker('option', 'minDate', date2);
+        $("#ciudadDestino").focus();
+    });
 
     $("#ciudadDestino").autocomplete({
         source: function (request, response) {
@@ -208,7 +245,7 @@ $(function () {
             $("#fechaHasta").focus();
         }
     })
-            .data("ui-autocomplete")._renderItem = autocomplete_renderItemCiudades;
+    .data("ui-autocomplete")._renderItem = autocomplete_renderItemCiudades;
 
     //#############################################################
 
@@ -255,35 +292,42 @@ $(function () {
         dataType: 'json',
         success: function (data) {
             $.each(data, function (index, value) {
-                $("#listRecomendaciones").append(getRecomendacionesDeAmigosHTML(value));
-            });
+                $("#listRecomendaciones").append(value.nombreyap
+                        + ' quiere que viajes desde '
+                        + value.origen
+                        + ' hasta '
+                        + value.destino);
+
+            })
             $("#listRecomendaciones").append("<li class=\"divider\"></li>");
             $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
         }
     });
 
 
-//#############################################################
+    //#############################################################
 
     $("#fechaHasta").datepicker({
         dateFormat: 'dd/mm/yy',
         todayHighlight: true
     })
-            .change(function (e) {
-                $("#btnBuscarVuelo").show();
-            });
+    .change(function (e) {
+        $("#btnBuscarVuelo").show();
+    });
+    
     $("#btnBuscarVuelo").click(function (event) {
         event.preventDefault();
         $("#modVuelos").modal('show');
         currentTrip = new Trip(orgCity, dstCity, $("#fechaDesde").val(), $("#fechaHasta").val());
         getVuelos();
-        $("a[role=vueloIda]").click(initClickIda);
+        //$("a[role=vueloIda]").click(initClickIda);
     });
     $("#btnCancelarViaje").click(function (event) {
         formResetViaje();
     });
     $("#modVuelos").on("shown.bs.modal", function (e) {
         //hack para que el mapa se dibuje bien
+    	currentMap = mapaVuelo;
         google.maps.event.trigger(mapaVuelo, "resize");
     });
     //**************************************************
@@ -303,47 +347,63 @@ $(function () {
         $("#boxVueloVuelta").hide();
         $("#lstVuevloVuelta").show();
     });
+    
     $("#btnViajar").click(function (event) {
-        event.preventDefault();
-        $("#itemSinViaje").hide();
-        /*
-         //TODO acá iría el ajax post a viaje. hay un objeto que se llama currentTrip que tiene toda la info del vuelo
-         solo me falta agregar los datos de los aeropuertos.
-         Todo eso se debería pasar como json en el post a la api
-         */
-        contViajes++;
-        $("#listViajes").append(getViajeHTML(contViajes));
-        // pruebo las cosas del mapa
-        console.log("https://maps.googleapis.com/maps/api/staticmap?center="+mapaVuelo.getCenter().toUrlValue()+
-    	 		"&zoom="+mapaVuelo.getZoom() +
-    	 		"&maptype="+mapaVuelo.getMapTypeId() +
-    	 		"&size=600x400"+
-    	 		"&markers=color:green%7C"+markerOrigen.getPosition().toString().trim()+
-    	 		"%7C"+markerDestino.getPosition().toString().trim()+
-    	 		"&path=color:red%7C"+markerOrigen.getPosition().toString().trim()+
-    	 		"%7C"+markerDestino.getPosition().toString().trim());
-        // posteo en muro de facebook
-        FB.api('/' + id + '/feed', 'post', {
-        	message : getViajeParaFB(),
-        	picture: "https://maps.googleapis.com/maps/api/staticmap?center="+mapaVuelo.getCenter().toUrlValue()+
-	 		"&zoom="+mapaVuelo.getZoom() +
-	 		"&maptype="+mapaVuelo.getMapTypeId() +
-	 		"&size=600x400"+
-	 		"&markers=color:green%7C"+markerOrigen.getPosition().toString().trim()+
-	 		"%7C"+markerDestino.getPosition().toString().trim()+
-	 		"&path=color:red%7C"+markerOrigen.getPosition().toString().trim()+
-	 		"%7C"+markerDestino.getPosition().toString().trim(),
-        	name : 'TACS POR EL MUNDO',
-        	description : 'viaje',
-        	access_token : token
-				        }, function(data) {
-					console.log(data);
-				});
+    	event.preventDefault();
+    	$("#itemSinViaje").hide();
 
-        $("div[id=" + contViajes + "] a[role=linkViaje]").click(initClickDetalle);
-        //limpio el form para futuros viajes
-        formResetViaje();
-        formResetVuelos();
+
+
+
+
+    	$.ajax({
+    		//TODO sacar hardcodeo del user
+    		type: 'POST',
+    		url: 'http://localhost:8080/api/trips',
+    		data:JSON.stringify({
+    			"idPassenger":"1",
+    			"itinerary":currentTrip.toJSON()
+    		}),
+    		contentType: 'application/json',
+    		dataType: 'text',
+    		success: function (data) {
+    			console.log(data);
+    			contViajes++;
+    			$("#listViajes").append(getViajeHTML(contViajes));
+
+//  			pruebo las cosas del mapa
+    			console.log("https://maps.googleapis.com/maps/api/staticmap?center="+mapaVuelo.getCenter().toUrlValue()+
+    					"&zoom="+mapaVuelo.getZoom() +
+    					"&maptype="+mapaVuelo.getMapTypeId() +
+    					"&size=600x400"+
+    					"&markers=color:green%7C"+markerOrigen.getPosition().toString().trim()+
+    					"%7C"+markerDestino.getPosition().toString().trim()+
+    					"&path=color:red%7C"+markerOrigen.getPosition().toString().trim()+
+    					"%7C"+markerDestino.getPosition().toString().trim());
+//  			posteo en muro de facebook
+    			FB.api('/' + id + '/feed', 'post', {
+    				message : getViajeParaFB(),
+    				picture: "https://maps.googleapis.com/maps/api/staticmap?center="+mapaVuelo.getCenter().toUrlValue()+
+    				"&zoom="+mapaVuelo.getZoom() +
+    				"&maptype="+mapaVuelo.getMapTypeId() +
+    				"&size=600x400"+
+    				"&markers=color:green%7C"+markerOrigen.getPosition().toString().trim()+
+    				"%7C"+markerDestino.getPosition().toString().trim()+
+    				"&path=color:red%7C"+markerOrigen.getPosition().toString().trim()+
+    				"%7C"+markerDestino.getPosition().toString().trim(),
+    				name : 'TACS POR EL MUNDO',
+    				description : 'viaje',
+    				access_token : token
+    			}, function(data) {
+    				console.log(data);
+    			});
+    			$("div[id=" + contViajes + "] a[role=linkViaje]").click(initClickDetalle);
+    			//limpio el form para futuros viajes
+    			formResetViaje();
+    			formResetVuelos();
+    		}
+    	});
+
     });
     $("#btnVolver").click(function (e) {
         e.preventDefault();
@@ -353,6 +413,7 @@ $(function () {
     //**************************************************
 });
 
+// ** templates ************************************************
 function getViajeHTML(idViaje) {
     return '<div class="list-group-item" id="' + idViaje + '">'
             + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje 1. Desde '
@@ -370,24 +431,12 @@ function getViajeHTML(idViaje) {
 
 
 
-function getUsuarioPorId(id) {
-    var nombre;
-    $.ajax({
-        url: 'http://localhost:8080/api/passengers/' + id,
-        dataType: 'json',
-        success: function (data) {
-            nombre = data.nombre + ' ' + data.apellido;
-        }
-    });
-    return nombre;
-}
-
 function getViajesPropiosHTML(data) {
     return '<div class="list-group-item" id="itemViaje">'
             + '<h3><a href="#" role="linkViaje">Viaje 1. Desde '
             + data.itinerary[0].from
             + ' a '
-            + data.itinerary[data.itinerary.length - 1].to
+            + data.itinerary[data.itinerary.length - 1].from
             + ' saliendo el d&iacute;a '
             + data.tripDepartureDate
             + ' y volviendo el d&iacute;a '
@@ -415,157 +464,16 @@ function getViajesDeAmigosHTML(data) {
 function getRecomendacionesDeAmigosHTML(data) {
     return '<li class="recomendacion-no-leida"><a href="#" role="linkViaj">'
             + 'El amigo '
-//            + getUsuarioPorId(data.Usuario)
-            + getUsuarioPorId(data.Usuario)
+            + $.get('http://localhost:8080/api/passengers/1', function (datos) {
+                $("#listRecomendaciones").append(datos.nombre + datos.apellido);
+            })
+
+//    +getUsuarioPorId(data.Usuario)
             + ' te recomienda viajar desde '
             + data.origen
             + ' a '
             + data.destino
             + '</a> </li>';
-}
-
-
-function formResetViaje() {
-    $("#frmNuevoViaje")[0].reset();
-    $("#btnBuscarVuelo").hide();
-    $("#dstContainter").hide();
-    $("#orgMapContainer").hide();
-    $("#dstMapContainer").hide();
-    $("#fechaDesdeContainer").hide();
-    $("#fechaHastaContainer").hide();
-    markerOrigen = null;
-    markerDestino = null;
-}
-
-function formResetVuelos() {
-    $("#frmVuelos")[0].reset();
-    $("#btnViajar").hide();
-    $("#sinVuelos").hide();
-    $("#boxVuelo").hide();
-    $("#lstVuelos").hide();
-    $("#cargandoVuelos").show();
-    opcionesViaje = Array();
-    currentTrip = null;
-}
-
-
-function initClickIda() {
-    $("#lstVuevloVuelta").show();
-    $("#lstVuevloIda").hide();
-    $("#boxVuelo").show();
-    getVuelos();
-    $("a[role=vueloVuelta]").click(initClickVuelta);
-    //TODO levantar las coordenadas de la ciudad de origen y pasarselas a la siguiente función
-    markerOrigen = setMapMarker(mapaVuelo, -34.599722222222, -58.381944444444);
-    //me centro en el marker
-    mapaVuelo.setCenter(markerOrigen.getPosition());
-    mapaVuelo.setZoom(10);
-}
-
-function initClickVuelta() {
-    $("#lstVuevloVuelta").hide();
-    $("#boxVueloVuelta").show();
-    $("#btnViajar").show();
-    markerDestino = setMapMarker(mapaVuelo, 51.507222, -0.1275);
-    setMapBounds(mapaVuelo);
-    flightPath = new google.maps.Polyline({
-        path: [markerOrigen.getPosition(), markerDestino.getPosition()],
-        strokeColor: "#00F",
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        map: mapaVuelo
-    });
-}
-
-function getVuelos() {
-    $.ajax({
-        url: 'http://localhost:8080/api/trip-options',
-        dataType: 'json',
-        data: {
-            'fromCity': currentTrip.fromCity.code,
-            'toCity': currentTrip.toCity.code,
-            'startDate': currentTrip.startDate,
-            'endDate': currentTrip.endDate,
-            'offset': 0, //TODO falta paginación!
-            'limit': 5
-        },
-        success: function (data) {
-            //autocomplete_processCities(data, response);
-            //console.log(data);
-            $("#cargandoVuelos").hide();
-            var datalen = data.items.length;
-            if (datalen > 0) {
-                $("#sinVuelos").hide();
-                $("#lstVuelos").show();
-                $("#lstVuelos .list-group").html('');
-                opcionesViaje = data.items;
-                var i = 0;
-                var line;
-                for (i = 0; i < datalen; i++) {
-                    $("#listaVuelos").append(templateVuelo(i, data.items[i]));
-                }
-                $("div[role=opciones-vuelo]").hide();
-                $("a[role=ver-detalle-vuelo]").click(function (event) {
-                    $("div[role=opciones-vuelo][vuelo!=" + $(this).attr("vuelo") + "]").hide();
-                    $("div[role=opciones-vuelo][vuelo!=" + $(this).attr("vuelo") + "]").children("input[type=radio]").prop("disabled", true);
-                    $("div[role=opciones-vuelo][vuelo=" + $(this).attr("vuelo") + "]").toggle();
-                    $("div[role=opciones-vuelo][vuelo=" + $(this).attr("vuelo") + "]").children("input[type=radio]").prop("disabled", false);
-                });
-                $("input[type=radio][alternativa]").click(function (event) {
-                    //$("li[role=opcion-vuelo]").removeClass("vuelo-selected");
-                    //$(this).parents("li[role=opcion-vuelo]").addClass("vuelo-selected");
-                    var i_vuelo = $(this).parents("div[role=opciones-vuelo]").attr("vuelo");
-                    var i_alternativa = $(this).attr('alternativa');
-                    var i_type = $(this).parents("div[role=opciones-vuelo]").attr("type");
-                    var airportdata = new Array();
-                    if (i_type == "ida") {
-                        currentTrip.outbound = opcionesViaje[i_vuelo].outbound_choices[i_alternativa];
-                        getInfoAirportsAndMap(currentTrip.outbound);
-                    }
-                    else {
-                        currentTrip.inbound = opcionesViaje[i_vuelo].inbound_choices[i_alternativa];
-                        getInfoAirportsAndMap(currentTrip.inbound);
-                    }
-                    currentTrip.price = opcionesViaje[i_vuelo].price_detail;
-                    if (currentTrip.isReady()) {
-                        $("#btnViajar").show();
-                    }
-                });
-            }
-            else {
-                $("#lstVuelos").show();
-                $("#sinVuelos").show();
-            }
-        }
-    });
-}
-
-function getAirportData(code, airportlist) {
-    for (var i = 0; i < airportlist.length; i++) {
-        if (code == airportlist[i].code) {
-            return airportlist[i];
-        }
-    }
-    return null;
-}
-
-function getInfoAirportsAndMap(flight) {
-    var prep = '';
-    prep = "&code=" + flight.airportCodesAsSet.join("&code=")
-    $.ajax({
-        url: 'http://localhost:8080/api/airports?' + prep,
-        dataType: 'json',
-        success: function (data) {
-            result = data;
-            drawFlightRoute(data);
-        }
-    });
-}
-
-var Viaje = function () {
-    this.pricedetail = null;
-    this.ida = null;
-    this.vuelta = null;
 }
 
 function getTitleViaje(vuelo) {
@@ -605,6 +513,126 @@ function templateVuelo(posData, vuelo) {
             '<div class="list-group" role="opciones-vuelo" vuelo="' + posData + '" type="vuelta">' + descripcionvuelta + '</div>' +
             '</div>';
 }
+//** templates ************************************************
+
+// ** manejo de datos ********************************************
+function dateDifference(date1, date2){
+	var d1 = new Date(date1);
+	var d2 = new Date(date2);
+	var timeDiff = Math.abs(d2.getTime() - d1.getTime());
+	return Math.ceil(timeDiff / (1000 * 3600)); 
+}
+//** manejo de datos ********************************************
+
+//** manejo de forms *********************************************
+function formResetViaje() {
+    $("#frmNuevoViaje")[0].reset();
+    $("#btnBuscarVuelo").hide();
+    $("#dstContainter").hide();
+    $("#orgMapContainer").hide();
+    $("#dstMapContainer").hide();
+    $("#fechaDesdeContainer").hide();
+    $("#fechaHastaContainer").hide();
+    markerOrigen = null;
+    markerDestino = null;
+}
+
+function formResetVuelos() {
+    $("#frmVuelos")[0].reset();
+    $("#btnViajar").hide();
+    $("#sinVuelos").hide();
+    $("#boxVuelo").hide();
+    $("#lstVuelos").hide();
+    $("#cargandoVuelos").show();
+    opcionesViaje = Array();
+    currentTrip = null;
+}
+//** manejo de forms *********************************************
+
+// ** funciones ajax ************************************************************** 
+function getVuelos() {
+    $.ajax({
+        url: 'http://localhost:8080/api/trip-options',
+        dataType: 'json',
+        data: {
+            'fromCity': currentTrip.fromCity.code,
+            'toCity': currentTrip.toCity.code,
+            'startDate': currentTrip.startDate,
+            'endDate': currentTrip.endDate,
+            'offset': 0, //TODO falta paginación!
+            'limit': 5
+        },
+        success: function (data) {
+            $("#cargandoVuelos").hide();
+            var datalen = data.items.length;
+            if (datalen > 0) {
+                $("#sinVuelos").hide();
+                $("#lstVuelos").show();
+                $("#lstVuelos .list-group").html('');
+                opcionesViaje = data.items;
+                var i = 0;
+                var line;
+                for (i = 0; i < datalen; i++) {
+                    $("#listaVuelos").append(templateVuelo(i, data.items[i]));
+                }
+                $("div[role=opciones-vuelo]").hide();
+                $("a[role=ver-detalle-vuelo]").click(function (event) {
+                    $("div[role=opciones-vuelo][vuelo!=" + $(this).attr("vuelo") + "]").hide();
+                    $("div[role=opciones-vuelo][vuelo!=" + $(this).attr("vuelo") + "]").children("input[type=radio]").prop("disabled", true);
+                    $("div[role=opciones-vuelo][vuelo=" + $(this).attr("vuelo") + "]").toggle();
+                    $("div[role=opciones-vuelo][vuelo=" + $(this).attr("vuelo") + "]").children("input[type=radio]").prop("disabled", false);
+                });
+                $("input[type=radio][alternativa]").click(function (event) {
+                    var i_vuelo = $(this).parents("div[role=opciones-vuelo]").attr("vuelo");
+                    var i_alternativa = $(this).attr('alternativa');
+                    var i_type = $(this).parents("div[role=opciones-vuelo]").attr("type");
+                    var airportdata = new Array();
+                    if (i_type == "ida") {
+                        currentTrip.outbound = opcionesViaje[i_vuelo].outbound_choices[i_alternativa];
+                        getInfoAirportsAndMap(currentTrip.outbound);
+                    }
+                    else {
+                        currentTrip.inbound = opcionesViaje[i_vuelo].inbound_choices[i_alternativa];
+                        getInfoAirportsAndMap(currentTrip.inbound);
+                    }
+                    currentTrip.price = opcionesViaje[i_vuelo].price_detail;
+                    if (currentTrip.isReady()) {
+                        $("#btnViajar").show();
+                    }
+                });
+            }
+            else {
+                $("#lstVuelos").show();
+                $("#sinVuelos").show();
+            }
+        }
+    });
+}
+
+//busco el aeropuerto que quiero por código
+function getAirportData(code, airportlist) {
+    for (var i = 0; i < airportlist.length; i++) {
+        if (code == airportlist[i].code) {
+            return airportlist[i];
+        }
+    }
+    return null;
+}
+
+function getInfoAirportsAndMap(flight) {
+    var prep = '';
+    prep = "&code=" + flight.airportCodesAsSet.join("&code=")
+    $.ajax({
+        url: 'http://localhost:8080/api/airports?' + prep,
+        dataType: 'json',
+        success: function (data) {
+            result = data;
+            drawFlightRoute(data);
+        }
+    });
+}
+//** funciones ajax **************************************************************
+
 
 function initClickDetalle() {
     // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
@@ -617,7 +645,6 @@ function initClickDetalle() {
 
 function getDateFromInput(inputId) {
     var date = $("#" + inputId).datepicker("getDate");
-    console.log(date);
     return new Date(date.substring(6, 9), date.substring(3, 4) + 1, date.substring(0, 1));
 }
 
@@ -692,13 +719,13 @@ function drawFlightRoute(airportdata) {
     markersVuelos = [];
     var latlngbounds = new google.maps.LatLngBounds();
     for (var i = 0; i < airportdata.length; i++) {
-        var marker = setMapMarker(mapaVuelo, airportdata[i].geolocation, airportdata[i].description);
+        var marker = setMapMarker(currentMap, airportdata[i].geolocation, airportdata[i].description);
         markersVuelos.push(marker);
         latlngbounds.extend(marker.getPosition());
     }
-    console.log("aca erramapa");
-    mapaVuelo.fitBounds(latlngbounds);
-    console.log("salio mapa");
+
+    currentMap.fitBounds(latlngbounds);
+
     var path = [];
     for (var i = 0; i < markersVuelos.length; i++) {
         path.push(markersVuelos[i].getPosition());
@@ -709,7 +736,7 @@ function drawFlightRoute(airportdata) {
         strokeColor: color,
         strokeOpacity: 0.8,
         strokeWeight: 2,
-        map: mapaVuelo
+        map: currentMap
     });
 }
 

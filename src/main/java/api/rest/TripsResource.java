@@ -56,15 +56,14 @@ public class TripsResource {
     }
     
     @POST
-    @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response guardarViaje(Trip v) {
         vjSrv.saveTrip(v);
-        String result = "Guardado: " + v.getIdTrip()
-                + " " + v.getItinerary().get(0).getFrom()
-                + " - "
+        String result = "Guardado viaje con id "+v.getIdTrip()+" desde " + v.getItinerary().get(0).getFrom()
+                + " - hasta "
                 + v.getItinerary().get(v.getItinerary().size() - 1)
-                .getTo();
+                .getFrom();
+        	
 
         return Response.status(201)
                 .entity(result).build();

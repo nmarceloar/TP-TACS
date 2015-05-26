@@ -44,14 +44,14 @@ public class TripsDAOStatic implements TripsDAO {
                 DateTime.now().plusDays(12).toString(),
                 Integer.toString(6), "LAN", "L23");
         Trip viaje3 = new Trip(3, Arrays.asList(seg3));
-        listaViajes.add(viaje2);
+        listaViajes.add(viaje3);
         
         Segment seg4 = new Segment("Buenos Aires", "San Pablo",
                 DateTime.now().plusDays(8).toString(),
                 DateTime.now().plusDays(12).toString(),
                 Integer.toString(4), "Gol", "GO-012");
         Trip viaje4 = new Trip(5, Arrays.asList(seg4));
-        listaViajes.add(viaje2);
+        listaViajes.add(viaje4);
     }
     
     public List<Trip> getTripList() {

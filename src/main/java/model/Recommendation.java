@@ -20,7 +20,13 @@ public class Recommendation implements Serializable {
     private int idRecomendacion;
     
     @JsonProperty("Usuario")
+
     private long idUsuarioRecom;
+
+    
+    @JsonProperty("nombreyap")
+    private String nombreYAp;
+
 
     @JsonProperty("origen")
     private String ciudadOrig;
@@ -30,6 +36,7 @@ public class Recommendation implements Serializable {
 
     public Recommendation() {
         idRecomendacion = generadorId++;
+        nombreYAp = "";
     }
 
     public Recommendation(long idUser, String origen, String destino) {
@@ -37,6 +44,7 @@ public class Recommendation implements Serializable {
         idUsuarioRecom = idUser;
         ciudadOrig = origen;
         ciudadDest = destino;
+        nombreYAp = "";
     }
 
     public int getIdRecomendacion() {
@@ -65,6 +73,14 @@ public class Recommendation implements Serializable {
 
     public void setIdUsuarioRecom(long idUsuarioRecom) {
         this.idUsuarioRecom = idUsuarioRecom;
+    }
+
+    public String getNombreYAp() {
+        return nombreYAp;
+    }
+
+    public void setNombreYAp(String nombreYAp) {
+        this.nombreYAp = nombreYAp;
     }
 
 }
