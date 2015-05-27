@@ -408,6 +408,25 @@ function getViajesDeAmigosHTML(data) {
             + '</div>';
 }
 
+function insertarRecomendacionesDeViajes(data) {
+//    return '<div class="list-group-item" id="itemRecom">'
+//            + '<h3><a href="#" role="linkViajeRecom">'
+//            + data.nombreyap
+//            + ' quiere que viajes desde '
+//            + data.origen
+//            + ' hasta '
+//            + data.destino
+//            + '</a></h3>'
+//            + '</div>';
+    return '<li><a href="#" role="linkViajeRecom">'
+            + data.nombreyap
+            + ' quiere que viajes desde '
+            + data.origen
+            + ' hasta '
+            + data.destino
+            + '</a></li>';
+}
+
 function getTitleViaje(vuelo) {
     var canttramos = vuelo.segments.length;
     return ' el ' + vuelo.segments[0].departure_datetime +
@@ -573,6 +592,15 @@ function initClickDetalle() {
     }
     //TODO get detalle de viaje (por api)
     $("#modDetalleViaje").modal('show');
+}
+
+function initClickDetalleRecom() {
+    // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
+    if (typeof $("#drpDwnRecomendaciones").data("bs.modal") != 'undefined' && $("#drpDwnRecomendaciones").data("bs.modal").isShown) {
+        $("#drpDwnRecomendaciones").modal("hide");
+    }
+    //TODO get detalle de viaje (por api)
+    $("#modDetalleViajeRecom").modal('show');
 }
 
 function getDateFromInput(inputId) {
@@ -779,13 +807,9 @@ function updateStatusCallback(response) {
             dataType: 'json',
             success: function (data) {
                 $.each(data, function (index, value) {
-                    $("#listRecomendaciones").append(value.nombreyap
-                            + ' quiere que viajes desde '
-                            + value.origen
-                            + ' hasta '
-                            + value.destino);
-
+                    $("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value));
                 });
+                $("div a[role=linkViajeRecom]").click(initClickDetalleRecom);
                 $("#listRecomendaciones").append("<li class=\"divider\"></li>");
                 $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
             }
