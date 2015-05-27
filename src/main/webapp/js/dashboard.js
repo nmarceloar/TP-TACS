@@ -409,7 +409,7 @@ function getViajesDeAmigosHTML(data) {
 }
 
 function getRecomendacionesDeAmigosHTML(data) {
-    return '<li class="recomendacion-no-leida"><a href="#" role="linkViaj">'
+    return '<li class="recomendacion-no-leida"><a href="#" role="linkViaje">'
             + 'El amigo '
             + $.get('http://localhost:8080/api/passengers/1', function (datos) {
                 $("#listRecomendaciones").append(datos.nombre + datos.apellido);
