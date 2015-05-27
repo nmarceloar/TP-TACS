@@ -60,6 +60,8 @@ public class PassengerDAOStatic implements PassengerDAO {
 //
 //        listaPasajeros.addAll(Arrays.asList(pasajero1, pasajero2, pasajero3, pasajero4,
 //                pasajero5, pasajero6, pasajero7));
+        pFlavio.setRecommendations(Arrays.asList(1));
+        pMartin.setRecommendations(Arrays.asList(2));
         listaPasajeros.addAll(Arrays.asList(pMartin, pFlavio));
     }
 

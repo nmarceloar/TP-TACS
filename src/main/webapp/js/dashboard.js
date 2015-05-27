@@ -28,18 +28,18 @@ var Trip = function (org, dst, start, end) {
         return this.outbound != null && this.inbound != null;
     };
     //convierto los datos del viaje para ser enviados a la api
-    this.toJSON = function (){
-    	var segments = new Array();
-    	for(var i = 0; i < this.outbound.segments.length; i++){
-    		this.outbound.segments[i].duration = dateDifference(this.outbound.segments[i].departure_datetime, this.outbound.segments[i].arrival_datetime).toString();
-    		segments.push(this.outbound.segments[i]);
-    	}
-    	for(var i = 0; i < this.inbound.segments.length; i++){
-    		this.inbound.segments[i].duration = dateDifference(this.inbound.segments[i].departure_datetime, this.inbound.segments[i].arrival_datetime).toString();
-    		segments.push(this.inbound.segments[i]);
-    	}
+    this.toJSON = function () {
+        var segments = new Array();
+        for (var i = 0; i < this.outbound.segments.length; i++) {
+            this.outbound.segments[i].duration = dateDifference(this.outbound.segments[i].departure_datetime, this.outbound.segments[i].arrival_datetime).toString();
+            segments.push(this.outbound.segments[i]);
+        }
+        for (var i = 0; i < this.inbound.segments.length; i++) {
+            this.inbound.segments[i].duration = dateDifference(this.inbound.segments[i].departure_datetime, this.inbound.segments[i].arrival_datetime).toString();
+            segments.push(this.inbound.segments[i]);
+        }
 //    	return JSON.stringify(segments);
-    	return segments;
+        return segments;
     };
 };
 //** clases **********************************************************
@@ -82,41 +82,41 @@ var token;
 //** main *******************************************************************
 
 $(function () {
-	
-	//####################### FACEBOOK #######################################
 
-	//GET DEL TOKEN
-	$(function() {
-		  $.ajaxSetup({ cache: true });
-		  $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
-		    FB.init({
-		      appId: '1586547271608233',
-		      version: 'v2.3' // or v2.0, v2.1, v2.0
-		    });     
-		    $('#loginbutton,#feedbutton').removeAttr('disabled');
-		    FB.getLoginStatus(function(response) {
-				updateStatusCallback(response);
-				
-			});
-		  });
-	});
-	
-	$("#cerrarSesion").click(function(){
-		
-		FB.logout(function(response) {
-	        // Person is now logged out
-			
-			var url = "/";    
-			$(location).attr('href',url);
-			
-		});
-		
-	});
+    //####################### FACEBOOK #######################################
+
+    //GET DEL TOKEN
+    $(function () {
+        $.ajaxSetup({cache: true});
+        $.getScript('//connect.facebook.net/en_US/sdk.js', function () {
+            FB.init({
+                appId: '1586547271608233',
+                version: 'v2.3' // or v2.0, v2.1, v2.0
+            });
+            $('#loginbutton,#feedbutton').removeAttr('disabled');
+            FB.getLoginStatus(function (response) {
+                updateStatusCallback(response);
+
+            });
+        });
+    });
+
+    $("#cerrarSesion").click(function () {
+
+        FB.logout(function (response) {
+            // Person is now logged out
+
+            var url = "/";
+            $(location).attr('href', url);
+
+        });
+
+    });
 
 
 
-	//####################### FACEBOOK #######################################
-   
+    //####################### FACEBOOK #######################################
+
     //config google maps
     google.maps.event.addDomListener(window, 'load', initialize);
 
@@ -203,21 +203,21 @@ $(function () {
             $("#fechaDesde").focus();
         }
     })
-    .data("ui-autocomplete")._renderItem = autocomplete_renderItemCiudades;
+            .data("ui-autocomplete")._renderItem = autocomplete_renderItemCiudades;
 
     $("#fechaDesde").datepicker({
         dateFormat: 'dd/mm/yy',
         minDate: new Date(),
         todayHighlight: true
     })
-    .change(function (e) {
-        $("#dstContainter").show();
-        //restrinjo la fecha de vuelta teniendo en cuenta la elejida de salida
-        var date2 = $('#fechaDesde').datepicker('getDate');
-        date2.setDate(date2.getDate() + 1);
-        $('#fechaHasta').datepicker('option', 'minDate', date2);
-        $("#ciudadDestino").focus();
-    });
+            .change(function (e) {
+                $("#dstContainter").show();
+                //restrinjo la fecha de vuelta teniendo en cuenta la elejida de salida
+                var date2 = $('#fechaDesde').datepicker('getDate');
+                date2.setDate(date2.getDate() + 1);
+                $('#fechaHasta').datepicker('option', 'minDate', date2);
+                $("#ciudadDestino").focus();
+            });
 
     $("#ciudadDestino").autocomplete({
         source: function (request, response) {
@@ -244,18 +244,18 @@ $(function () {
             $("#fechaHasta").focus();
         }
     })
-    .data("ui-autocomplete")._renderItem = autocomplete_renderItemCiudades;
+            .data("ui-autocomplete")._renderItem = autocomplete_renderItemCiudades;
 
-   
+
 
     $("#fechaHasta").datepicker({
         dateFormat: 'dd/mm/yy',
         todayHighlight: true
     })
-    .change(function (e) {
-        $("#btnBuscarVuelo").show();
-    });
-    
+            .change(function (e) {
+                $("#btnBuscarVuelo").show();
+            });
+
     $("#btnBuscarVuelo").click(function (event) {
         event.preventDefault();
         $("#modVuelos").modal('show');
@@ -268,7 +268,7 @@ $(function () {
     });
     $("#modVuelos").on("shown.bs.modal", function (e) {
         //hack para que el mapa se dibuje bien
-    	currentMap = mapaVuelo;
+        currentMap = mapaVuelo;
         google.maps.event.trigger(mapaVuelo, "resize");
     });
     //**************************************************
@@ -288,67 +288,67 @@ $(function () {
         $("#boxVueloVuelta").hide();
         $("#lstVuevloVuelta").show();
     });
-    
+
     $("#btnViajar").click(function (event) {
-    	event.preventDefault();
-    	$("#itemSinViaje").hide();
+        event.preventDefault();
+        $("#itemSinViaje").hide();
 
-    	$.ajax({
-    		type: 'POST',
-    		url: 'http://localhost:8080/api/trips',
-    		data:JSON.stringify({
-    			"idPassenger":id,
-    			"fromCity":currentTrip.fromCity.description,
-    			"toCity":currentTrip.toCity.description,
-    			"itinerary":currentTrip.toJSON()
-    		}),
-    		contentType: 'application/json',
-    		dataType: 'json',
-    		success: function (data) {
-    			console.log(data.result);
-    			contViajes++;
-    			$("#listViajes").append(getViajeHTML(data.id));
-    			
-    			bootbox.confirm("Felicitaciones por tu viaje! Queres publicarlo en tu muro de Facebook?", function(result) {
-    				if(result){
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:8080/api/trips',
+            data: JSON.stringify({
+                "idPassenger": id,
+                "fromCity": currentTrip.fromCity.description,
+                "toCity": currentTrip.toCity.description,
+                "itinerary": currentTrip.toJSON()
+            }),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data.result);
+                contViajes++;
+                $("#listViajes").append(getViajeHTML(data.id));
+
+                bootbox.confirm("Felicitaciones por tu viaje! Queres publicarlo en tu muro de Facebook?", function (result) {
+                    if (result) {
 //  					pruebo las cosas del mapa
-    					console.log("https://maps.googleapis.com/maps/api/staticmap?center="+mapaVuelo.getCenter().toUrlValue()+
-    							"&zoom="+mapaVuelo.getZoom() +
-    							"&maptype="+mapaVuelo.getMapTypeId() +
-    							"&size=600x400"+
-    							"&markers=color:green%7C"+markerOrigen.getPosition().toString().trim()+
-    							"%7C"+markerDestino.getPosition().toString().trim()+
-    							"&path=color:red%7C"+markerOrigen.getPosition().toString().trim()+
-    							"%7C"+markerDestino.getPosition().toString().trim());
+                        console.log("https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
+                                "&zoom=" + mapaVuelo.getZoom() +
+                                "&maptype=" + mapaVuelo.getMapTypeId() +
+                                "&size=600x400" +
+                                "&markers=color:green%7C" + markerOrigen.getPosition().toString().trim() +
+                                "%7C" + markerDestino.getPosition().toString().trim() +
+                                "&path=color:red%7C" + markerOrigen.getPosition().toString().trim() +
+                                "%7C" + markerDestino.getPosition().toString().trim());
 //  					posteo en muro de facebook
-    					FB.api('/' + id + '/feed', 'post', {
-    						message : getViajeParaFB(),
-    						picture: "https://maps.googleapis.com/maps/api/staticmap?center="+mapaVuelo.getCenter().toUrlValue()+
-    						"&zoom="+mapaVuelo.getZoom() +
-    						"&maptype="+mapaVuelo.getMapTypeId() +
-    						"&size=600x400"+
-    						"&markers=color:green%7C"+markerOrigen.getPosition().toString().trim()+
-    						"%7C"+markerDestino.getPosition().toString().trim()+
-    						"&path=color:red%7C"+markerOrigen.getPosition().toString().trim()+
-    						"%7C"+markerDestino.getPosition().toString().trim(),
-    						name : 'TACS POR EL MUNDO',
-    						description : 'viaje',
-    						access_token : token
-    					}, function(data) {
-    						console.log(data);
-    					});
-    					bootbox.alert("Excelente! Tu nuevo viaje ya esta publicado", function() {
-    					});
-    				}
-    			}); 
-    			
+                        FB.api('/' + id + '/feed', 'post', {
+                            message: getViajeParaFB(),
+                            picture: "https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
+                                    "&zoom=" + mapaVuelo.getZoom() +
+                                    "&maptype=" + mapaVuelo.getMapTypeId() +
+                                    "&size=600x400" +
+                                    "&markers=color:green%7C" + markerOrigen.getPosition().toString().trim() +
+                                    "%7C" + markerDestino.getPosition().toString().trim() +
+                                    "&path=color:red%7C" + markerOrigen.getPosition().toString().trim() +
+                                    "%7C" + markerDestino.getPosition().toString().trim(),
+                            name: 'TACS POR EL MUNDO',
+                            description: 'viaje',
+                            access_token: token
+                        }, function (data) {
+                            console.log(data);
+                        });
+                        bootbox.alert("Excelente! Tu nuevo viaje ya esta publicado", function () {
+                        });
+                    }
+                });
 
-    			$("div[id=" + contViajes + "] a[role=linkViaje]").click(initClickDetalle);
-    			//limpio el form para futuros viajes
-    			formResetViaje();
-    			formResetVuelos();
-    		}
-    	});
+
+                $("div[id=" + contViajes + "] a[role=linkViaje]").click(initClickDetalle);
+                //limpio el form para futuros viajes
+                formResetViaje();
+                formResetVuelos();
+            }
+        });
 
     });
     $("#btnVolver").click(function (e) {
@@ -362,7 +362,7 @@ $(function () {
 // ** templates ************************************************
 function getViajeHTML(idViaje) {
     return '<div class="list-group-item" id="' + idViaje + '">'
-            + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje '+contViajes+'. Desde '
+            + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje ' + contViajes + '. Desde '
             + currentTrip.fromCity.description
             + ' a '
             + currentTrip.toCity.description
@@ -378,9 +378,9 @@ function getViajeHTML(idViaje) {
 
 
 function getViajesPropiosHTML(data) {
-	contViajes++;
+    contViajes++;
     return '<div class="list-group-item" id="itemViaje">'
-            + '<h3><a href="#" role="linkViaje">Viaje '+contViajes+'. Desde '
+            + '<h3><a href="#" role="linkViaje">Viaje ' + contViajes + '. Desde '
             + data.fromCity
             + ' a '
             + data.toCity
@@ -406,21 +406,6 @@ function getViajesDeAmigosHTML(data) {
             + '</a></h3>'
             + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#">Compartir</a> <a href="#">Eliminar</a></p>'
             + '</div>';
-}
-
-function getRecomendacionesDeAmigosHTML(data) {
-    return '<li class="recomendacion-no-leida"><a href="#" role="linkViaj">'
-            + 'El amigo '
-            + $.get('http://localhost:8080/api/passengers/1', function (datos) {
-                $("#listRecomendaciones").append(datos.nombre + datos.apellido);
-            })
-
-//    +getUsuarioPorId(data.Usuario)
-            + ' te recomienda viajar desde '
-            + data.origen
-            + ' a '
-            + data.destino
-            + '</a> </li>';
 }
 
 function getTitleViaje(vuelo) {
@@ -463,11 +448,11 @@ function templateVuelo(posData, vuelo) {
 //** templates ************************************************
 
 // ** manejo de datos ********************************************
-function dateDifference(date1, date2){
-	var d1 = new Date(date1);
-	var d2 = new Date(date2);
-	var timeDiff = Math.abs(d2.getTime() - d1.getTime());
-	return Math.ceil(timeDiff / (1000 * 3600)); 
+function dateDifference(date1, date2) {
+    var d1 = new Date(date1);
+    var d2 = new Date(date2);
+    var timeDiff = Math.abs(d2.getTime() - d1.getTime());
+    return Math.ceil(timeDiff / (1000 * 3600));
 }
 //** manejo de datos ********************************************
 
@@ -700,136 +685,137 @@ function getRandomColor() {
  */
 
 //####################### FACEBOOK #######################################
-function updateStatusCallback(response){
-	
-	console.log('updateStatusCallback');
+function updateStatusCallback(response) {
 
-	if (response.status === 'connected') {
+    console.log('updateStatusCallback');
 
-		
-		
-
-		console.log("TOKEN");
-		console.log(response.authResponse.accessToken);
-		console.log("EXPIRES IN");
-		console.log(response.authResponse.expiresIn);
-		console.log("ID");
-		console.log(response.authResponse.userID);
-		console.log("API--");
-		
-		id=response.authResponse.userID;
-		console.log(id);
-				 
-		FB.api('/'+id, {
-			fields : 'name'
-		}, function(response) {
-			$("#nombreUsuarioFb").html(response.name);
-		});
-
-		FB.api('/'+id+'?fields=picture', function(response) {
-
-			$("#imagenPerfil").attr("src", response.picture.data.url);
-		});
-		
-		var url = 'http://localhost:8080/api/passengers/query?id='+id;
-    	console.log("logueo url cambiada posta");
-    	console.log(url);
-    	$(document).ready(function(){
-    		$.ajax({
-    	    	 url : url,
-    	    	 dataType : 'text',
-    	    	 success : function(data) {
-    	    		 console.log("LLEGO BIEN el token");
-    	    		 console.log(data);
-    	    		 token= data;
-    	    	 	}
-    	    	 });
-    	})
-    	 //#############################################################
-
-    /**
-     * Implemento la carga de viajes del usuario mediante rest
-     */
+    if (response.status === 'connected') {
 
 
-    /**
-     * Lleno mis viajes anteriores
-     */
-    $.ajax({
-        url: 'http://localhost:8080/api/trips/'+id,
-        dataType: 'json',
-        success: function (data) {
-        	if(data.length!=0){
-            $("#itemSinViaje").hide();
-            $.each(data, function (index, value) {
-                $("#listViajes").append(getViajesPropiosHTML(value));
+
+
+        console.log("TOKEN");
+        console.log(response.authResponse.accessToken);
+        console.log("EXPIRES IN");
+        console.log(response.authResponse.expiresIn);
+        console.log("ID");
+        console.log(response.authResponse.userID);
+        console.log("API--");
+
+        id = response.authResponse.userID;
+        console.log(id);
+
+        FB.api('/' + id, {
+            fields: 'name'
+        }, function (response) {
+            $("#nombreUsuarioFb").html(response.name);
+        });
+
+        FB.api('/' + id + '?fields=picture', function (response) {
+
+            $("#imagenPerfil").attr("src", response.picture.data.url);
+        });
+
+        var url = 'http://localhost:8080/api/passengers/query?id=' + id;
+        console.log("logueo url cambiada posta");
+        console.log(url);
+        $(document).ready(function () {
+            $.ajax({
+                url: url,
+                dataType: 'text',
+                success: function (data) {
+                    console.log("LLEGO BIEN el token");
+                    console.log(data);
+                    token = data;
+                }
             });
-        	}
+        })
+        //#############################################################
+
+        /**
+         * Implemento la carga de viajes del usuario mediante rest
+         */
+
+
+        /**
+         * Lleno mis viajes anteriores
+         */
+        $.ajax({
+            url: 'http://localhost:8080/api/trips/' + id,
+            dataType: 'json',
+            success: function (data) {
+                if (data.length != 0) {
+                    $("#itemSinViaje").hide();
+                    $.each(data, function (index, value) {
+                        $("#listViajes").append(getViajesPropiosHTML(value));
+                    });
+                }
+            }
         }
+        );
+
+
+        /**
+         * LLeno los viajes de los amigos
+         */
+        $.ajax({
+            url: 'http://localhost:8080/api/trips/friends/' + id,
+            dataType: 'json',
+            success: function (data) {
+                if (data.length !== 0) {
+                    $.each(data, function (index, value) {
+                        $("#listViajesAmigos").append(getViajesDeAmigosHTML(value));
+                        $("div a[role=linkViaje]").click(initClickDetalle);
+                    });
+                }
+            }
+        });
+
+        /**
+         * Lleno con las recomendaciones que me hicieron
+         */
+        $.ajax({
+            url: 'http://localhost:8080/api/recommendations/' + id,
+            dataType: 'json',
+            success: function (data) {
+                $.each(data, function (index, value) {
+                    $("#listRecomendaciones").append(value.nombreyap
+                            + ' quiere que viajes desde '
+                            + value.origen
+                            + ' hasta '
+                            + value.destino);
+
+                });
+                $("#listRecomendaciones").append("<li class=\"divider\"></li>");
+                $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
+            }
+        });
+
+
+        //#############################################################
+
+    } else if (response.status === 'not_authorized') {
+        console.log("Esta logueado en face, pero todavia no acepto")
+        // The person is logged into Facebook, but not your app.
+        var url = "/";
+        $(location).attr('href', url);
+    } else {
+        // The person is not logged into Facebook, so we're not sure if
+        // they are logged into this app or not.
+        console.log("No esta logueado en face")
+        var url = "/";
+        $(location).attr('href', url);
     }
-    );
 
 
-    /**
-     * LLeno los viajes de los amigos
-     */
-    $.ajax({
-        url: 'http://localhost:8080/api/trips/friends/1',
-        dataType: 'json',
-        success: function (data) {
-        	if(data.length!=0){
-            $.each(data, function (index, value) {
-                $("#listViajesAmigos").append(getViajesDeAmigosHTML(value));
-                $("div a[role=linkViaje]").click(initClickDetalle);
-            });}
-        }
-    });
-
-    /**
-     * Lleno con las recomendaciones que me hicieron
-     */
-    $.ajax({
-        url: 'http://localhost:8080/api/recommendations/1',
-        dataType: 'json',
-        success: function (data) {
-            $.each(data, function (index, value) {
-                $("#listRecomendaciones").append(value.nombreyap
-                        + ' quiere que viajes desde '
-                        + value.origen
-                        + ' hasta '
-                        + value.destino);
-
-            })
-            $("#listRecomendaciones").append("<li class=\"divider\"></li>");
-            $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
-        }
-    });
-
-
-    //#############################################################
-		
-	} else if (response.status === 'not_authorized') {
-		console.log("Esta logueado en face, pero todavia no acepto")
-		// The person is logged into Facebook, but not your app.
-		var url = "/";    
-		$(location).attr('href',url);
-	} else {
-		// The person is not logged into Facebook, so we're not sure if
-		// they are logged into this app or not.
-		console.log("No esta logueado en face")
-		var url = "/";    
-		$(location).attr('href',url);
-	}
-
-	
 }
 
 
 
-function dameLongToken(){
-	
-	return token;
-	
+function dameLongToken() {
+
+    return token;
+
 }
 
 
