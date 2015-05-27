@@ -57,6 +57,10 @@ public class TripsResource {
     @Path("friends/{id}")
     @Produces("application/json")
     public List<Trip> getTripsOfFriends(@PathParam("id") String id) {
+        // Salvo la posibilidad de que de null los viajes de amigos
+        if (vjSrv.getTripsOfFriendsOfUser(Long.parseLong(id)) == null){
+            return new ArrayList<>();
+        }
         return vjSrv.getTripsOfFriendsOfUser(Long.parseLong(id));
     }
     
