@@ -45,22 +45,10 @@ public class PassengerDAOStatic implements PassengerDAO {
         Passenger pMartin = new Passenger(10206028316763565L, "Martin", "De Ciervo", "11", new ArrayList());
         Passenger pFlavio = new Passenger(10153253398579452L, "Flavio", "Pietrolati", "22", new ArrayList());
 
-//        Passenger pasajero1 = new Passenger(1, "pasajero1", "apellido1", "111111", new ArrayList());
-//        Passenger pasajero2 = new Passenger(2, "pasajero2", "apellido2", "222222", new ArrayList());
-//        Passenger pasajero3 = new Passenger(3, "pasajero3", "apellido3", "333333", new ArrayList());
-//        Passenger pasajero4 = new Passenger(4, "pasajero4", "apellido4", "444444", new ArrayList());
-//        Passenger pasajero5 = new Passenger(5, "pasajero5", "apellido5", "555555", new ArrayList());
-//        Passenger pasajero6 = new Passenger(6, "pasajero6", "apellido6", "666666", new ArrayList());
-//        Passenger pasajero7 = new Passenger(7, "pasajero7", "apellido7", "777777", new ArrayList());
-//
-//        pasajero1.agregarAmigo(pasajero3);
-//        pasajero1.setRecommendations(Arrays.asList(1));
-//        pasajero1.agregarAmigo(pasajero5);
-//        pasajero2.agregarAmigosPorPasajeros(Arrays.asList(pasajero4, pasajero6, pasajero7));
-//
-//        listaPasajeros.addAll(Arrays.asList(pasajero1, pasajero2, pasajero3, pasajero4,
-//                pasajero5, pasajero6, pasajero7));
+        pFlavio.setRecommendations(Arrays.asList(1));
+        pMartin.setRecommendations(Arrays.asList(2));
         listaPasajeros.addAll(Arrays.asList(pMartin, pFlavio));
+//        listaPasajeros.addAll(Arrays.asList(pMartin));
     }
 
     public List<Passenger> getListaPasajeros() {
@@ -126,9 +114,9 @@ public class PassengerDAOStatic implements PassengerDAO {
 
             Passenger pasajero = new Passenger(id, nombre.getFirst_name(), apellido.getLast_name(), longToken, new ArrayList());
 
+            guardarPasajero(pasajero);
             obtenerAmigosFB(pasajero);
 
-            guardarPasajero(pasajero);
             return pasajero;
         }
         return buscado;
@@ -186,7 +174,8 @@ public class PassengerDAOStatic implements PassengerDAO {
         WebTarget target = client.target("https://graph.facebook.com/v2.3/" + pasajero.getIdUser() + "/friends?fields=id,first_name,last_name&access_token=" + pasajero.getToken());
         Invocation.Builder invocationBuilder = target.request();
         Response response = invocationBuilder.get();
-        SearchFriendsFB busqueda = response.readEntity(new GenericType<SearchFriendsFB>() { });
+        SearchFriendsFB busqueda = response.readEntity(new GenericType<SearchFriendsFB>() {
+        });
 
         /**
          * Ahora solo es una asignacion unidireccional, teniendo en cuenta que
