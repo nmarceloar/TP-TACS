@@ -8,8 +8,6 @@ package services;
 import apis.PassengerAPI;
 import apis.RecommendationAPI;
 import apis.TripsAPI;
-import integracion.despegar.TripOption;
-import apis.TripOptionsProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import model.Trip;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import repository.PassengerDAO;
@@ -73,7 +70,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     }
 
     @Override
-    public List<Recommendation> getRecommendationsOfUser(int id) {
+    public List<Recommendation> getRecommendationsOfUser(long id) {
         List<Recommendation> lista =  recDao.getRecomendacionesPorId(
                 psjDao.getRecomendacionesDeUsuario(id));
         asignarPasajeroARecomendaciones(lista, id);
@@ -134,14 +131,14 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     }
 
     @Override
-    public void asignarPasajeroARecomendaciones(List<Recommendation> list, Integer pass) {
+    public void asignarPasajeroARecomendaciones(List<Recommendation> list, long pass) {
         for (Recommendation rec : list){
             asignarPasajeroARecomendacion(rec, pass);
         }
     }
 
     @Override
-    public void asignarPasajeroARecomendacion(Recommendation rec, Integer pass) {
+    public void asignarPasajeroARecomendacion(Recommendation rec, long pass) {
         Passenger pj = psjDao.getPasajeroById(pass);
         rec.setNombreYAp(pj.getName() + " " + pj.getSurname());
     }

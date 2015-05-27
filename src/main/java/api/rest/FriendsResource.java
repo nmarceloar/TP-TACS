@@ -6,6 +6,7 @@
 package api.rest;
 
 import apis.PassengerAPI;
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -37,6 +38,10 @@ public class FriendsResource {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public List<Passenger> getAmigosDeUsuario(@PathParam("id") String id) {
+        // Chequeo que si no existe ese usuario, devuelva lista vacia
+        if ( pjSrv.getFriendsOfPassenger(Long.parseLong(id)) == null){
+            return new ArrayList<>();
+        }
         return pjSrv.getFriendsOfPassenger(Long.parseLong(id));
     }
 

@@ -7,6 +7,8 @@ package repository;
 
 import integracion.facebook.NombreFB;
 import integracion.facebook.ApellidoFB;
+import integracion.facebook.SearchFriendsFB;
+import integracion.facebook.UserRegisteredFB;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +22,6 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
 import model.Passenger;
-
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -37,21 +38,29 @@ public class PassengerDAOStatic implements PassengerDAO {
 
     public PassengerDAOStatic() {
         listaPasajeros = new ArrayList<>();
-        Passenger pasajero1 = new Passenger(1,"pasajero1", "apellido1", "111111", new ArrayList());
-        Passenger pasajero2 = new Passenger(2,"pasajero2", "apellido2", "222222", new ArrayList());
-        Passenger pasajero3 = new Passenger(3,"pasajero3", "apellido3", "333333", new ArrayList());
-        Passenger pasajero4 = new Passenger(4,"pasajero4", "apellido4", "444444", new ArrayList());
-        Passenger pasajero5 = new Passenger(5,"pasajero5", "apellido5", "555555", new ArrayList());
-        Passenger pasajero6 = new Passenger(6,"pasajero6", "apellido6", "666666", new ArrayList());
-        Passenger pasajero7 = new Passenger(7,"pasajero7", "apellido7", "777777", new ArrayList());
 
-        pasajero1.agregarAmigo(pasajero3);
-        pasajero1.setRecommendations(Arrays.asList(1));
-        pasajero1.agregarAmigo(pasajero5);
-        pasajero2.agregarAmigosPorPasajeros(Arrays.asList(pasajero4, pasajero6, pasajero7));
+        // ID Tincho 10204737549535191 segun el 10206028316763565
+        // ID Flavio 10153326807009452 o el 10153253398579452
+        // Simulo la carga de amigos existentes en Facebook
+        Passenger pMartin = new Passenger(10206028316763565L, "Martin", "De Ciervo", "11", new ArrayList());
+        Passenger pFlavio = new Passenger(10153253398579452L, "Flavio", "Pietrolati", "22", new ArrayList());
 
-        listaPasajeros.addAll(Arrays.asList(pasajero1, pasajero2, pasajero3, pasajero4,
-                pasajero5, pasajero6, pasajero7));
+//        Passenger pasajero1 = new Passenger(1, "pasajero1", "apellido1", "111111", new ArrayList());
+//        Passenger pasajero2 = new Passenger(2, "pasajero2", "apellido2", "222222", new ArrayList());
+//        Passenger pasajero3 = new Passenger(3, "pasajero3", "apellido3", "333333", new ArrayList());
+//        Passenger pasajero4 = new Passenger(4, "pasajero4", "apellido4", "444444", new ArrayList());
+//        Passenger pasajero5 = new Passenger(5, "pasajero5", "apellido5", "555555", new ArrayList());
+//        Passenger pasajero6 = new Passenger(6, "pasajero6", "apellido6", "666666", new ArrayList());
+//        Passenger pasajero7 = new Passenger(7, "pasajero7", "apellido7", "777777", new ArrayList());
+//
+//        pasajero1.agregarAmigo(pasajero3);
+//        pasajero1.setRecommendations(Arrays.asList(1));
+//        pasajero1.agregarAmigo(pasajero5);
+//        pasajero2.agregarAmigosPorPasajeros(Arrays.asList(pasajero4, pasajero6, pasajero7));
+//
+//        listaPasajeros.addAll(Arrays.asList(pasajero1, pasajero2, pasajero3, pasajero4,
+//                pasajero5, pasajero6, pasajero7));
+        listaPasajeros.addAll(Arrays.asList(pMartin, pFlavio));
     }
 
     public List<Passenger> getListaPasajeros() {
@@ -73,51 +82,54 @@ public class PassengerDAOStatic implements PassengerDAO {
         }
         return buscado;
     }
-    
+
     @Override
-    public Passenger postPasajeroByIdToken(long id, String shortToken){
+    public Passenger postPasajeroByIdToken(long id, String shortToken) {
         Passenger buscado = null;
         for (Passenger p : getListaPasajeros()) {
             if (p.getIdUser() == id) {
-            	ClientConfig config = new ClientConfig().register(new JacksonFeature());
+                ClientConfig config = new ClientConfig().register(new JacksonFeature());
                 Client client = ClientBuilder.newClient(config);
-                WebTarget target = client.target("https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=1586547271608233&client_secret=359a6eae58ad036b4df0c599d0cdd11a&fb_exchange_token="+shortToken);       
+                WebTarget target = client.target("https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=1586547271608233&client_secret=359a6eae58ad036b4df0c599d0cdd11a&fb_exchange_token=" + shortToken);
                 Invocation.Builder invocationBuilder = target.request();
                 Response response = invocationBuilder.get();
-                String longToken = response.readEntity(new GenericType<String>() {});
+                String longToken = response.readEntity(new GenericType<String>() {
+                });
                 longToken = longToken.substring(13);
-                longToken = longToken.split("&",2)[0];
+                longToken = longToken.split("&", 2)[0];
                 buscado = p;
                 buscado.setToken(longToken);
             }
         }
-        if(buscado == null){
-        	ClientConfig config = new ClientConfig().register(new JacksonFeature());
+        if (buscado == null) {
+            ClientConfig config = new ClientConfig().register(new JacksonFeature());
             Client client = ClientBuilder.newClient(config);
-            WebTarget target = client.target("https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=1586547271608233&client_secret=359a6eae58ad036b4df0c599d0cdd11a&fb_exchange_token="+shortToken);       
+            WebTarget target = client.target("https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=1586547271608233&client_secret=359a6eae58ad036b4df0c599d0cdd11a&fb_exchange_token=" + shortToken);
             Invocation.Builder invocationBuilder = target.request();
             Response response = invocationBuilder.get();
-            String longToken = response.readEntity(new GenericType<String>() {});
+            String longToken = response.readEntity(new GenericType<String>() {
+            });
             longToken = longToken.substring(13);
-            longToken = longToken.split("&",2)[0];
-            
-            
-            target = client.target("https://graph.facebook.com/"+id+"?fields=first_name&access_token="+longToken);       
-            invocationBuilder = target.request();
-            response = invocationBuilder.get();
-            NombreFB nombre = response.readEntity(new GenericType<NombreFB>() {});
+            longToken = longToken.split("&", 2)[0];
 
-            
-            
-            target = client.target("https://graph.facebook.com/"+id+"?fields=last_name&access_token="+longToken);       
+            target = client.target("https://graph.facebook.com/" + id + "?fields=first_name&access_token=" + longToken);
             invocationBuilder = target.request();
             response = invocationBuilder.get();
-            ApellidoFB apellido = response.readEntity(new GenericType<ApellidoFB>() {});
-            
-        	
-            Passenger pasajero = new Passenger(id,nombre.getFirst_name(), apellido.getLast_name(), longToken, new ArrayList());
-        	guardarPasajero(pasajero);
-        	return pasajero;
+            NombreFB nombre = response.readEntity(new GenericType<NombreFB>() {
+            });
+
+            target = client.target("https://graph.facebook.com/" + id + "?fields=last_name&access_token=" + longToken);
+            invocationBuilder = target.request();
+            response = invocationBuilder.get();
+            ApellidoFB apellido = response.readEntity(new GenericType<ApellidoFB>() {
+            });
+
+            Passenger pasajero = new Passenger(id, nombre.getFirst_name(), apellido.getLast_name(), longToken, new ArrayList());
+
+            obtenerAmigosFB(pasajero);
+
+            guardarPasajero(pasajero);
+            return pasajero;
         }
         return buscado;
     }
@@ -165,6 +177,30 @@ public class PassengerDAOStatic implements PassengerDAO {
     public void assignFriend(long idUser, long idFriend) {
         Passenger pass = getPasajeroById(idUser);
         pass.agregarAmigo(idFriend);
+    }
+
+    private void obtenerAmigosFB(Passenger pasajero) {
+
+        ClientConfig config = new ClientConfig().register(new JacksonFeature());
+        Client client = ClientBuilder.newClient(config);
+        WebTarget target = client.target("https://graph.facebook.com/v2.3/" + pasajero.getIdUser() + "/friends?fields=id,first_name,last_name&access_token=" + pasajero.getToken());
+        Invocation.Builder invocationBuilder = target.request();
+        Response response = invocationBuilder.get();
+        SearchFriendsFB busqueda = response.readEntity(new GenericType<SearchFriendsFB>() { });
+
+        /**
+         * Ahora solo es una asignacion unidireccional, teniendo en cuenta que
+         * se cargan estaticamente usuarios desde el inicio de la aplicacion,
+         * pero luego se quitara el comentario para que se asignen amigos hacia
+         * ambos lados de la relacion.
+         */
+        for (UserRegisteredFB fbUs : busqueda.getUsuarios()) {
+            if (getPasajeroById(fbUs.getId()) != null) {
+                assignFriend(pasajero.getIdUser(), fbUs.getId());
+//                assignFriend(p.getIdUser(), pasajero.getIdUser());
+            }
+        }
+
     }
 
 }
