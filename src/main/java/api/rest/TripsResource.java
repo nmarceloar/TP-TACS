@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package api.rest;
-
+import org.json.*;
 import apis.TripsAPI;
 import java.util.List;
 import javax.inject.Inject;
@@ -59,14 +59,13 @@ public class TripsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response guardarViaje(Trip v) {
         vjSrv.saveTrip(v);
-        String result = "Guardado viaje con id "+v.getIdTrip()+" desde " + v.getItinerary().get(0).getFrom()
+        String result = "Guardado viaje con id "+v.getIdTrip()+" desde " + v.getFromCity()
                 + " - hasta "
-                + v.getItinerary().get(v.getItinerary().size() - 1)
-                .getFrom();
-        	
-
+                + v.getToCity();
+        JSONObject obj = new JSONObject("{\"id\":\""+v.getIdTrip()+"\" , \"result\":\""+result+"\"}");
+        
         return Response.status(201)
-                .entity(result).build();
+                .entity(obj.toString()).build();
     }
 
 }

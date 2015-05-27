@@ -2,6 +2,9 @@ package model;
 
 import java.io.Serializable;
 import java.util.List;
+
+import javax.mail.search.FromTerm;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Trip implements Serializable {
@@ -10,18 +13,43 @@ public class Trip implements Serializable {
 
     @JsonProperty("idPassenger")
     private long idPassenger;
-
+    
+    @JsonProperty("fromCity")
+    private String fromCity;
+    
+    @JsonProperty("toCity")
+    private String toCity;
+    
     @JsonProperty("itinerary")
     private List<Segment> itinerary;
 
     private int idTrip;
 
+    public String getFromCity() {
+		return fromCity;
+	}
+
+	public void setFromCity(String fromCity) {
+		this.fromCity = fromCity;
+	}
+
+	public String getToCity() {
+		return toCity;
+	}
+
+	public void setToCity(String toCity) {
+		this.toCity = toCity;
+	}
+
+
     public Trip() {
         idTrip = contadorId++;
     }
 
-    public Trip(int idPassenger, List<Segment> itinerary) {
+    public Trip(int idPassenger,String fromCity,String toCity, List<Segment> itinerary) {
         this.idPassenger = idPassenger;
+        this.fromCity=fromCity;
+        this.toCity=toCity;
         this.itinerary = itinerary;
         idTrip = contadorId++;
     }

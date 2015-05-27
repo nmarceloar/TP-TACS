@@ -68,6 +68,8 @@ var currentMap = null;
 var orgCity = new City();
 //guardo los datos de la ciudad de destino
 var dstCity = new City();
+//contador de viajes para darle un orden a la lista que se muestra
+var contViajes = 0;
 //** globales ***************************************************************
 
 
@@ -84,7 +86,6 @@ $(function () {
 	//####################### FACEBOOK #######################################
 
 	//GET DEL TOKEN
-
 	$(function() {
 		  $.ajaxSetup({ cache: true });
 		  $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
@@ -115,8 +116,7 @@ $(function () {
 
 
 	//####################### FACEBOOK #######################################
-	
-    var contViajes = 0;
+   
     //config google maps
     google.maps.event.addDomListener(window, 'load', initialize);
 
@@ -246,65 +246,7 @@ $(function () {
     })
     .data("ui-autocomplete")._renderItem = autocomplete_renderItemCiudades;
 
-    //#############################################################
-
-    /**
-     * Implemento la carga de viajes del usuario mediante rest
-     */
-
-
-    /**
-     * Lleno mis viajes anteriores
-     */
-    $.ajax({
-        url: 'http://localhost:8080/api/trips/1',
-        dataType: 'json',
-        success: function (data) {
-            $("#itemSinViaje").hide();
-            $.each(data, function (index, value) {
-                $("#listViajes").append(getViajesPropiosHTML(value));
-            });
-        }
-    }
-    );
-
-
-    /**
-     * LLeno los viajes de los amigos
-     */
-    $.ajax({
-        url: 'http://localhost:8080/api/trips/friends/1',
-        dataType: 'json',
-        success: function (data) {
-            $.each(data, function (index, value) {
-                $("#listViajesAmigos").append(getViajesDeAmigosHTML(value));
-                $("div a[role=linkViaje]").click(initClickDetalle);
-            });
-        }
-    });
-
-    /**
-     * Lleno con las recomendaciones que me hicieron
-     */
-    $.ajax({
-        url: 'http://localhost:8080/api/recommendations/1',
-        dataType: 'json',
-        success: function (data) {
-            $.each(data, function (index, value) {
-                $("#listRecomendaciones").append(value.nombreyap
-                        + ' quiere que viajes desde '
-                        + value.origen
-                        + ' hasta '
-                        + value.destino);
-
-            })
-            $("#listRecomendaciones").append("<li class=\"divider\"></li>");
-            $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
-        }
-    });
-
-
-    //#############################################################
+   
 
     $("#fechaHasta").datepicker({
         dateFormat: 'dd/mm/yy',
@@ -351,20 +293,21 @@ $(function () {
     	event.preventDefault();
     	$("#itemSinViaje").hide();
 
-
     	$.ajax({
     		type: 'POST',
     		url: 'http://localhost:8080/api/trips',
     		data:JSON.stringify({
     			"idPassenger":id,
+    			"fromCity":currentTrip.fromCity.description,
+    			"toCity":currentTrip.toCity.description,
     			"itinerary":currentTrip.toJSON()
     		}),
     		contentType: 'application/json',
-    		dataType: 'text',
+    		dataType: 'json',
     		success: function (data) {
-    			console.log(data);
+    			console.log(data.result);
     			contViajes++;
-    			$("#listViajes").append(getViajeHTML(contViajes));
+    			$("#listViajes").append(getViajeHTML(data.id));
     			
     			bootbox.confirm("Felicitaciones por tu viaje! Queres publicarlo en tu muro de Facebook?", function(result) {
     				if(result){
@@ -419,7 +362,7 @@ $(function () {
 // ** templates ************************************************
 function getViajeHTML(idViaje) {
     return '<div class="list-group-item" id="' + idViaje + '">'
-            + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje 1. Desde '
+            + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje '+contViajes+'. Desde '
             + currentTrip.fromCity.description
             + ' a '
             + currentTrip.toCity.description
@@ -435,11 +378,12 @@ function getViajeHTML(idViaje) {
 
 
 function getViajesPropiosHTML(data) {
+	contViajes++;
     return '<div class="list-group-item" id="itemViaje">'
-            + '<h3><a href="#" role="linkViaje">Viaje 1. Desde '
-            + data.itinerary[0].from
+            + '<h3><a href="#" role="linkViaje">Viaje '+contViajes+'. Desde '
+            + data.fromCity
             + ' a '
-            + data.itinerary[data.itinerary.length - 1].from
+            + data.toCity
             + ' saliendo el d&iacute;a '
             + data.tripDepartureDate
             + ' y volviendo el d&iacute;a '
@@ -452,9 +396,9 @@ function getViajesPropiosHTML(data) {
 function getViajesDeAmigosHTML(data) {
     return '<div class="list-group-item" id="itemAmigo">'
             + '<h3><a href="#" role="linkViaje">Viaje Desde '
-            + data.itinerary[0].from
+            + data.fromCity
             + ' a '
-            + data.itinerary[data.itinerary.length - 1].to
+            + data.toCity
             + ' saliendo el d&iacute;a '
             + data.tripDepartureDate
             + ' y volviendo el d&iacute;a '
@@ -801,6 +745,68 @@ function updateStatusCallback(response){
     	    	 	}
     	    	 });
     	})
+    	 //#############################################################
+
+    /**
+     * Implemento la carga de viajes del usuario mediante rest
+     */
+
+
+    /**
+     * Lleno mis viajes anteriores
+     */
+    $.ajax({
+        url: 'http://localhost:8080/api/trips/'+id,
+        dataType: 'json',
+        success: function (data) {
+        	if(data.length!=0){
+            $("#itemSinViaje").hide();
+            $.each(data, function (index, value) {
+                $("#listViajes").append(getViajesPropiosHTML(value));
+            });
+        	}
+        }
+    }
+    );
+
+
+    /**
+     * LLeno los viajes de los amigos
+     */
+    $.ajax({
+        url: 'http://localhost:8080/api/trips/friends/1',
+        dataType: 'json',
+        success: function (data) {
+        	if(data.length!=0){
+            $.each(data, function (index, value) {
+                $("#listViajesAmigos").append(getViajesDeAmigosHTML(value));
+                $("div a[role=linkViaje]").click(initClickDetalle);
+            });}
+        }
+    });
+
+    /**
+     * Lleno con las recomendaciones que me hicieron
+     */
+    $.ajax({
+        url: 'http://localhost:8080/api/recommendations/1',
+        dataType: 'json',
+        success: function (data) {
+            $.each(data, function (index, value) {
+                $("#listRecomendaciones").append(value.nombreyap
+                        + ' quiere que viajes desde '
+                        + value.origen
+                        + ' hasta '
+                        + value.destino);
+
+            })
+            $("#listRecomendaciones").append("<li class=\"divider\"></li>");
+            $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
+        }
+    });
+
+
+    //#############################################################
 		
 	} else if (response.status === 'not_authorized') {
 		console.log("Esta logueado en face, pero todavia no acepto")
