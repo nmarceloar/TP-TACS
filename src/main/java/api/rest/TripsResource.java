@@ -6,6 +6,7 @@
 package api.rest;
 
 import apis.TripsAPI;
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
@@ -38,6 +39,10 @@ public class TripsResource {
     @Path("{id}")
     @Produces("application/json")
     public List<Trip> getViajesPorPasajero(@PathParam("id") String id) {
+        // Salvo condicion de lista vacia
+        if (vjSrv.getTripsOfPassenger(Long.parseLong(id)) == null){
+            return new ArrayList<>();
+        }
         return vjSrv.getTripsOfPassenger(Long.parseLong(id));
     }
     

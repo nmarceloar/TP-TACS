@@ -6,6 +6,7 @@
 package api.rest;
 
 import apis.RecommendationAPI;
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -37,7 +38,11 @@ public class RecommendationResource {
     @Path("{userId}")
     @Produces("application/json")
     public List<Recommendation> getRecommendationsByUser(@PathParam("userId") String id){
-        return srvRecom.getRecommendationsOfUser(Integer.parseInt(id));
+        // Salvo la opcion de que devuelva una lista vacia
+        if (srvRecom.getRecommendationsOfUser(Long.parseLong(id)) == null){
+            return new ArrayList<>();
+        }
+        return srvRecom.getRecommendationsOfUser(Long.parseLong(id));
     }
     
     @GET

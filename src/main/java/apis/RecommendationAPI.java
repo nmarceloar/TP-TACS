@@ -15,7 +15,7 @@ import model.Recommendation;
  */
 public interface RecommendationAPI {
     
-    public List<Recommendation> getRecommendationsOfUser(int id);
+    public List<Recommendation> getRecommendationsOfUser(long id);
     
     public String getRecommendationToString(int id);
     
@@ -23,8 +23,8 @@ public interface RecommendationAPI {
     
     public void saveRecommendation(Recommendation rec);
     
-    public void asignarPasajeroARecomendaciones(List<Recommendation> list, Integer pass);
+    public void asignarPasajeroARecomendaciones(List<Recommendation> list, long pass);
     
-    public void asignarPasajeroARecomendacion(Recommendation rec, Integer pass);
+    public void asignarPasajeroARecomendacion(Recommendation rec, long pass);
     
 }

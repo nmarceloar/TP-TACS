@@ -5,7 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Trip implements Serializable {
-    
+
     private static int contadorId = 1;
 
     @JsonProperty("idPassenger")
@@ -14,25 +14,23 @@ public class Trip implements Serializable {
     @JsonProperty("itinerary")
     private List<Segment> itinerary;
 
-    private int idTrip;
+    private long idTrip;
 
     public Trip() {
         idTrip = contadorId++;
     }
 
-    public Trip(int idPassenger, List<Segment> itinerary) {
+    public Trip(long idPassenger, List<Segment> itinerary) {
         this.idPassenger = idPassenger;
         this.itinerary = itinerary;
         idTrip = contadorId++;
     }
 
-    
-
     public long getIdPassenger() {
         return idPassenger;
     }
 
-    public int getIdTrip() {
+    public long getIdTrip() {
         return idTrip;
     }
 

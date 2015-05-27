@@ -20,13 +20,10 @@ public class Recommendation implements Serializable {
     private int idRecomendacion;
     
     @JsonProperty("Usuario")
-
     private long idUsuarioRecom;
-
     
     @JsonProperty("nombreyap")
     private String nombreYAp;
-
 
     @JsonProperty("origen")
     private String ciudadOrig;

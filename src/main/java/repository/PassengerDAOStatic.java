@@ -7,6 +7,8 @@ package repository;
 
 import integracion.facebook.NombreFB;
 import integracion.facebook.ApellidoFB;
+import integracion.facebook.SearchFriendsFB;
+import integracion.facebook.UserRegisteredFB;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,10 +40,10 @@ public class PassengerDAOStatic implements PassengerDAO {
         listaPasajeros = new ArrayList<>();
 
         // ID Tincho 10204737549535191 segun el 10206028316763565
-        // ID Flavio 10153326807009452
+        // ID Flavio 10153326807009452 o el 10153253398579452
         // Simulo la carga de amigos existentes en Facebook
         Passenger pMartin = new Passenger(10206028316763565L, "Martin", "De Ciervo", "11", new ArrayList());
-        Passenger pFlavio = new Passenger(10153326807009452L, "Flavio", "Pietrolati", "22", new ArrayList());
+        Passenger pFlavio = new Passenger(10153253398579452L, "Flavio", "Pietrolati", "22", new ArrayList());
 
 //        Passenger pasajero1 = new Passenger(1, "pasajero1", "apellido1", "111111", new ArrayList());
 //        Passenger pasajero2 = new Passenger(2, "pasajero2", "apellido2", "222222", new ArrayList());
@@ -181,11 +183,10 @@ public class PassengerDAOStatic implements PassengerDAO {
 
         ClientConfig config = new ClientConfig().register(new JacksonFeature());
         Client client = ClientBuilder.newClient(config);
-        WebTarget target = client.target("https://graph.facebook.com/" + pasajero.getIdUser() + "/friends?fields=name,id&access_token=" + pasajero.getToken());
+        WebTarget target = client.target("https://graph.facebook.com/v2.3/" + pasajero.getIdUser() + "/friends?fields=id,first_name,last_name&access_token=" + pasajero.getToken());
         Invocation.Builder invocationBuilder = target.request();
         Response response = invocationBuilder.get();
-        List<Passenger> amigosFB = response.readEntity(new GenericType<List<Passenger>>() {
-        });
+        SearchFriendsFB busqueda = response.readEntity(new GenericType<SearchFriendsFB>() { });
 
         /**
          * Ahora solo es una asignacion unidireccional, teniendo en cuenta que
@@ -193,9 +194,9 @@ public class PassengerDAOStatic implements PassengerDAO {
          * pero luego se quitara el comentario para que se asignen amigos hacia
          * ambos lados de la relacion.
          */
-        for (Passenger p : amigosFB) {
-            if (getPasajeroById(p.getIdUser()) != null) {
-                assignFriend(pasajero.getIdUser(), p.getIdUser());
+        for (UserRegisteredFB fbUs : busqueda.getUsuarios()) {
+            if (getPasajeroById(fbUs.getId()) != null) {
+                assignFriend(pasajero.getIdUser(), fbUs.getId());
 //                assignFriend(p.getIdUser(), pasajero.getIdUser());
             }
         }
