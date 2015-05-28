@@ -82,9 +82,7 @@ var token;
 //** main *******************************************************************
 
 $(function () {
-
     //####################### FACEBOOK #######################################
-
     //GET DEL TOKEN
     $(function () {
         $.ajaxSetup({cache: true});
@@ -123,7 +121,6 @@ $(function () {
     formResetViaje();
     formResetVuelos();
 
-    $("a[role=linkViaje]").click(initClickDetalle);
     $("#modDetalleViaje").on("shown.bs.modal", function (e) {
         //hack para que el mapa se dibuje bien
         google.maps.event.trigger(mapaReview, "resize");
@@ -292,7 +289,6 @@ $(function () {
     $("#btnViajar").click(function (event) {
         event.preventDefault();
         $("#itemSinViaje").hide();
-
         $.ajax({
             type: 'POST',
             url: 'http://localhost:8080/api/trips',
@@ -300,6 +296,7 @@ $(function () {
                 "idPassenger": id,
                 "fromCity": currentTrip.fromCity.description,
                 "toCity": currentTrip.toCity.description,
+                "price":currentTrip.price.total+currentTrip.price.currency,
                 "itinerary": currentTrip.toJSON()
             }),
             contentType: 'application/json',
@@ -343,7 +340,7 @@ $(function () {
                 });
 
 
-                $("div[id=" + contViajes + "] a[role=linkViaje]").click(initClickDetalle);
+                $("div[id=" + data.id + "] a[role=linkViaje]").click(initClickDetalle);
                 //limpio el form para futuros viajes
                 formResetViaje();
                 formResetVuelos();
@@ -379,8 +376,8 @@ function getViajeHTML(idViaje) {
 
 function getViajesPropiosHTML(data) {
     contViajes++;
-    return '<div class="list-group-item" id="itemViaje">'
-            + '<h3><a href="#" role="linkViaje">Viaje ' + contViajes + '. Desde '
+    return '<div class="list-group-item" id="'+data.idTrip+'">'
+            + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje ' + contViajes + '. Desde '
             + data.fromCity
             + ' a '
             + data.toCity
@@ -395,7 +392,7 @@ function getViajesPropiosHTML(data) {
 
 function getViajesDeAmigosHTML(data) {
     return '<div class="list-group-item" id="itemAmigo">'
-            + '<h3><a href="#" role="linkViaje">Viaje Desde '
+            + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje Desde '
             + data.fromCity
             + ' a '
             + data.toCity
@@ -554,9 +551,16 @@ function getVuelos() {
                 });
             }
             else {
+            	$("#cargandoVuelos").hide();
                 $("#lstVuelos").show();
                 $("#sinVuelos").show();
             }
+                        
+        },
+        error: function(){
+        	$("#cargandoVuelos").hide();
+        	$("#lstVuelos").show();
+            $("#sinVuelos").show();
         }
     });
 }
@@ -777,6 +781,8 @@ function updateStatusCallback(response) {
                     $("#itemSinViaje").hide();
                     $.each(data, function (index, value) {
                         $("#listViajes").append(getViajesPropiosHTML(value));
+                        
+                        $("div[id="+value.idTrip+"] a[role=linkViaje]").click(initClickDetalle);
                     });
                 }
             }
@@ -794,7 +800,7 @@ function updateStatusCallback(response) {
                 if (data.length !== 0) {
                     $.each(data, function (index, value) {
                         $("#listViajesAmigos").append(getViajesDeAmigosHTML(value));
-                        $("div a[role=linkViaje]").click(initClickDetalle);
+                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(initClickDetalle);
                     });
                 }
             }
@@ -814,9 +820,8 @@ function updateStatusCallback(response) {
                 $("#listRecomendaciones").append("<li class=\"divider\"></li>");
                 $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
             }
+        
         });
-
-
         //#############################################################
 
     } else if (response.status === 'not_authorized') {
