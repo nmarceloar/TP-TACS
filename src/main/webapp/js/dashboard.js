@@ -83,6 +83,7 @@ var token;
 
 $(function () {
     //####################### FACEBOOK #######################################
+	
     //GET DEL TOKEN
     $(function () {
         $.ajaxSetup({cache: true});
@@ -584,7 +585,10 @@ function getInfoAirportsAndMap(flight) {
         success: function (data) {
             result = data;
             drawFlightRoute(data);
-        }
+        },
+    	error: function(){
+    		console.log("ERROR no se puede dibujar ruta");
+    	}
     });
 }
 //** funciones ajax **************************************************************
