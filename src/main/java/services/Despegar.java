@@ -229,7 +229,7 @@ public class Despegar
 
         } catch (InterruptedException ex) {
 
-            throw new RuntimeException("Error. Despegar 1");
+            throw new RuntimeException("Error. Despegar");
 
         } finally {
 
@@ -247,7 +247,7 @@ public class Despegar
 
             } catch (Exception ex) {
 
-                throw new RuntimeException("Error. Despegar 2");
+                throw new RuntimeException("Error. Despegar");
 
             } finally {
 
