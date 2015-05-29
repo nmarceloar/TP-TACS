@@ -33,6 +33,9 @@ public class Recommendation implements Serializable {
     
     @JsonProperty("viajeAsoc")
     private int tripRec;
+    
+    @JsonProperty("estado")
+    private int estado;
 
     public int getTripRec() {
         return tripRec;
@@ -42,18 +45,28 @@ public class Recommendation implements Serializable {
         this.tripRec = tripRec;
     }
 
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
+
     public Recommendation() {
         idRecomendacion = generadorId++;
         nombreYAp = "";
+        estado = 0;
     }
 
-    public Recommendation(long idUser, String origen, String destino, int viaje) {
+    public Recommendation(long idUser, String nomYap, String origen, String destino, int viaje) {
         idRecomendacion = generadorId++;
         idUsuarioRecom = idUser;
         ciudadOrig = origen;
         ciudadDest = destino;
-        nombreYAp = "";
+        nombreYAp = nomYap;
         tripRec = viaje;
+        estado = 0;
     }
 
     public int getIdRecomendacion() {
@@ -90,6 +103,14 @@ public class Recommendation implements Serializable {
 
     public void setNombreYAp(String nombreYAp) {
         this.nombreYAp = nombreYAp;
+    }
+    
+    public void aceptarRecomendacion(){
+        estado = 1;
+    }
+    
+    public void rechazarRecomendacion(){
+        estado = -1;
     }
 
 }

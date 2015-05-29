@@ -21,26 +21,26 @@ public class RecommendationDAOStatic implements RecommendationDAO {
     private final List<Recommendation> listaRecomendaciones;
 
     public RecommendationDAOStatic() {
-        listaRecomendaciones = Arrays.asList( new Recommendation(10153253398579452L, "Buenos Aires", "Roma",1),
-                new Recommendation(10206028316763565L, "Amsterdam", "Bruselas",4));
+        listaRecomendaciones = Arrays.asList( new Recommendation(10153253398579452L, "Flavio Pietrolati", "Buenos Aires", "Roma",1),
+                new Recommendation(10206028316763565L, "Martin De Ciervo","Amsterdam", "Bruselas",4));
     }
 
     public List<Recommendation> getListaRecomendaciones() {
         return listaRecomendaciones;
     }
 
-    @Override
-    public List<Recommendation> getRecomendacionesPorId(List<Integer> recomendaciones) {
-        List<Recommendation> recomend = new ArrayList<>();
-        for (Integer rec : recomendaciones){
-            for (Recommendation recom : getListaRecomendaciones()){
-                if (recom.getIdRecomendacion() == rec){
-                    recomend.add(recom);
-                }
-            }
-        }
-        return recomend;
-    }
+//    @Override
+//    public List<Recommendation> getRecomendacionesPorId(List<Integer> recomendaciones) {
+//        List<Recommendation> recomend = new ArrayList<>();
+//        for (Integer rec : recomendaciones){
+//            for (Recommendation recom : getListaRecomendaciones()){
+//                if (recom.getIdRecomendacion() == rec){
+//                    recomend.add(recom);
+//                }
+//            }
+//        }
+//        return recomend;
+//    }
 
     @Override
     public Recommendation getRecomendacionPorId(Integer id) {
@@ -55,6 +55,17 @@ public class RecommendationDAOStatic implements RecommendationDAO {
     @Override
     public void saveRecommendation(Recommendation rec) {
         listaRecomendaciones.add(rec);
+    }
+
+    @Override
+    public List<Recommendation> getRecomendacionesDeUsuarioPorId(long idUser) {
+        List<Recommendation> recomend = new ArrayList<>();
+        for (Recommendation rec : getListaRecomendaciones()){
+            if (rec.getIdUsuarioRecom() == idUser){
+                recomend.add(rec);
+            }
+        }
+        return recomend;
     }
 
 }

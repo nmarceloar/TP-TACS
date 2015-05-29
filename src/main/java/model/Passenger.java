@@ -22,16 +22,16 @@ public class Passenger implements Serializable {
     @JsonProperty("amigos")
     private List<Long> friends;
     
-    @JsonProperty("recomendaciones")
-    private List<Integer> recommendations;
+//    @JsonProperty("recomendaciones")
+//    private List<Integer> recommendations;
 
-    public List<Integer> getRecommendations() {
-        return recommendations;
-    }
-
-    public void setRecommendations(List<Integer> recommendations) {
-        this.recommendations = recommendations;
-    }
+//    public List<Integer> getRecommendations() {
+//        return recommendations;
+//    }
+//
+//    public void setRecommendations(List<Integer> recommendations) {
+//        this.recommendations = recommendations;
+//    }
 
     public Passenger(long id,String nombre, String apellido, String token,
             List<Long> amigos) {
@@ -39,7 +39,7 @@ public class Passenger implements Serializable {
         this.surname = apellido;
         this.token = token;
         this.friends = amigos;
-        this.recommendations = new ArrayList<>();
+//        this.recommendations = new ArrayList<>();
         this.idUser = id;
     }
 

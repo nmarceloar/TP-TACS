@@ -14,10 +14,12 @@ import model.Recommendation;
  */
 public interface RecommendationDAO {
     
-    public List<Recommendation> getRecomendacionesPorId(List<Integer> recomendaciones);
+//    public List<Recommendation> getRecomendacionesPorId(List<Integer> recomendaciones);
     
     public Recommendation getRecomendacionPorId(Integer id);
     
     public void saveRecommendation(Recommendation rec);
+    
+    public List<Recommendation> getRecomendacionesDeUsuarioPorId(long idUser);
     
 }

@@ -45,8 +45,6 @@ public class PassengerDAOStatic implements PassengerDAO {
         Passenger pMartin = new Passenger(10206028316763565L, "Martin", "De Ciervo", "11", new ArrayList());
         Passenger pFlavio = new Passenger(10153253398579452L, "Flavio", "Pietrolati", "22", new ArrayList());
 
-        pFlavio.setRecommendations(Arrays.asList(1));
-        pMartin.setRecommendations(Arrays.asList(2));
         listaPasajeros.addAll(Arrays.asList(pMartin, pFlavio));
 //        listaPasajeros.addAll(Arrays.asList(pMartin));
     }
@@ -151,15 +149,15 @@ public class PassengerDAOStatic implements PassengerDAO {
         return null;
     }
 
-    @Override
-    public List<Integer> getRecomendacionesDeUsuario(long pas) {
-        for (Passenger psj : getListaPasajeros()) {
-            if (psj.getIdUser() == pas) {
-                return psj.getRecommendations();
-            }
-        }
-        return null;
-    }
+//    @Override
+//    public List<Integer> getRecomendacionesDeUsuario(long pas) {
+//        for (Passenger psj : getListaPasajeros()) {
+//            if (psj.getIdUser() == pas) {
+//                return psj.getRecommendations();
+//            }
+//        }
+//        return null;
+//    }
 
     @Override
     public void assignFriend(long idUser, long idFriend) {
