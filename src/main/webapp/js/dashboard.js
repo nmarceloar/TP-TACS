@@ -337,14 +337,15 @@ $(function () {
                         });
                         bootbox.alert("Excelente! Tu nuevo viaje ya esta publicado", function () {
                         });
+                        formResetViaje();
+                        formResetVuelos();
                     }
                 });
 
 
                 $("div[id=" + data.id + "] a[role=linkViaje]").click(data.id,initClickDetalle);
                 //limpio el form para futuros viajes
-                formResetViaje();
-                formResetVuelos();
+                
             }
         });
 
