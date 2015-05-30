@@ -1,24 +1,24 @@
 .box{
-	border: 2px solid;
-	border-radius: 5px;
-	border-color: #cccccc;
-	width: 300px;
+    border: 2px solid;
+    border-radius: 5px;
+    border-color: #cccccc;
+    width: 300px;
 }
 
 /*hack para que el autocomplete de jquery ui se vea bien sobre el modal de bootstrap*/
 .ui-autocomplete{
-	z-index: 5000;
+    z-index: 5000;
 }
 
 .map-crea-viaje{
-	width:400px;
-	height:340px;
-	border: 2px solid;
-	border-radius: 5px;
+    width:400px;
+    height:340px;
+    border: 2px solid;
+    border-radius: 5px;
 }
 
 .btn-float{
-	float: right;
+    float: right;
 }
 
 .modal .modal-body {
@@ -27,7 +27,7 @@
 }
 
 .recomendacion-no-leida{
-	background-color: #CCCCCC;
+    background-color: #CCCCCC;
 }
 
 .ui-autocomplete-loading {
@@ -35,13 +35,17 @@
 }
 
 .vuelo-tramos-detail{
-	font-size: 12px;
+    font-size: 12px;
 }
 
 .vuelo-tramo-ajuste{
-	display: inline;
+    display: inline;
 }
 
 .vuelo-selected{
-	background-color: #CCCCFF;
+    background-color: #CCCCFF;
+}
+
+.list-group-item.active{
+    background-color: #0F364D;
 }

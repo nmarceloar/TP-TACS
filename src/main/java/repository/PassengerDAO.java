@@ -19,7 +19,7 @@ public interface PassengerDAO {
     
     public Passenger getPasajeroById(long id);
     
-    public Passenger postPasajeroByIdToken(long id, String shortToken);
+//    public Passenger postPasajeroByIdToken(long id, String shortToken);
     
     public List<Passenger> getTodosLosPasajeros();
     

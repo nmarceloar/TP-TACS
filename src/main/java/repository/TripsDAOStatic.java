@@ -54,7 +54,7 @@ public class TripsDAOStatic implements TripsDAO {
                 DateTime.now().plusDays(12).toString(),
                 Integer.toString(4), "Gol", "GO-012");
 
-        Trip viaje4 = new Trip(10206028316763565L,"Buenos Aires", "San Pablo","4500 ARS", Arrays.asList(seg4));
+        Trip viaje4 = new Trip(10206028316763565L,"Fortaleza", "Madrid","4500 ARS", Arrays.asList(seg4));
         listaViajes.add(viaje4);
     }
     
