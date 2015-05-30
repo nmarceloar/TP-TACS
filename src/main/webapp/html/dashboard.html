@@ -47,12 +47,7 @@
                 <div class="dropdown btn-float">
                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="drpDwnRecomendaciones">Recomendaciones <span class="caret"></span></button>
                     <ul class="dropdown-menu dropdown-menu-right" id="listRecomendaciones">
-                        <!--                        <li class="recomendacion-no-leida"><a href="#" role="linkViaje">Juanito quiere que viajes a Madagascar</a></li>
-                                                <li><a href="#" role="linkViaje">Lucía quiere que viajes a Mumbai</a></li>
-                                                <li><a href="#" role="linkViaje">Makoto quiere que viajes a Kyoto</a></li>
-                                                <li><a href="#" role="linkViaje">Dimitri quiere que viajes a San Petersburgo</a></li>-->
-                        <!--                        <li class="divider"></li>
-                                                <li><a href="#" id="verTodasRecomendaciones">Ver todas las recomendaciones</a></li>-->
+                        <!--Aca se agregan por JavaScript los elementos de la lista de recomendaciones-->
                     </ul>
                 </div>   
             </div>
@@ -303,9 +298,7 @@
                     <div class="modal-body">
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <p>>Detalle</p>
-                                </div>
+                                <div class="col-md-6" id="detViajeRecom">  </div>
                                 <div class="col-md-5">
                                     <div id="googleMapViajeReview" class="map-crea-viaje"></div>
                                 </div>
