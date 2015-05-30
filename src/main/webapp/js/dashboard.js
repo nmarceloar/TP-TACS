@@ -84,7 +84,7 @@ var token;
 $(function () {
     //####################### FACEBOOK #######################################
 
-    //GET DEL TOKEN
+	//GET DEL TOKEN
     $(function () {
         $.ajaxSetup({cache: true});
         $.getScript('//connect.facebook.net/en_US/sdk.js', function () {
@@ -297,7 +297,7 @@ $(function () {
                 "idPassenger": id,
                 "fromCity": currentTrip.fromCity.description,
                 "toCity": currentTrip.toCity.description,
-                "price": currentTrip.price.total + currentTrip.price.currency,
+                "price": currentTrip.price.total + " " + currentTrip.price.currency,
                 "itinerary": currentTrip.toJSON()
             }),
             contentType: 'application/json',
@@ -341,7 +341,7 @@ $(function () {
                 });
 
 
-                $("div[id=" + data.id + "] a[role=linkViaje]").click(initClickDetalle);
+                $("div[id=" + data.id + "] a[role=linkViaje]").click(data.id,initClickDetalle);
                 //limpio el form para futuros viajes
                 formResetViaje();
                 formResetVuelos();
@@ -589,13 +589,50 @@ function getInfoAirportsAndMap(flight) {
 //** funciones ajax **************************************************************
 
 
-function initClickDetalle() {
-    // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
-    if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
-        $("#modListaRecomendaciones").modal("hide");
-    }
-    //TODO get detalle de viaje (por api)
-    $("#modDetalleViaje").modal('show');
+function initClickDetalle(id) {
+	console.log(id.data);
+	// reviso si la lista de recomendaciones está abierta y la cierro si hace falta
+	if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
+		$("#modListaRecomendaciones").modal("hide");
+	}
+	
+	var precio;
+	var desde;
+	var hasta;
+
+	$.ajax({
+		url: "http://localhost:8080/api/trips/one/"+id.data,
+		dataType: 'json',
+		success: function (data) {
+			console.log("Respuesta trip");
+			console.log(data);
+			precio=data.price;
+			desde=data.fromCity;
+			hasta=data.toCity;
+			var titulo = "\u00A1Tu viaje desde "+desde+" hasta "+hasta+"!";
+			$("div[id=modDetalleViaje] h4").html(titulo);
+			var itinerario = "";
+			var enter = "<br>";
+			$.each(data.itinerary, function (index, value) {
+				var fechaSalida = Date.parse(value.departure_datetime);
+				var fechaLlegada = Date.parse(value.arrival_datetime);
+				if(fechaSalida.toString("dd/MM/yyyy")==fechaLlegada.toString("dd/MM/yyyy")){
+					itinerario = itinerario + "Sal\u00eds el "+fechaSalida.toString("dd/MM/yyyy")+" desde "+value.from+" a las "+fechaSalida.toString("HH:mm")+" hs " +
+					"y lleg\u00e1s a "+value.to+" a las "+fechaLlegada.toString("HH:mm")+" del mismo d\u00eda";
+				}
+				else
+				{
+					itinerario = itinerario + "Sal\u00eds el "+fechaSalida.toString("dd/MM/yyyy")+" desde "+value.from+" a las "+fechaSalida.toString("HH:mm")+" hs " +
+					"y lleg\u00e1s el "+fechaSalida.toString("dd/MM/yyyy")+" a "+value.to+" a las "+fechaLlegada.toString("HH:mm");
+				}
+				itinerario = itinerario+enter;
+			});
+			$("div[id=modDetalleViaje] div[class=col-md-6]").html(itinerario);
+			//TODO llenar el mapa de detalle del viaje
+			$("#modDetalleViaje").modal('show');
+		}
+	});
+
 }
 
 
@@ -767,7 +804,7 @@ function updateStatusCallback(response) {
                     $("#itemSinViaje").hide();
                     $.each(data, function (index, value) {
                         $("#listViajes").append(getViajesPropiosHTML(value));
-                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(initClickDetalle);
+                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip,initClickDetalle);
                     });
                 }
             }
@@ -784,7 +821,7 @@ function updateStatusCallback(response) {
                 if (data.length !== 0) {
                     $.each(data, function (index, value) {
                         $("#listViajesAmigos").append(getViajesDeAmigosHTML(value));
-                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(initClickDetalle);
+                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip,initClickDetalle);
                     });
                 }
             }
@@ -802,7 +839,7 @@ function updateStatusCallback(response) {
 //                    $("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value, i));
 //                    i++;
                     $("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value));
-                    $("div[id=" + value.idTrip + "] a[role=linkViajeRecom]").click(initClickDetalle);
+                    $("div[id=" + value.idTrip + "] a[role=linkViajeRecom]").click(value.idTrip,initClickDetalle);
                 });
                 $("#listRecomendaciones").append("<li class=\"divider\"></li>");
                 $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
