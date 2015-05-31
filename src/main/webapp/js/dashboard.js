@@ -623,7 +623,7 @@ function initClickDetalle(id) {
 		dataType: 'json',
 		success: function (data) {
 			console.log("Respuesta trip");
-			console.log(data);
+			//console.log(data);
 			precio=data.price;
 			desde=data.fromCity;
 			hasta=data.toCity;
@@ -632,8 +632,9 @@ function initClickDetalle(id) {
 			var itinerario = "";
 			var enter = "<br>";
 			$.each(data.itinerary, function (index, value) {
-				var fechaSalida = Date.parse(value.departure_datetime);
-				var fechaLlegada = Date.parse(value.arrival_datetime);
+				console.log(value);
+				var fechaSalida = value.departure_datetime;
+				var fechaLlegada = value.arrival_datetime;
 				if(fechaSalida.toString("dd/MM/yyyy")==fechaLlegada.toString("dd/MM/yyyy")){
 					itinerario = itinerario + "Sal\u00eds el "+fechaSalida.toString("dd/MM/yyyy")+" desde "+value.from+" a las "+fechaSalida.toString("HH:mm")+" hs " +
 					"y lleg\u00e1s a "+value.to+" a las "+fechaLlegada.toString("HH:mm")+" del mismo d\u00eda";
@@ -857,7 +858,8 @@ function updateStatusCallback(response) {
 //                    $("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value, i));
 //                    i++;
                     $("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value));
-                    $("div[id=" + value.idTrip + "] a[role=linkViajeRecom]").click(value.idTrip,initClickDetalle);
+                    //<a href="#" role="linkViajeRecom" id="itemRecom" trip="4">
+                    $("a[trip=" + value.viajeAsoc + "][role=linkViajeRecom]").click(value.viajeAsoc,initClickDetalle);
                 });
                 $("#listRecomendaciones").append("<li class=\"divider\"></li>");
                 $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
