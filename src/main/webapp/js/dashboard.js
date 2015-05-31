@@ -288,66 +288,83 @@ $(function () {
     });
 
     $("#btnViajar").click(function (event) {
-        event.preventDefault();
-        $("#itemSinViaje").hide();
-        $.ajax({
-            type: 'POST',
-            url: 'http://localhost:8080/api/trips',
-            data: JSON.stringify({
-                "idPassenger": id,
-                "fromCity": currentTrip.fromCity.description,
-                "toCity": currentTrip.toCity.description,
-                "price": currentTrip.price.total + " " + currentTrip.price.currency,
-                "itinerary": currentTrip.toJSON()
-            }),
-            contentType: 'application/json',
-            dataType: 'json',
-            success: function (data) {
-                console.log(data.result);
-                contViajes++;
-                $("#listViajes").append(getViajeHTML(data.id));
-
-                bootbox.confirm("Felicitaciones por tu viaje! Queres publicarlo en tu muro de Facebook?", function (result) {
-                    if (result) {
-//  					pruebo las cosas del mapa
-                        console.log("https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
-                                "&zoom=" + mapaVuelo.getZoom() +
-                                "&maptype=" + mapaVuelo.getMapTypeId() +
-                                "&size=600x400" +
-                                "&markers=color:green%7C" + markerOrigen.getPosition().toString().trim() +
-                                "%7C" + markerDestino.getPosition().toString().trim() +
-                                "&path=color:red%7C" + markerOrigen.getPosition().toString().trim() +
-                                "%7C" + markerDestino.getPosition().toString().trim());
-//  					posteo en muro de facebook
-                        FB.api('/' + id + '/feed', 'post', {
-                            message: getViajeParaFB(),
-                            picture: "https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
-                                    "&zoom=" + mapaVuelo.getZoom() +
-                                    "&maptype=" + mapaVuelo.getMapTypeId() +
-                                    "&size=600x400" +
-                                    "&markers=color:green%7C" + markerOrigen.getPosition().toString().trim() +
-                                    "%7C" + markerDestino.getPosition().toString().trim() +
-                                    "&path=color:red%7C" + markerOrigen.getPosition().toString().trim() +
-                                    "%7C" + markerDestino.getPosition().toString().trim(),
-                            name: 'TACS POR EL MUNDO',
-                            description: 'viaje',
-                            access_token: token
-                        }, function (data) {
-                            console.log(data);
-                        });
-                        bootbox.alert("Excelente! Tu nuevo viaje ya esta publicado", function () {
-                        });
-                        formResetViaje();
-                        formResetVuelos();
-                    }
-                });
-
-
-                $("div[id=" + data.id + "] a[role=linkViaje]").click(data.id,initClickDetalle);
-                //limpio el form para futuros viajes
-                
-            }
-        });
+    	event.preventDefault();
+    	$("#itemSinViaje").hide();
+    	$.ajax({
+    		type: 'POST',
+    		url: 'http://localhost:8080/api/trips',
+    		data: JSON.stringify({
+    			"idPassenger": id,
+    			"fromCity": currentTrip.fromCity.description,
+    			"toCity": currentTrip.toCity.description,
+    			"price": currentTrip.price.total + " " + currentTrip.price.currency,
+    			"itinerary": currentTrip.toJSON()
+    		}),
+    		contentType: 'application/json',
+    		dataType: 'json',
+    		success: function (data) {
+    			console.log(data.result);
+    			contViajes++;
+    			$("#listViajes").append(getViajeHTML(data.id));
+    			bootbox.confirm("Felicitaciones por tu viaje! Queres publicarlo en tu muro de Facebook?", 
+    					function (result) {
+    				if (result) {
+    					console.log("checkeo los permisoss");
+    					FB.api('/' + id + '/permissions','get',function(resp){
+    						console.log(resp);
+    						var dioPermiso = false;
+    						for(var i=0; i<resp.data.length; i++) {
+    							console.log("logueo elemento");
+    							console.log(resp.data[i].permission);
+    							console.log(resp.data[i].status);
+    							if (resp.data[i].permission == 'publish_actions'&&resp.data[i].status == 'granted'){
+    								dioPermiso=true;
+    							}
+    						};
+    						console.log("logueo el bool");
+    						console.log(dioPermiso);
+    						if(dioPermiso==true){
+        						//El tipo ya dio permiso para publicar
+        						publicar();
+        					}else{
+        						//Todavia no dio permiso
+        						FB.login(function(response) {
+        							console.log(response);
+        							console.log(response.authResponse.grantedScopes);
+        							var respondioOk = false;
+//        							verifico que respondio
+        							FB.api('/' + id + '/permissions','get',function(resp){
+        	    						console.log(resp);
+        	    						var respondioOk = false;
+        	    						for(var i=0; i<resp.data.length; i++) {
+        	    							console.log("logueo elemento ");
+        	    							console.log(resp.data[i].permission);
+        	    							console.log(resp.data[i].status);
+        	    							if (resp.data[i].permission == 'publish_actions'&&resp.data[i].status == 'granted'){
+        	    								respondioOk=true;
+        	    							}
+        	    						};
+        	    						if(respondioOk==true){
+        	    							publicar();
+        	    						}
+        	    						formResetViaje();
+        	    						formResetVuelos();
+        	    					})
+        						}, {
+        							scope: 'publish_actions',
+        							return_scopes: true
+        						});
+        					}
+    					});
+    				}else{
+    					//limpio el form para futuros viajes
+    					formResetViaje();
+    					formResetVuelos();
+    				}
+    			});
+    			$("div[id=" + data.id + "] a[role=linkViaje]").click(data.id,initClickDetalle);
+    		}
+    	});
 
     });
     $("#btnVolver").click(function (e) {
@@ -885,6 +902,38 @@ function getViajeParaFB() {
             + currentTrip.inbound.segments[(currentTrip.inbound.segments.length - 1)].arrival_datetime;
 }
 
+function publicar(){
+//	pruebo las cosas del mapa
+	console.log("https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
+			"&zoom=" + mapaVuelo.getZoom() +
+			"&maptype=" + mapaVuelo.getMapTypeId() +
+			"&size=600x400" +
+			"&markers=color:green%7C" + markerOrigen.getPosition().toString().trim() +
+			"%7C" + markerDestino.getPosition().toString().trim() +
+			"&path=color:red%7C" + markerOrigen.getPosition().toString().trim() +
+			"%7C" + markerDestino.getPosition().toString().trim());
+//	posteo en muro de facebook
+	FB.api('/' + id + '/feed', 'post', {
+        message: getViajeParaFB(),
+        picture: "https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
+                "&zoom=" + mapaVuelo.getZoom() +
+                "&maptype=" + mapaVuelo.getMapTypeId() +
+                "&size=600x400" +
+                "&markers=color:green%7C" + markerOrigen.getPosition().toString().trim() +
+                "%7C" + markerDestino.getPosition().toString().trim() +
+                "&path=color:red%7C" + markerOrigen.getPosition().toString().trim() +
+                "%7C" + markerDestino.getPosition().toString().trim(),
+        name: 'TACS POR EL MUNDO',
+        description: 'viaje',
+        access_token: token
+    }, function (data) {
+        console.log(data);
+    });
+    bootbox.alert("Excelente! Tu nuevo viaje ya esta publicado", function () {
+    });
+    formResetViaje();
+    formResetVuelos();
+}
 //####################### FACEBOOK #######################################
 
 //Salís el 23/04/2015 desde Ezeiza, Buenos Aires a las 14:35 hs y llegás al Aeropuerto Internacional de la ciudad de Panamá a las 23:35 del mismo día

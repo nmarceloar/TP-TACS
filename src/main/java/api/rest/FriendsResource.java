@@ -44,6 +44,21 @@ public class FriendsResource {
         }
         return pjSrv.getFriendsOfPassenger(Long.parseLong(id));
     }
+    
+    @GET
+    @Path("{idUser}/{idFriend}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean getSonAmigos(@PathParam("idUser") String id,@PathParam("idFriend") String idFriend) {
+        // Chequeo que si no existe ese usuario, devuelva lista vacia
+    	if ( pjSrv.getFriendsOfPassenger(Long.parseLong(id)) == null){
+            return false;
+        }
+    	if(pjSrv.getFriendsOfPassenger(Long.parseLong(id)).contains(idFriend)){
+        return true;
+    	}
+    	return false;
+    }
+    		
 
     @POST
     @Path("{idUser}/{idFriend}")

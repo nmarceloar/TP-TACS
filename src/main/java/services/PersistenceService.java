@@ -15,6 +15,7 @@ import integracion.facebook.UserRegisteredFB;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
@@ -28,9 +29,9 @@ import model.Recommendation;
 import org.springframework.stereotype.Service;
 
 import model.Trip;
+
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jackson.JacksonFeature;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import repository.PassengerDAO;
@@ -52,7 +53,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
 
     @Autowired
     private RecommendationDAO recDao;
-
+    
     public PersistenceService() {
     }
 
@@ -74,7 +75,6 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     @Override
     public Passenger getPassengerById(long id) {
         Passenger psj = psjDao.getPasajeroById(id);
-        assignFacebookFriendsToPassenger(psj);
         return psj;
     }
 
@@ -163,7 +163,17 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     }
 
     // #########################################################################
-    
+    private boolean sonAmigos(long id, long idFriend){
+    	Passenger p = getPassengerById(id);
+        // Chequeo que si no existe ese usuario, devuelva lista vacia
+    	if (p.getFriends() == null){
+            return false;
+        }
+    	if(p.getFriends().contains(idFriend)){
+        return true;
+    	}
+    	return false;
+    }
     private void assignFacebookFriendsToPassenger(Passenger pasajero) {
 
         ClientConfig config = new ClientConfig().register(new JacksonFeature());
@@ -181,9 +191,9 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
          * ambos lados de la relacion.
          */
         for (UserRegisteredFB fbUs : busqueda.getUsuarios()) {
-            if (psjDao.getPasajeroById(fbUs.getId()) != null) {
+            if (psjDao.getPasajeroById(fbUs.getId()) != null && sonAmigos(pasajero.getIdUser(),fbUs.getId())==false ) {
                 assignFriend(pasajero.getIdUser(), fbUs.getId());
-//                assignFriend(p.getIdUser(), pasajero.getIdUser());
+                assignFriend(fbUs.getId(), pasajero.getIdUser());
             }
         }
     }
@@ -203,6 +213,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
                 longToken = longToken.split("&", 2)[0];
                 buscado = p;
                 buscado.setToken(longToken);
+                assignFacebookFriendsToPassenger(buscado);
             }
         }
         if (buscado == null) {
