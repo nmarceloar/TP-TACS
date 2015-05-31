@@ -353,6 +353,7 @@ $(function () {
     			});
     			$("div[id=" + data.id + "] a[role=linkViaje]").click(data.id,initClickDetalle);
     			$("div[id=" + data.id + "] a[id=eliminarViaje]").click(data.id,initClickEliminar);
+    			$("div[id=" + data.id + "] a[id=compartirViaje]").click(data.id,initClickCompartir);
     		}
     	});
 
@@ -667,7 +668,8 @@ function initClickEliminar(idViajeAEliminar) {
 	                    $.each(data, function (index, value) {
 	                        $("#listViajes").append(getViajesPropiosHTML(value));
 	                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip,initClickDetalle);
-	                        $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.id,initClickEliminar);
+	                        $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip,initClickEliminar);
+	                        $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip,initClickCompartir);
 	                    });
 	                }
 	            }
@@ -676,6 +678,65 @@ function initClickEliminar(idViajeAEliminar) {
 	})
 }
 
+function initClickCompartir(idViajeACompartir) {
+	console.log(idViajeACompartir.data);
+	// reviso si la lista de recomendaciones está abierta y la cierro si hace falta
+	if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
+		$("#modListaRecomendaciones").modal("hide");
+	}
+	$.ajax({
+		url: 'http://localhost:8080/api/trips/one/' + idViajeACompartir.data,
+		dataType: 'json',
+		success: function(data){
+			console.log(data);
+			
+			bootbox.confirm("Queres publicar este viaje en tu muro de Facebook?", 
+					function (result) {
+				if (result) {
+					FB.api('/' + id + '/permissions','get',function(resp){
+						console.log(resp);
+						var dioPermiso = false;
+						for(var i=0; i<resp.data.length; i++) {
+							if (resp.data[i].permission == 'publish_actions'&&resp.data[i].status == 'granted'){
+								dioPermiso=true;
+							}
+						};
+						if(dioPermiso==true){
+							//El tipo ya dio permiso para publicar
+							compartir(data);
+						}else{
+							//Todavia no dio permiso
+							FB.login(function(response) {
+								var respondioOk = false;
+//								verifico que respondio
+								FB.api('/' + id + '/permissions','get',function(resp){
+									console.log(resp);
+									var respondioOk = false;
+									for(var i=0; i<resp.data.length; i++) {
+										if (resp.data[i].permission == 'publish_actions'&&resp.data[i].status == 'granted'){
+											respondioOk=true;
+										}
+									};
+									if(respondioOk==true){
+										compartir(data);
+									}
+									formResetViaje();
+									formResetVuelos();
+								})
+							}, {
+								scope: 'publish_actions',
+								return_scopes: true
+							});
+						}
+					});
+				}
+			})
+		}
+	})
+	
+
+
+}
 
 //helpers autocomplete ******************************************************************
 function autocomplete_processCities(data, response) {
@@ -847,6 +908,7 @@ function updateStatusCallback(response) {
                         $("#listViajes").append(getViajesPropiosHTML(value));
                         $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip,initClickDetalle);
                         $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip,initClickEliminar);
+                        $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip,initClickCompartir);
                     });
                 }
             }
@@ -865,6 +927,7 @@ function updateStatusCallback(response) {
                         $("#listViajesAmigos").append(getViajesDeAmigosHTML(value));
                         $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip,initClickDetalle);
                         $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip,initClickEliminar);
+                        $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip,initClickCompartir);
                     });
                 }
             }
@@ -917,15 +980,15 @@ function dameLongToken() {
 }
 
 
-function getViajeParaFB() {
+function getViajeParaFB(from,to,salida,vuelta) {
     return 'TACS POR EL MUNDO: Viajo desde '
-            + currentTrip.fromCity.description
+            + from
             + ' a '
-            + currentTrip.toCity.description
+            + to
             + ' saliendo el dia '
-            + currentTrip.outbound.segments[0].departure_datetime
+            + salida
             + ' y volviendo el dia '
-            + currentTrip.inbound.segments[(currentTrip.inbound.segments.length - 1)].arrival_datetime;
+            + vuelta;
 }
 
 function publicar(){
@@ -940,7 +1003,10 @@ function publicar(){
 			"%7C" + markerDestino.getPosition().toString().trim());
 //	posteo en muro de facebook
 	FB.api('/' + id + '/feed', 'post', {
-        message: getViajeParaFB(),
+        message: getViajeParaFB(currentTrip.fromCity.description,
+        		currentTrip.toCity.description,
+        		currentTrip.outbound.segments[0].departure_datetime,
+        		currentTrip.inbound.segments[(currentTrip.inbound.segments.length - 1)].arrival_datetime),
         picture: "https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
                 "&zoom=" + mapaVuelo.getZoom() +
                 "&maptype=" + mapaVuelo.getMapTypeId() +
@@ -959,6 +1025,37 @@ function publicar(){
     });
     formResetViaje();
     formResetVuelos();
+}
+
+function compartir(viaje){
+//	pruebo las cosas del mapa
+//	console.log("https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
+//			"&zoom=" + mapaVuelo.getZoom() +
+//			"&maptype=" + mapaVuelo.getMapTypeId() +
+//			"&size=600x400" +
+//			"&markers=color:green%7C" + markerOrigen.getPosition().toString().trim() +
+//			"%7C" + markerDestino.getPosition().toString().trim() +
+//			"&path=color:red%7C" + markerOrigen.getPosition().toString().trim() +
+//			"%7C" + markerDestino.getPosition().toString().trim());
+//	posteo en muro de facebook
+	FB.api('/' + id + '/feed', 'post', {
+        message: getViajeParaFB(viaje.fromCity,viaje.toCity,viaje.tripDepartureDate.toString("dd/MM/yyyy HH:mm"),viaje.tripArrivalDate.toString("dd/MM/yyyy HH:mm")),
+//        picture: "https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
+//                "&zoom=" + mapaVuelo.getZoom() +
+//                "&maptype=" + mapaVuelo.getMapTypeId() +
+//                "&size=600x400" +
+//                "&markers=color:green%7C" + markerOrigen.getPosition().toString().trim() +
+//                "%7C" + markerDestino.getPosition().toString().trim() +
+//                "&path=color:red%7C" + markerOrigen.getPosition().toString().trim() +
+//                "%7C" + markerDestino.getPosition().toString().trim(),
+        name: 'TACS POR EL MUNDO',
+        description: 'viaje',
+        access_token: token
+    }, function (data) {
+        console.log(data);
+    });
+    bootbox.alert("Excelente! Tu nuevo viaje ya esta publicado", function () {
+    });
 }
 //####################### FACEBOOK #######################################
 
