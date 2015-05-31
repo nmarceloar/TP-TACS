@@ -21,4 +21,8 @@ public interface TripsDAO {
     
     public List<Trip> searchTripByPassenger(long fr);
     
+    public List<Trip> getTrips();
+    
+    public String deleteTrip(int id);
+    
 }

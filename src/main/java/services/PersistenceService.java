@@ -104,6 +104,12 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     }
 
     @Override
+    public List<Trip> getTrips() {
+        return viajeDao.getTrips();
+    }
+    
+    
+    @Override
     public void saveTrip(Trip v) {
         viajeDao.saveTrip(v);
     }
@@ -162,6 +168,11 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
         rec.setNombreYAp(pj.getName() + " " + pj.getSurname());
     }
 
+    @Override
+    public String deleteTrip(int id){
+    	String s = viajeDao.deleteTrip(id);
+    	return s;
+    }
     // #########################################################################
     private boolean sonAmigos(long id, long idFriend){
     	Passenger p = getPassengerById(id);

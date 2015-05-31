@@ -309,37 +309,26 @@ $(function () {
     			bootbox.confirm("Felicitaciones por tu viaje! Queres publicarlo en tu muro de Facebook?", 
     					function (result) {
     				if (result) {
-    					console.log("checkeo los permisoss");
     					FB.api('/' + id + '/permissions','get',function(resp){
     						console.log(resp);
     						var dioPermiso = false;
     						for(var i=0; i<resp.data.length; i++) {
-    							console.log("logueo elemento");
-    							console.log(resp.data[i].permission);
-    							console.log(resp.data[i].status);
     							if (resp.data[i].permission == 'publish_actions'&&resp.data[i].status == 'granted'){
     								dioPermiso=true;
     							}
     						};
-    						console.log("logueo el bool");
-    						console.log(dioPermiso);
     						if(dioPermiso==true){
         						//El tipo ya dio permiso para publicar
         						publicar();
         					}else{
         						//Todavia no dio permiso
         						FB.login(function(response) {
-        							console.log(response);
-        							console.log(response.authResponse.grantedScopes);
         							var respondioOk = false;
 //        							verifico que respondio
         							FB.api('/' + id + '/permissions','get',function(resp){
         	    						console.log(resp);
         	    						var respondioOk = false;
         	    						for(var i=0; i<resp.data.length; i++) {
-        	    							console.log("logueo elemento ");
-        	    							console.log(resp.data[i].permission);
-        	    							console.log(resp.data[i].status);
         	    							if (resp.data[i].permission == 'publish_actions'&&resp.data[i].status == 'granted'){
         	    								respondioOk=true;
         	    							}
@@ -363,6 +352,7 @@ $(function () {
     				}
     			});
     			$("div[id=" + data.id + "] a[role=linkViaje]").click(data.id,initClickDetalle);
+    			$("div[id=" + data.id + "] a[id=eliminarViaje]").click(data.id,initClickEliminar);
     		}
     	});
 
@@ -387,7 +377,7 @@ function getViajeHTML(idViaje) {
             + ' y volviendo el d&iacute;a '
             + currentTrip.inbound.segments[(currentTrip.inbound.segments.length - 1)].arrival_datetime
             + '</a></h3>'
-            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#">Compartir</a> <a href="#">Eliminar</a></p>'
+            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a> <a href="#" id="eliminarViaje">Eliminar</a></p>'
             + '</div>';
 }
 
@@ -405,7 +395,7 @@ function getViajesPropiosHTML(data) {
             + ' y volviendo el d&iacute;a '
             + data.tripArrivalDate
             + '</a></h3>'
-            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#">Compartir</a> <a href="#">Eliminar</a></p>'
+            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a> <a href="#" id="eliminarViaje">Eliminar</a></p>'
             + '</div>';
 }
 
@@ -420,7 +410,7 @@ function getViajesDeAmigosHTML(data) {
             + ' y volviendo el d&iacute;a '
             + data.tripArrivalDate
             + '</a></h3>'
-            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#">Compartir</a> <a href="#">Eliminar</a></p>'
+            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a> <a href="#" id="eliminarViaje">Eliminar</a></p>'
             + '</div>';
 }
 
@@ -654,6 +644,38 @@ function initClickDetalle(id) {
 
 }
 
+function initClickEliminar(idViajeAEliminar) {
+	console.log(idViajeAEliminar.data);
+	// reviso si la lista de recomendaciones está abierta y la cierro si hace falta
+	if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
+		$("#modListaRecomendaciones").modal("hide");
+	}
+	$.ajax({
+		url: "http://localhost:8080/api/trips/"+idViajeAEliminar.data,
+		dataType:"text",
+		method:"DELETE",
+		success: function (data) {
+			console.log(data);
+			$("#listViajes").html('<div class="list-group-item active"><h4>Tus viajes</h4></div>'+
+					'<div class="list-group-item" id="itemSinViaje">Todav\u00eda no hiciste ning\u00fan viaje <span class="glyphicon glyphicon-thumbs-down"></span></div>');
+			$.ajax({
+	            url: 'http://localhost:8080/api/trips/' + id,
+	            dataType: 'json',
+	            success: function (data) {
+	                if (data.length != 0) {
+	                    $("#itemSinViaje").hide();
+	                    $.each(data, function (index, value) {
+	                        $("#listViajes").append(getViajesPropiosHTML(value));
+	                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip,initClickDetalle);
+	                        $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.id,initClickEliminar);
+	                    });
+	                }
+	            }
+			});
+		}
+	})
+}
+
 
 //helpers autocomplete ******************************************************************
 function autocomplete_processCities(data, response) {
@@ -824,6 +846,7 @@ function updateStatusCallback(response) {
                     $.each(data, function (index, value) {
                         $("#listViajes").append(getViajesPropiosHTML(value));
                         $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip,initClickDetalle);
+                        $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip,initClickEliminar);
                     });
                 }
             }
@@ -841,6 +864,7 @@ function updateStatusCallback(response) {
                     $.each(data, function (index, value) {
                         $("#listViajesAmigos").append(getViajesDeAmigosHTML(value));
                         $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip,initClickDetalle);
+                        $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip,initClickEliminar);
                     });
                 }
             }

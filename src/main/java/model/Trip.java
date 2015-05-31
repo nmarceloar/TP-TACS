@@ -74,7 +74,7 @@ public class Trip implements Serializable {
         return idPassenger;
     }
 
-    public long getIdTrip() {
+    public int getIdTrip() {
         return idTrip;
     }
 

@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -47,6 +48,12 @@ public class TripsResource {
     }
     
     @GET
+    @Produces("application/json")
+    public List<Trip> getTrips(){
+        return vjSrv.getTrips();
+    }
+    
+    @GET
     @Path("one/{idTrip}")
     @Produces("application/json")
     public Trip getTripById(@NotNull @PathParam("idTrip") String id){
@@ -62,6 +69,14 @@ public class TripsResource {
             return new ArrayList<>();
         }
         return vjSrv.getTripsOfFriendsOfUser(Long.parseLong(id));
+    }
+    
+    @DELETE
+    @Path("{idTrip}")
+    @Produces("application/json")
+    public String deleteTripById(@NotNull @PathParam("idTrip") String id){
+    	String result = vjSrv.deleteTrip(Integer.parseInt(id));
+        return "Se ha eliminado el viaje con id "+result;
     }
     
     @POST

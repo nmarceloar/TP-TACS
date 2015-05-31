@@ -8,8 +8,10 @@ package repository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import model.Trip;
 import model.Segment;
+
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 
@@ -68,6 +70,14 @@ public class TripsDAOStatic implements TripsDAO {
     }
     
     @Override
+    public String deleteTrip(int id) {
+    	Trip trip = searchTripById(id);
+    	String idResult = Integer.toString(trip.getIdTrip());
+    	listaViajes.remove(trip);
+    	return idResult;
+    }
+    
+    @Override
     public Trip searchTripById(int id) {
         Trip buscado = null;
         for (Trip v : getTripList()) {
@@ -76,6 +86,11 @@ public class TripsDAOStatic implements TripsDAO {
             }
         }
         return buscado;
+    }
+    
+    @Override
+    public List<Trip> getTrips() {
+        return listaViajes;
     }
     
     @Override

@@ -16,10 +16,14 @@ public interface TripsAPI {
     
     public List<Trip> getTripsOfPassenger(long id);
     
+    public List<Trip> getTrips();
+    
     public void saveTrip(Trip v);
     
     public Trip getTrip(int id);
     
     public List<Trip> getTripsOfFriendsOfUser(long id);
+    
+    public String deleteTrip(int id);
     
 }
