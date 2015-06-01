@@ -13,10 +13,11 @@ import java.io.Serializable;
  * @author flpitu88
  */
 public class RecommendationBeanFB implements Serializable {
-    
+
+    // Usuario que envia la recomendacion
     @JsonProperty("idUsuario")
     private long idUser;
-    
+
     @JsonProperty("idViaje")
     private int idTrip;
 
@@ -43,7 +44,5 @@ public class RecommendationBeanFB implements Serializable {
     public void setIdTrip(int idTrip) {
         this.idTrip = idTrip;
     }
-    
-    
-    
+
 }

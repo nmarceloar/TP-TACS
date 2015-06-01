@@ -13,62 +13,62 @@ public class Trip implements Serializable {
 
     @JsonProperty("idPassenger")
     private long idPassenger;
-    
+
     @JsonProperty("fromCity")
     private String fromCity;
-    
+
     @JsonProperty("toCity")
     private String toCity;
-    
+
     @JsonProperty("price")
     private String price;
-    
-   	@JsonProperty("itinerary")
+
+    @JsonProperty("itinerary")
     private List<Segment> itinerary;
 
+    @JsonProperty("idTrip")
     private int idTrip;
 
     public String getFromCity() {
-		return fromCity;
-	}
+        return fromCity;
+    }
 
-	public void setFromCity(String fromCity) {
-		this.fromCity = fromCity;
-	}
+    public void setFromCity(String fromCity) {
+        this.fromCity = fromCity;
+    }
 
-	public String getToCity() {
-		return toCity;
-	}
+    public String getToCity() {
+        return toCity;
+    }
 
-	public void setToCity(String toCity) {
-		this.toCity = toCity;
-	}
-
+    public void setToCity(String toCity) {
+        this.toCity = toCity;
+    }
 
     public Trip() {
         idTrip = contadorId++;
     }
 
-    public Trip(long idPassenger,String fromCity,String toCity,String price, List<Segment> itinerary) {
+    public Trip(long idPassenger, String fromCity, String toCity, String price, List<Segment> itinerary) {
         this.idPassenger = idPassenger;
-        this.fromCity=fromCity;
-        this.toCity=toCity;
-        this.price=price;
+        this.fromCity = fromCity;
+        this.toCity = toCity;
+        this.price = price;
         this.itinerary = itinerary;
         idTrip = contadorId++;
     }
-    
+
     public String getPrice() {
-		return price;
-	}
+        return price;
+    }
 
-	public void setPrice(String price) {
-		this.price = price;
-	}
+    public void setPrice(String price) {
+        this.price = price;
+    }
 
-	public void setIdPassenger(long idPassenger) {
-		this.idPassenger = idPassenger;
-	}
+    public void setIdPassenger(long idPassenger) {
+        this.idPassenger = idPassenger;
+    }
 
     public long getIdPassenger() {
         return idPassenger;

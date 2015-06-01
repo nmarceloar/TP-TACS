@@ -5,6 +5,7 @@
  */
 package apis;
 
+import integracion.facebook.RecommendationBeanFB;
 import java.util.List;
 import model.Passenger;
 import model.Recommendation;
@@ -26,5 +27,7 @@ public interface RecommendationAPI {
     public void asignarPasajeroARecomendaciones(List<Recommendation> list, long pass);
     
     public void asignarPasajeroARecomendacion(Recommendation rec, long pass);
+    
+    public void instanceAndSaveRecommendation(RecommendationBeanFB recBean, long idUser);
     
 }

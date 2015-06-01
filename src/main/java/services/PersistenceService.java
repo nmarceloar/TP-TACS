@@ -10,6 +10,7 @@ import apis.RecommendationAPI;
 import apis.TripsAPI;
 import integracion.facebook.ApellidoFB;
 import integracion.facebook.NombreFB;
+import integracion.facebook.RecommendationBeanFB;
 import integracion.facebook.SearchFriendsFB;
 import integracion.facebook.UserRegisteredFB;
 
@@ -53,7 +54,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
 
     @Autowired
     private RecommendationDAO recDao;
-    
+
     public PersistenceService() {
     }
 
@@ -107,8 +108,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     public List<Trip> getTrips() {
         return viajeDao.getTrips();
     }
-    
-    
+
     @Override
     public void saveTrip(Trip v) {
         viajeDao.saveTrip(v);
@@ -169,22 +169,24 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     }
 
     @Override
-    public String deleteTrip(int id){
-    	String s = viajeDao.deleteTrip(id);
-    	return s;
+    public String deleteTrip(int id) {
+        String s = viajeDao.deleteTrip(id);
+        return s;
     }
+
     // #########################################################################
-    private boolean sonAmigos(long id, long idFriend){
-    	Passenger p = getPassengerById(id);
+    private boolean sonAmigos(long id, long idFriend) {
+        Passenger p = getPassengerById(id);
         // Chequeo que si no existe ese usuario, devuelva lista vacia
-    	if (p.getFriends() == null){
+        if (p.getFriends() == null) {
             return false;
         }
-    	if(p.getFriends().contains(idFriend)){
-        return true;
-    	}
-    	return false;
+        if (p.getFriends().contains(idFriend)) {
+            return true;
+        }
+        return false;
     }
+
     private void assignFacebookFriendsToPassenger(Passenger pasajero) {
 
         ClientConfig config = new ClientConfig().register(new JacksonFeature());
@@ -202,7 +204,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
          * ambos lados de la relacion.
          */
         for (UserRegisteredFB fbUs : busqueda.getUsuarios()) {
-            if (psjDao.getPasajeroById(fbUs.getId()) != null && sonAmigos(pasajero.getIdUser(),fbUs.getId())==false ) {
+            if (psjDao.getPasajeroById(fbUs.getId()) != null && sonAmigos(pasajero.getIdUser(), fbUs.getId()) == false) {
                 assignFriend(pasajero.getIdUser(), fbUs.getId());
                 assignFriend(fbUs.getId(), pasajero.getIdUser());
             }
@@ -251,13 +253,28 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
             });
 
             Passenger pasajero = new Passenger(id, nombre.getFirst_name(), apellido.getLast_name(), longToken, new ArrayList());
-            
+
             psjDao.guardarPasajero(pasajero);
             assignFacebookFriendsToPassenger(pasajero);
 
             return pasajero;
         }
         return buscado;
+    }
+
+    @Override
+    /**
+     * Instancia una recomendacion a partir de los datos recibidos, y la guarda
+     * en el DAO correspondiente.
+     */
+    public void instanceAndSaveRecommendation(RecommendationBeanFB recBean, long idUser) {
+        int idViajeRecom = recBean.getIdTrip();
+        long idUsuarioQueRecomienda = recBean.getIdUser();
+        Trip viaje = viajeDao.searchTripById(idViajeRecom);
+        Passenger psj = psjDao.getPasajeroById(idUsuarioQueRecomienda);
+        recDao.saveRecommendation(new Recommendation(idUser, idUsuarioQueRecomienda,
+                psj.getName() + ' ' + psj.getSurname(),
+                viaje.getFromCity(), viaje.getToCity(), idViajeRecom));
     }
 
 }

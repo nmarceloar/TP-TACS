@@ -6,6 +6,7 @@
 package api.rest;
 
 import apis.RecommendationAPI;
+import integracion.facebook.RecommendationBeanFB;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -53,10 +54,20 @@ public class RecommendationResource {
     }
     
     @POST
-    @Path("{id}")
+    @Path("{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response assignRecommendation(Recommendation rec) {
-        srvRecom.saveRecommendation(rec);
+//    public Response assignRecommendation(Recommendation rec) {
+//        srvRecom.saveRecommendation(rec);
+//        String result = "Recomendacion asignada correctamente";
+//        return Response.status(201)
+//                .entity(result).build();
+//    }
+    /**
+     * Modifico el post de recomendacion para que el nombre completo y ciudad
+     * de partida y destino se completen en el servidor y no en la vista
+     */
+    public Response assignRecommendation(RecommendationBeanFB rec, @PathParam("userId") String id){
+        srvRecom.instanceAndSaveRecommendation(rec, Long.parseLong(id));
         String result = "Recomendacion asignada correctamente";
         return Response.status(201)
                 .entity(result).build();

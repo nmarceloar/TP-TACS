@@ -76,8 +76,9 @@ var contViajes = 0;
 //###############################VARIABLES DE FACEBOOK#######################
 var id;
 var token;
-var listAmigos = [];
+var listAmigos = [[], []];
 var listIdAmigosARecomendar = [];
+var amigosSelecRecomendar = [];
 var idViajeARecomendar;
 //###############################VARIABLES DE FACEBOOK#######################
 
@@ -153,31 +154,33 @@ $(function () {
         event.preventDefault();
         $("#modRecomendar").modal("show");
     });
-    
-    
+
+
     /**
      * Agrego la funcionalidad de efectivamente recomendar y notificar por un viaje
      */
     $("#btnRecomendar").click(function (event) {
         event.preventDefault();
         $("#modRecomendar").hide();
-        // Posteo de recomendacion (falta obtener idViaje)
-        $.ajax({
-            type: 'POST',
-            url: 'http://localhost:8080/api/recommendations/'+id,
-            data: JSON.stringify({
-                    "idUsuario": listIdAmigosARecomendar[0],
+
+        $.each(listIdAmigosARecomendar, function (i, val) {
+            // Posteo de recomendacion    
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:8080/api/recommendations/' + val,
+                data: JSON.stringify({
+                    "idUsuario": id,
                     "idViaje": idViajeARecomendar
-            }),
-            contentType: 'application/json',
-            dataType: 'json',
-            success: function (data) {
-                console.log(data.result);
-                alert("Has recomendado el viaje satisfactoriamente");
-            }
-        });
-        // Posteo notificacion al usuario destino (POR DESARROLLAR)
-//        $.ajax({
+                }),
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data.result);
+                    alert("Has recomendado el viaje satisfactoriamente");
+                }
+            });
+            // Posteo notificacion
+            //        $.ajax({
 //            type: 'POST',
 //            url: 'http://graph.facebook.com/v2.3/' + id + '/notifications',
 //            data: JSON.stringify({
@@ -190,6 +193,23 @@ $(function () {
 //                console.log(data.result);
 //            }
 //        });
+        });
+//        $.ajax({
+//            type: 'POST',
+//            url: 'http://localhost:8080/api/recommendations/'+id,
+//            data: JSON.stringify({
+//                    "idUsuario": listIdAmigosARecomendar[0],
+//                    "idViaje": idViajeARecomendar
+//            }),
+//            contentType: 'application/json',
+//            dataType: 'json',
+//            success: function (data) {
+//                console.log(data.result);
+//                alert("Has recomendado el viaje satisfactoriamente");
+//            }
+//        });
+        // Posteo notificacion al usuario destino (POR DESARROLLAR)
+
     });
 
 
@@ -1128,6 +1148,7 @@ function compartir(viaje) {
 //Salís el 23/04/2015 desde Ezeiza, Buenos Aires a las 14:35 hs y llegás al Aeropuerto Internacional de la ciudad de Panamá a las 23:35 del mismo día
 
 function llegadaDatosViaje(datos) {
+    idViajeARecomendar = datos.idTrip;
     $("#detViajeRecom").append(
             'Salio el '
             + datos.tripDepartureDate
