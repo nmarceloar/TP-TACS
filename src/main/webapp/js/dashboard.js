@@ -3,7 +3,7 @@ var Viaje = function () {
     this.pricedetail = null;
     this.ida = null;
     this.vuelta = null;
-}
+};
 
 var City = function () {
     this.description = null;
@@ -76,6 +76,9 @@ var contViajes = 0;
 //###############################VARIABLES DE FACEBOOK#######################
 var id;
 var token;
+var listAmigos = [];
+var listIdAmigosARecomendar = [];
+var idViajeARecomendar;
 //###############################VARIABLES DE FACEBOOK#######################
 
 
@@ -84,7 +87,7 @@ var token;
 $(function () {
     //####################### FACEBOOK #######################################
 
-	//GET DEL TOKEN
+    //GET DEL TOKEN
     $(function () {
         $.ajaxSetup({cache: true});
         $.getScript('//connect.facebook.net/en_US/sdk.js', function () {
@@ -145,17 +148,58 @@ $(function () {
 //    });
     // notificaciones de recomendación *******************************
 
-    // recomendar ****************************************
-    var listaAmigosTrucha = ['Juan', 'Pedro', 'Luis', 'Luc&iacute;a', 'Romina', 'Jimena', 'Roberto', 'Julio', 'Makoto', 'Dimitri'];
+
     $("#btnRecomendarViaje").click(function (event) {
         event.preventDefault();
         $("#modRecomendar").modal("show");
     });
+    
+    
+    /**
+     * Agrego la funcionalidad de efectivamente recomendar y notificar por un viaje
+     */
+    $("#btnRecomendar").click(function (event) {
+        event.preventDefault();
+        $("#modRecomendar").hide();
+        // Posteo de recomendacion (falta obtener idViaje)
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:8080/api/recommendations/'+id,
+            data: JSON.stringify({
+                    "idUsuario": listIdAmigosARecomendar[0],
+                    "idViaje": idViajeARecomendar
+            }),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data.result);
+                alert("Has recomendado el viaje satisfactoriamente");
+            }
+        });
+        // Posteo notificacion al usuario destino (POR DESARROLLAR)
+//        $.ajax({
+//            type: 'POST',
+//            url: 'http://graph.facebook.com/v2.3/' + id + '/notifications',
+//            data: JSON.stringify({
+//                    "idUsuario": listIdAmigosARecomendar[0],
+//                    "idViaje": idViajeARecomendar
+//            }),
+//            contentType: 'application/json',
+//            dataType: 'json',
+//            success: function (data) {
+//                console.log(data.result);
+//            }
+//        });
+    });
+
+
+    // ---------------------------------------------------------------------------------------
 
     //TODO habría que hacer que los elementos se te vayan agregando en el input (como el de facebook)
     $("#boxAmigos").autocomplete({
         //TODO get amigoss
-        source: listaAmigosTrucha,
+//        source: listaAmigosTrucha,
+        source: listAmigos,
         select: function (event, ui) {
             $("#amigosList").append("<li>" + ui.item.value + "</li>");
             $("#boxAmigos").val('');
@@ -288,74 +332,76 @@ $(function () {
     });
 
     $("#btnViajar").click(function (event) {
-    	event.preventDefault();
-    	$("#itemSinViaje").hide();
-    	$.ajax({
-    		type: 'POST',
-    		url: 'http://localhost:8080/api/trips',
-    		data: JSON.stringify({
-    			"idPassenger": id,
-    			"fromCity": currentTrip.fromCity.description,
-    			"toCity": currentTrip.toCity.description,
-    			"price": currentTrip.price.total + " " + currentTrip.price.currency,
-    			"itinerary": currentTrip.toJSON()
-    		}),
-    		contentType: 'application/json',
-    		dataType: 'json',
-    		success: function (data) {
-    			console.log(data.result);
-    			contViajes++;
-    			$("#listViajes").append(getViajeHTML(data.id));
-    			bootbox.confirm("Felicitaciones por tu viaje! Queres publicarlo en tu muro de Facebook?", 
-    					function (result) {
-    				if (result) {
-    					FB.api('/' + id + '/permissions','get',function(resp){
-    						console.log(resp);
-    						var dioPermiso = false;
-    						for(var i=0; i<resp.data.length; i++) {
-    							if (resp.data[i].permission == 'publish_actions'&&resp.data[i].status == 'granted'){
-    								dioPermiso=true;
-    							}
-    						};
-    						if(dioPermiso==true){
-        						//El tipo ya dio permiso para publicar
-        						publicar();
-        					}else{
-        						//Todavia no dio permiso
-        						FB.login(function(response) {
-        							var respondioOk = false;
+        event.preventDefault();
+        $("#itemSinViaje").hide();
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:8080/api/trips',
+            data: JSON.stringify({
+                "idPassenger": id,
+                "fromCity": currentTrip.fromCity.description,
+                "toCity": currentTrip.toCity.description,
+                "price": currentTrip.price.total + " " + currentTrip.price.currency,
+                "itinerary": currentTrip.toJSON()
+            }),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data.result);
+                contViajes++;
+                $("#listViajes").append(getViajeHTML(data.id));
+                bootbox.confirm("Felicitaciones por tu viaje! Queres publicarlo en tu muro de Facebook?",
+                        function (result) {
+                            if (result) {
+                                FB.api('/' + id + '/permissions', 'get', function (resp) {
+                                    console.log(resp);
+                                    var dioPermiso = false;
+                                    for (var i = 0; i < resp.data.length; i++) {
+                                        if (resp.data[i].permission == 'publish_actions' && resp.data[i].status == 'granted') {
+                                            dioPermiso = true;
+                                        }
+                                    }
+                                    ;
+                                    if (dioPermiso == true) {
+                                        //El tipo ya dio permiso para publicar
+                                        publicar();
+                                    } else {
+                                        //Todavia no dio permiso
+                                        FB.login(function (response) {
+                                            var respondioOk = false;
 //        							verifico que respondio
-        							FB.api('/' + id + '/permissions','get',function(resp){
-        	    						console.log(resp);
-        	    						var respondioOk = false;
-        	    						for(var i=0; i<resp.data.length; i++) {
-        	    							if (resp.data[i].permission == 'publish_actions'&&resp.data[i].status == 'granted'){
-        	    								respondioOk=true;
-        	    							}
-        	    						};
-        	    						if(respondioOk==true){
-        	    							publicar();
-        	    						}
-        	    						formResetViaje();
-        	    						formResetVuelos();
-        	    					})
-        						}, {
-        							scope: 'publish_actions',
-        							return_scopes: true
-        						});
-        					}
-    					});
-    				}else{
-    					//limpio el form para futuros viajes
-    					formResetViaje();
-    					formResetVuelos();
-    				}
-    			});
-    			$("div[id=" + data.id + "] a[role=linkViaje]").click(data.id,initClickDetalle);
-    			$("div[id=" + data.id + "] a[id=eliminarViaje]").click(data.id,initClickEliminar);
-    			$("div[id=" + data.id + "] a[id=compartirViaje]").click(data.id,initClickCompartir);
-    		}
-    	});
+                                            FB.api('/' + id + '/permissions', 'get', function (resp) {
+                                                console.log(resp);
+                                                var respondioOk = false;
+                                                for (var i = 0; i < resp.data.length; i++) {
+                                                    if (resp.data[i].permission == 'publish_actions' && resp.data[i].status == 'granted') {
+                                                        respondioOk = true;
+                                                    }
+                                                }
+                                                ;
+                                                if (respondioOk == true) {
+                                                    publicar();
+                                                }
+                                                formResetViaje();
+                                                formResetVuelos();
+                                            })
+                                        }, {
+                                            scope: 'publish_actions',
+                                            return_scopes: true
+                                        });
+                                    }
+                                });
+                            } else {
+                                //limpio el form para futuros viajes
+                                formResetViaje();
+                                formResetVuelos();
+                            }
+                        });
+                $("div[id=" + data.id + "] a[role=linkViaje]").click(data.id, initClickDetalle);
+                $("div[id=" + data.id + "] a[id=eliminarViaje]").click(data.id, initClickEliminar);
+                $("div[id=" + data.id + "] a[id=compartirViaje]").click(data.id, initClickCompartir);
+            }
+        });
 
     });
     $("#btnVolver").click(function (e) {
@@ -599,141 +645,143 @@ function getInfoAirportsAndMap(flight) {
 
 
 function initClickDetalle(id) {
-	console.log(id.data);
-	// reviso si la lista de recomendaciones está abierta y la cierro si hace falta
-	if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
-		$("#modListaRecomendaciones").modal("hide");
-	}
-	
-	var precio;
-	var desde;
-	var hasta;
+    console.log(id.data);
+    // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
+    if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
+        $("#modListaRecomendaciones").modal("hide");
+    }
 
-	$.ajax({
-		url: "http://localhost:8080/api/trips/one/"+id.data,
-		dataType: 'json',
-		success: function (data) {
-			console.log("Respuesta trip");
-			//console.log(data);
-			precio=data.price;
-			desde=data.fromCity;
-			hasta=data.toCity;
-			var titulo = "\u00A1Tu viaje desde "+desde+" hasta "+hasta+"!";
-			$("div[id=modDetalleViaje] h4").html(titulo);
-			var itinerario = "";
-			var enter = "<br>";
-			$.each(data.itinerary, function (index, value) {
-				console.log(value);
-				var fechaSalida = value.departure_datetime;
-				var fechaLlegada = value.arrival_datetime;
-				if(fechaSalida.toString("dd/MM/yyyy")==fechaLlegada.toString("dd/MM/yyyy")){
-					itinerario = itinerario + "Sal\u00eds el "+fechaSalida.toString("dd/MM/yyyy")+" desde "+value.from+" a las "+fechaSalida.toString("HH:mm")+" hs " +
-					"y lleg\u00e1s a "+value.to+" a las "+fechaLlegada.toString("HH:mm")+" del mismo d\u00eda";
-				}
-				else
-				{
-					itinerario = itinerario + "Sal\u00eds el "+fechaSalida.toString("dd/MM/yyyy")+" desde "+value.from+" a las "+fechaSalida.toString("HH:mm")+" hs " +
-					"y lleg\u00e1s el "+fechaSalida.toString("dd/MM/yyyy")+" a "+value.to+" a las "+fechaLlegada.toString("HH:mm");
-				}
-				itinerario = itinerario+enter;
-			});
-			$("div[id=modDetalleViaje] div[class=col-md-6]").html(itinerario);
-			//TODO llenar el mapa de detalle del viaje
-			$("#modDetalleViaje").modal('show');
-		}
-	});
+    var precio;
+    var desde;
+    var hasta;
+
+    $.ajax({
+        url: "http://localhost:8080/api/trips/one/" + id.data,
+        dataType: 'json',
+        success: function (data) {
+            console.log("Respuesta trip");
+            //console.log(data);
+            precio = data.price;
+            desde = data.fromCity;
+            hasta = data.toCity;
+            var titulo = "\u00A1Tu viaje desde " + desde + " hasta " + hasta + "!";
+            $("div[id=modDetalleViaje] h4").html(titulo);
+            var itinerario = "";
+            var enter = "<br>";
+            $.each(data.itinerary, function (index, value) {
+                console.log(value);
+                var fechaSalida = value.departure_datetime;
+                var fechaLlegada = value.arrival_datetime;
+                if (fechaSalida.toString("dd/MM/yyyy") == fechaLlegada.toString("dd/MM/yyyy")) {
+                    itinerario = itinerario + "Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.from + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                            "y lleg\u00e1s a " + value.to + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda";
+                }
+                else
+                {
+                    itinerario = itinerario + "Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.from + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                            "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.to + " a las " + fechaLlegada.toString("HH:mm");
+                }
+                itinerario = itinerario + enter;
+            });
+            $("div[id=modDetalleViaje] div[class=col-md-6]").html(itinerario);
+            //TODO llenar el mapa de detalle del viaje
+            $("#modDetalleViaje").modal('show');
+        }
+    });
 
 }
 
 function initClickEliminar(idViajeAEliminar) {
-	console.log(idViajeAEliminar.data);
-	// reviso si la lista de recomendaciones está abierta y la cierro si hace falta
-	if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
-		$("#modListaRecomendaciones").modal("hide");
-	}
-	$.ajax({
-		url: "http://localhost:8080/api/trips/"+idViajeAEliminar.data,
-		dataType:"text",
-		method:"DELETE",
-		success: function (data) {
-			console.log(data);
-			$("#listViajes").html('<div class="list-group-item active"><h4>Tus viajes</h4></div>'+
-					'<div class="list-group-item" id="itemSinViaje">Todav\u00eda no hiciste ning\u00fan viaje <span class="glyphicon glyphicon-thumbs-down"></span></div>');
-			$.ajax({
-	            url: 'http://localhost:8080/api/trips/' + id,
-	            dataType: 'json',
-	            success: function (data) {
-	                if (data.length != 0) {
-	                    $("#itemSinViaje").hide();
-	                    $.each(data, function (index, value) {
-	                        $("#listViajes").append(getViajesPropiosHTML(value));
-	                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip,initClickDetalle);
-	                        $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip,initClickEliminar);
-	                        $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip,initClickCompartir);
-	                    });
-	                }
-	            }
-			});
-		}
-	})
+    console.log(idViajeAEliminar.data);
+    // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
+    if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
+        $("#modListaRecomendaciones").modal("hide");
+    }
+    $.ajax({
+        url: "http://localhost:8080/api/trips/" + idViajeAEliminar.data,
+        dataType: "text",
+        method: "DELETE",
+        success: function (data) {
+            console.log(data);
+            $("#listViajes").html('<div class="list-group-item active"><h4>Tus viajes</h4></div>' +
+                    '<div class="list-group-item" id="itemSinViaje">Todav\u00eda no hiciste ning\u00fan viaje <span class="glyphicon glyphicon-thumbs-down"></span></div>');
+            $.ajax({
+                url: 'http://localhost:8080/api/trips/' + id,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.length != 0) {
+                        $("#itemSinViaje").hide();
+                        $.each(data, function (index, value) {
+                            $("#listViajes").append(getViajesPropiosHTML(value));
+                            $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip, initClickDetalle);
+                            $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
+                            $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
+                        });
+                    }
+                }
+            });
+        }
+    })
 }
 
 function initClickCompartir(idViajeACompartir) {
-	console.log(idViajeACompartir.data);
-	// reviso si la lista de recomendaciones está abierta y la cierro si hace falta
-	if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
-		$("#modListaRecomendaciones").modal("hide");
-	}
-	$.ajax({
-		url: 'http://localhost:8080/api/trips/one/' + idViajeACompartir.data,
-		dataType: 'json',
-		success: function(data){
-			console.log(data);
-			
-			bootbox.confirm("Queres publicar este viaje en tu muro de Facebook?", 
-					function (result) {
-				if (result) {
-					FB.api('/' + id + '/permissions','get',function(resp){
-						console.log(resp);
-						var dioPermiso = false;
-						for(var i=0; i<resp.data.length; i++) {
-							if (resp.data[i].permission == 'publish_actions'&&resp.data[i].status == 'granted'){
-								dioPermiso=true;
-							}
-						};
-						if(dioPermiso==true){
-							//El tipo ya dio permiso para publicar
-							compartir(data);
-						}else{
-							//Todavia no dio permiso
-							FB.login(function(response) {
-								var respondioOk = false;
+    console.log(idViajeACompartir.data);
+    // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
+    if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
+        $("#modListaRecomendaciones").modal("hide");
+    }
+    $.ajax({
+        url: 'http://localhost:8080/api/trips/one/' + idViajeACompartir.data,
+        dataType: 'json',
+        success: function (data) {
+            console.log(data);
+
+            bootbox.confirm("Queres publicar este viaje en tu muro de Facebook?",
+                    function (result) {
+                        if (result) {
+                            FB.api('/' + id + '/permissions', 'get', function (resp) {
+                                console.log(resp);
+                                var dioPermiso = false;
+                                for (var i = 0; i < resp.data.length; i++) {
+                                    if (resp.data[i].permission == 'publish_actions' && resp.data[i].status == 'granted') {
+                                        dioPermiso = true;
+                                    }
+                                }
+                                ;
+                                if (dioPermiso == true) {
+                                    //El tipo ya dio permiso para publicar
+                                    compartir(data);
+                                } else {
+                                    //Todavia no dio permiso
+                                    FB.login(function (response) {
+                                        var respondioOk = false;
 //								verifico que respondio
-								FB.api('/' + id + '/permissions','get',function(resp){
-									console.log(resp);
-									var respondioOk = false;
-									for(var i=0; i<resp.data.length; i++) {
-										if (resp.data[i].permission == 'publish_actions'&&resp.data[i].status == 'granted'){
-											respondioOk=true;
-										}
-									};
-									if(respondioOk==true){
-										compartir(data);
-									}
-									formResetViaje();
-									formResetVuelos();
-								})
-							}, {
-								scope: 'publish_actions',
-								return_scopes: true
-							});
-						}
-					});
-				}
-			})
-		}
-	})
-	
+                                        FB.api('/' + id + '/permissions', 'get', function (resp) {
+                                            console.log(resp);
+                                            var respondioOk = false;
+                                            for (var i = 0; i < resp.data.length; i++) {
+                                                if (resp.data[i].permission == 'publish_actions' && resp.data[i].status == 'granted') {
+                                                    respondioOk = true;
+                                                }
+                                            }
+                                            ;
+                                            if (respondioOk == true) {
+                                                compartir(data);
+                                            }
+                                            formResetViaje();
+                                            formResetVuelos();
+                                        })
+                                    }, {
+                                        scope: 'publish_actions',
+                                        return_scopes: true
+                                    });
+                                }
+                            });
+                        }
+                    })
+        }
+    })
+
 
 
 }
@@ -906,9 +954,9 @@ function updateStatusCallback(response) {
                     $("#itemSinViaje").hide();
                     $.each(data, function (index, value) {
                         $("#listViajes").append(getViajesPropiosHTML(value));
-                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip,initClickDetalle);
-                        $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip,initClickEliminar);
-                        $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip,initClickCompartir);
+                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip, initClickDetalle);
+                        $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
+                        $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
                     });
                 }
             }
@@ -925,9 +973,9 @@ function updateStatusCallback(response) {
                 if (data.length !== 0) {
                     $.each(data, function (index, value) {
                         $("#listViajesAmigos").append(getViajesDeAmigosHTML(value));
-                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip,initClickDetalle);
-                        $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip,initClickEliminar);
-                        $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip,initClickCompartir);
+                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip, initClickDetalle);
+                        $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
+                        $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
                     });
                 }
             }
@@ -946,13 +994,31 @@ function updateStatusCallback(response) {
 //                    i++;
                     $("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value));
                     //<a href="#" role="linkViajeRecom" id="itemRecom" trip="4">
-                    $("a[trip=" + value.viajeAsoc + "][role=linkViajeRecom]").click(value.viajeAsoc,initClickDetalle);
+                    $("a[trip=" + value.viajeAsoc + "][role=linkViajeRecom]").click(value.viajeAsoc, initClickDetalle);
                 });
                 $("#listRecomendaciones").append("<li class=\"divider\"></li>");
                 $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
             }
 
         });
+
+
+        /**
+         * LLeno los amigos que pueden ser destino de recomendaciones
+         */
+        $.ajax({
+            url: 'http://localhost:8080/api/friends/' + id,
+            dataType: 'json',
+            success: function (data) {
+                $.each(data, function (index, value) {
+                    var nombreCom = value.nombre + ' ' + value.apellido;
+                    listIdAmigosARecomendar.push(value.id);
+                    listAmigos.push(nombreCom);
+                });
+            }
+        });
+
+
         //#############################################################
 
     } else if (response.status === 'not_authorized') {
@@ -980,7 +1046,7 @@ function dameLongToken() {
 }
 
 
-function getViajeParaFB(from,to,salida,vuelta) {
+function getViajeParaFB(from, to, salida, vuelta) {
     return 'TACS POR EL MUNDO: Viajo desde '
             + from
             + ' a '
@@ -991,22 +1057,22 @@ function getViajeParaFB(from,to,salida,vuelta) {
             + vuelta;
 }
 
-function publicar(){
+function publicar() {
 //	pruebo las cosas del mapa
-	console.log("https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
-			"&zoom=" + mapaVuelo.getZoom() +
-			"&maptype=" + mapaVuelo.getMapTypeId() +
-			"&size=600x400" +
-			"&markers=color:green%7C" + markerOrigen.getPosition().toString().trim() +
-			"%7C" + markerDestino.getPosition().toString().trim() +
-			"&path=color:red%7C" + markerOrigen.getPosition().toString().trim() +
-			"%7C" + markerDestino.getPosition().toString().trim());
+    console.log("https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
+            "&zoom=" + mapaVuelo.getZoom() +
+            "&maptype=" + mapaVuelo.getMapTypeId() +
+            "&size=600x400" +
+            "&markers=color:green%7C" + markerOrigen.getPosition().toString().trim() +
+            "%7C" + markerDestino.getPosition().toString().trim() +
+            "&path=color:red%7C" + markerOrigen.getPosition().toString().trim() +
+            "%7C" + markerDestino.getPosition().toString().trim());
 //	posteo en muro de facebook
-	FB.api('/' + id + '/feed', 'post', {
+    FB.api('/' + id + '/feed', 'post', {
         message: getViajeParaFB(currentTrip.fromCity.description,
-        		currentTrip.toCity.description,
-        		currentTrip.outbound.segments[0].departure_datetime,
-        		currentTrip.inbound.segments[(currentTrip.inbound.segments.length - 1)].arrival_datetime),
+                currentTrip.toCity.description,
+                currentTrip.outbound.segments[0].departure_datetime,
+                currentTrip.inbound.segments[(currentTrip.inbound.segments.length - 1)].arrival_datetime),
         picture: "https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
                 "&zoom=" + mapaVuelo.getZoom() +
                 "&maptype=" + mapaVuelo.getMapTypeId() +
@@ -1027,7 +1093,7 @@ function publicar(){
     formResetVuelos();
 }
 
-function compartir(viaje){
+function compartir(viaje) {
 //	pruebo las cosas del mapa
 //	console.log("https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
 //			"&zoom=" + mapaVuelo.getZoom() +
@@ -1038,8 +1104,8 @@ function compartir(viaje){
 //			"&path=color:red%7C" + markerOrigen.getPosition().toString().trim() +
 //			"%7C" + markerDestino.getPosition().toString().trim());
 //	posteo en muro de facebook
-	FB.api('/' + id + '/feed', 'post', {
-        message: getViajeParaFB(viaje.fromCity,viaje.toCity,viaje.tripDepartureDate.toString("dd/MM/yyyy HH:mm"),viaje.tripArrivalDate.toString("dd/MM/yyyy HH:mm")),
+    FB.api('/' + id + '/feed', 'post', {
+        message: getViajeParaFB(viaje.fromCity, viaje.toCity, viaje.tripDepartureDate.toString("dd/MM/yyyy HH:mm"), viaje.tripArrivalDate.toString("dd/MM/yyyy HH:mm")),
 //        picture: "https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
 //                "&zoom=" + mapaVuelo.getZoom() +
 //                "&maptype=" + mapaVuelo.getMapTypeId() +
