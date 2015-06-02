@@ -18,11 +18,11 @@
         <script src="../js/dashboard.js"></script>
         <title>TACS por el mundo</title>
     </head>
-      <body style="background: url(../img/web_viajes.jpg) no-repeat center center fixed; 
- 		 -webkit-background-size: cover;
-		  -moz-background-size: cover;
-		  -o-background-size: cover;
- 		 background-size: cover;">
+    <body style="background: url(../img/web_viajes.jpg) no-repeat center center fixed; 
+          -webkit-background-size: cover;
+          -moz-background-size: cover;
+          -o-background-size: cover;
+          background-size: cover;">
         <!-- inicio cuerpo del dashboard -->
         <div class="container">
             <!-- header -->
@@ -61,9 +61,9 @@
                             <div class="list-group-item active"><h4>Tus viajes</h4></div>
                             <div class="list-group-item" id="itemSinViaje">Todavía no hiciste ningún viaje <span class="glyphicon glyphicon-thumbs-down"></span></div>
                             <!--  <div class="list-group-item" id="b">
-                            	<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje aaaaaaaaaaaaaa</a></h3>
-       							<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#">Compartir</a> <a href="#">Eliminar</a></p>
-          					</div>-->
+                                <h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje aaaaaaaaaaaaaa</a></h3>
+                                                        <p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#">Compartir</a> <a href="#">Eliminar</a></p>
+                                                </div>-->
                         </div>
                     </div>
                     <div class="col-md-5">
@@ -201,9 +201,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal" id="btnVolverViaje">Volver</button>
+                    <div class="modal-footer" id="footDetalle">
+                        <div id="botoneraViaje">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="btnVolverViaje">Volver</button>
+                        </div>
+                        <div id="botoneraRecomendacion">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnAceptarRecom">Aceptar <span class="glyphicon glyphicon-share-alt"></span></button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnRechazarRecom">Rechazar <span class="glyphicon glyphicon-share-alt"></span></button>
+                        </div>
                     </div>
                 </div>
                 <!-- fin contenido del modal-->
@@ -314,6 +320,14 @@
             </div>
         </div>
         <!-- Fin Modal detalle de viaje -->
+
+        <!--Modal de aceptacion o rechazo de recomendacion-->
+        <div id="dialog-recom" title="¿Aceptar Recomendacion?">
+            <p>
+                <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;">
+                </span> Al aceptar la recomendacion, se agregara el mismo viaje para ser realizado.
+            </p>
+        </div>
 
     </body>
 </html>

@@ -76,11 +76,11 @@ var contViajes = 0;
 //###############################VARIABLES DE FACEBOOK#######################
 var id;
 var token;
-var listAmigos = [];
-//var listIdAmigosARecomendar = [];
-var listIdAmigosARecomendar = new Array();
-var amigosSelecRecomendar = [];
+var listAmigos = []; // Se guardan los nombres para llenar el autocomplete
+var listIdAmigosARecomendar = []; // Se guardan pares id, nombre de los posibles a recibir recomendaciones
+var amigosSelecRecomendar = []; // Se colocan los finalmente seleccionados para recomendar
 var idViajeARecomendar;
+var recomActiva;
 //###############################VARIABLES DE FACEBOOK#######################
 
 
@@ -156,6 +156,27 @@ $(function () {
         $("#modRecomendar").modal("show");
     });
 
+    $("btnAceptarRecom").click(function (event) {
+        $.ajax({
+            url: 'http://localhost:8080/api/recommendations/one/' + recomActiva,
+            type: 'PUT',
+            data: "st=acp",
+            success: function (data) {
+                alert('Se ha aceptado la recomendacion');
+            }
+        });
+    });
+
+    $("btnRechazarRecom").click(function (event) {
+        $.ajax({
+            url: 'http://localhost:8080/api/recommendations/one/' + recomActiva,
+            type: 'PUT',
+            data: "st=rej",
+            success: function (data) {
+                alert('Se ha rechazado la recomendacion');
+            }
+        });
+    });
 
     /**
      * Agrego la funcionalidad de efectivamente recomendar y notificar por un viaje
@@ -163,17 +184,16 @@ $(function () {
     $("#btnRecomendar").click(function (event) {
         event.preventDefault();
         $("#modRecomendar").hide();
-        console.log(listIdAmigosARecomendar);
 
-        $.each(listIdAmigosARecomendar, function (i, val) {
+        $.each(amigosSelecRecomendar, function (i, val) {
             // Posteo de recomendacion    
             console.log('Recomendacion posteada ------');
-            console.log('usuario a postearle: ' + listIdAmigosARecomendar[0]);
+            console.log('usuario a postearle: ' + val);
             console.log('usuario que postea: ' + id);
             console.log('id viaje recomendado: ' + idViajeARecomendar);
             $.ajax({
                 type: 'POST',
-                url: 'http://localhost:8080/api/recommendations/' + listIdAmigosARecomendar[0],
+                url: 'http://localhost:8080/api/recommendations/' + val,
                 data: JSON.stringify({
                     "idUsuario": id,
                     "idViaje": idViajeARecomendar
@@ -186,36 +206,17 @@ $(function () {
                 }
             });
             // Posteo notificacion
-            //        $.ajax({
-//            type: 'POST',
-//            url: 'http://graph.facebook.com/v2.3/' + id + '/notifications',
-//            data: JSON.stringify({
-//                    "idUsuario": listIdAmigosARecomendar[0],
-//                    "idViaje": idViajeARecomendar
-//            }),
-//            contentType: 'application/json',
-//            dataType: 'json',
-//            success: function (data) {
-//                console.log(data.result);
-//            }
-//        });
+            $.ajax({
+                type: 'POST',
+                url: 'http://graph.facebook.com/v2.3/' + val + '/notifications',
+                data: "template=Recibiste una recomendacion de un viaje&href=http://localhost:8080",
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (data) {
+                    console.log('Parametros notification: ' + data);
+                }
+            });
         });
-//        $.ajax({
-//            type: 'POST',
-//            url: 'http://localhost:8080/api/recommendations/'+id,
-//            data: JSON.stringify({
-//                    "idUsuario": listIdAmigosARecomendar[0],
-//                    "idViaje": idViajeARecomendar
-//            }),
-//            contentType: 'application/json',
-//            dataType: 'json',
-//            success: function (data) {
-//                console.log(data.result);
-//                alert("Has recomendado el viaje satisfactoriamente");
-//            }
-//        });
-        // Posteo notificacion al usuario destino (POR DESARROLLAR)
-
     });
 
 
@@ -227,8 +228,11 @@ $(function () {
 //        source: listaAmigosTrucha,
         source: listAmigos,
         select: function (event, ui) {
-            console.log('El ui vale: ' + ui.item.value);
-//            listIdAmigosARecomendar.push(ui.item.value);
+            for (var indice in listIdAmigosARecomendar) {
+                if (listIdAmigosARecomendar[indice].name == ui.item.value) {
+                    amigosSelecRecomendar.push(listIdAmigosARecomendar[indice].id);
+                }
+            }
             $("#amigosList").append("<li>" + ui.item.value + "</li>");
             $("#boxAmigos").val('');
         }
@@ -243,6 +247,9 @@ $(function () {
         //posiciono el cursor en la ciudad de origen
         $("#ciudadOrigen").focus();
     });
+
+//    Aceptar / Rechazar recomendacion
+
 
     $("#btnNuevoViaje").click(function (event) {
         $("#modNuevoViaje").modal('show');
@@ -425,7 +432,7 @@ $(function () {
                                 formResetVuelos();
                             }
                         });
-                $("div[id=" + data.id + "] a[role=linkViaje]").click(data.id, initClickDetalle);
+                $("div[id=" + data.id + "] a[role=linkViaje]").click({"viaje": data.id, "tipo": '1'}, initClickDetalle);
                 $("div[id=" + data.id + "] a[id=eliminarViaje]").click(data.id, initClickEliminar);
                 $("div[id=" + data.id + "] a[id=compartirViaje]").click(data.id, initClickCompartir);
             }
@@ -672,11 +679,25 @@ function getInfoAirportsAndMap(flight) {
 //** funciones ajax **************************************************************
 
 
-function initClickDetalle(id) {
-    console.log(id.data);
+//function initClickDetalle(id) {
+function initClickDetalle(event) {
+    var idDet = event.data.idTrip;
+    var tipoDet = event.data.tipo;
+
+    console.log(idDet);
+//    console.log(id.data);
+    recomActiva = idRecom;
     // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
     if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
         $("#modListaRecomendaciones").modal("hide");
+    }
+
+    if (tipoDet === '2') {
+        $("#botoneraViaje").hide();
+        $("#botoneraRecomendacion").show();
+    } else {
+        $("#botoneraViaje").show();
+        $("#botoneraRecomendacion").hide();
     }
 
     var precio;
@@ -684,7 +705,8 @@ function initClickDetalle(id) {
     var hasta;
 
     $.ajax({
-        url: "http://localhost:8080/api/trips/one/" + id.data,
+//        url: "http://localhost:8080/api/trips/one/" + id.data,
+        url: "http://localhost:8080/api/trips/one/" + idDet,
         dataType: 'json',
         success: function (data) {
             console.log('El viaje a recomendar es: ' + data.idTrip);
@@ -743,7 +765,7 @@ function initClickEliminar(idViajeAEliminar) {
                         $("#itemSinViaje").hide();
                         $.each(data, function (index, value) {
                             $("#listViajes").append(getViajesPropiosHTML(value));
-                            $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip, initClickDetalle);
+                            $("div[id=" + value.idTrip + "] a[role=linkViaje]").click({"viaje": value.idTrip, "tipo": '2'}, initClickDetalle);
                             $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
                             $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
                         });
@@ -984,7 +1006,7 @@ function updateStatusCallback(response) {
                     $("#itemSinViaje").hide();
                     $.each(data, function (index, value) {
                         $("#listViajes").append(getViajesPropiosHTML(value));
-                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip, initClickDetalle);
+                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click({"viaje": value.idTrip, "tipo": '1'}, initClickDetalle);
                         $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
                         $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
                     });
@@ -1003,7 +1025,7 @@ function updateStatusCallback(response) {
                 if (data.length !== 0) {
                     $.each(data, function (index, value) {
                         $("#listViajesAmigos").append(getViajesDeAmigosHTML(value));
-                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip, initClickDetalle);
+                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click({"viaje": value.idTrip, "tipo": '1'}, initClickDetalle);
                         $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
                         $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
                     });
@@ -1024,7 +1046,7 @@ function updateStatusCallback(response) {
 //                    i++;
                     $("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value));
                     //<a href="#" role="linkViajeRecom" id="itemRecom" trip="4">
-                    $("a[trip=" + value.viajeAsoc + "][role=linkViajeRecom]").click(value.viajeAsoc, initClickDetalle);
+                    $("a[trip=" + value.viajeAsoc + "][role=linkViajeRecom]").click({"viaje": value.idTrip, "tipo": '1'}, initClickDetalle);
                 });
                 $("#listRecomendaciones").append("<li class=\"divider\"></li>");
                 $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
@@ -1042,7 +1064,10 @@ function updateStatusCallback(response) {
             success: function (data) {
                 $.each(data, function (index, value) {
                     var nombreCom = value.nombre + ' ' + value.apellido;
-                    listIdAmigosARecomendar[index] = value.id;
+//                    console.log('Agrego ' + value.id + ' a lista de amigos.')
+//                    listIdAmigosARecomendar.push(value.id);
+//                    listAmigos.push(nombreCom);
+                    listId.push({"id": value.id, "name": nombreCom});
                     listAmigos.push(nombreCom);
                 });
             }
