@@ -205,17 +205,17 @@ $(function () {
                     alert("Has recomendado el viaje satisfactoriamente");
                 }
             });
-            // Posteo notificacion
-            $.ajax({
-                type: 'POST',
-                url: 'http://graph.facebook.com/v2.3/' + val + '/notifications',
-                data: "template=Recibiste una recomendacion de un viaje&href=http://localhost:8080",
-                contentType: 'application/json',
-                dataType: 'json',
-                success: function (data) {
-                    console.log('Parametros notification: ' + data);
-                }
-            });
+            // Posteo notificacion //CORREGIR °!!!!!!!!!!!!!!!!!!!!
+//            $.ajax({
+//                type: 'POST',
+//                url: 'http://graph.facebook.com/v2.3/' + val + '/notifications',
+//                data: "template=Recibiste una recomendacion de un viaje&href=http://localhost:8080",
+////                contentType: 'application/json',
+//                dataType: 'json',
+//                success: function (data) {
+//                    console.log('Parametros notification: ' + data);
+//                }
+//            });
         });
     });
 
@@ -432,7 +432,7 @@ $(function () {
                                 formResetVuelos();
                             }
                         });
-                $("div[id=" + data.id + "] a[role=linkViaje]").click({"viaje": data.id, "tipo": '1'}, initClickDetalle);
+                $("div[id=" + data.id + "] a[role=linkViaje]").click({"viaje": data.id, "idRec":0, "tipo": '1'}, initClickDetalle);
                 $("div[id=" + data.id + "] a[id=eliminarViaje]").click(data.id, initClickEliminar);
                 $("div[id=" + data.id + "] a[id=compartirViaje]").click(data.id, initClickCompartir);
             }
@@ -681,18 +681,18 @@ function getInfoAirportsAndMap(flight) {
 
 //function initClickDetalle(id) {
 function initClickDetalle(event) {
-    var idDet = event.data.idTrip;
+    var idDet = event.data.viaje;
     var tipoDet = event.data.tipo;
+    recomActiva = event.data.idRec;
+    console.log('click detalle: tipo ' + tipoDet + ' - idViaje: ' + idDet + ' - recom: ' + recomActiva);
 
-    console.log(idDet);
-//    console.log(id.data);
-    recomActiva = idRecom;
     // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
     if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
         $("#modListaRecomendaciones").modal("hide");
     }
 
     if (tipoDet === '2') {
+        
         $("#botoneraViaje").hide();
         $("#botoneraRecomendacion").show();
     } else {
@@ -765,7 +765,7 @@ function initClickEliminar(idViajeAEliminar) {
                         $("#itemSinViaje").hide();
                         $.each(data, function (index, value) {
                             $("#listViajes").append(getViajesPropiosHTML(value));
-                            $("div[id=" + value.idTrip + "] a[role=linkViaje]").click({"viaje": value.idTrip, "tipo": '2'}, initClickDetalle);
+                            $("div[id=" + value.idTrip + "] a[role=linkViaje]").click({"viaje": value.idTrip, "idRec":0, "tipo": '1'}, initClickDetalle);
                             $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
                             $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
                         });
@@ -1006,7 +1006,7 @@ function updateStatusCallback(response) {
                     $("#itemSinViaje").hide();
                     $.each(data, function (index, value) {
                         $("#listViajes").append(getViajesPropiosHTML(value));
-                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click({"viaje": value.idTrip, "tipo": '1'}, initClickDetalle);
+                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click({"viaje": value.idTrip, "idRec":0, "tipo": '1'}, initClickDetalle);
                         $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
                         $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
                     });
@@ -1025,7 +1025,7 @@ function updateStatusCallback(response) {
                 if (data.length !== 0) {
                     $.each(data, function (index, value) {
                         $("#listViajesAmigos").append(getViajesDeAmigosHTML(value));
-                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click({"viaje": value.idTrip, "tipo": '1'}, initClickDetalle);
+                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click({"viaje": value.idTrip, "idRec":0, "tipo": '1'}, initClickDetalle);
                         $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
                         $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
                     });
@@ -1046,7 +1046,7 @@ function updateStatusCallback(response) {
 //                    i++;
                     $("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value));
                     //<a href="#" role="linkViajeRecom" id="itemRecom" trip="4">
-                    $("a[trip=" + value.viajeAsoc + "][role=linkViajeRecom]").click({"viaje": value.idTrip, "tipo": '1'}, initClickDetalle);
+                    $("a[trip=" + value.viajeAsoc + "][role=linkViajeRecom]").click({"viaje": value.viajeAsoc, "idRec":value.id, "tipo": '2'}, initClickDetalle);
                 });
                 $("#listRecomendaciones").append("<li class=\"divider\"></li>");
                 $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
@@ -1067,7 +1067,7 @@ function updateStatusCallback(response) {
 //                    console.log('Agrego ' + value.id + ' a lista de amigos.')
 //                    listIdAmigosARecomendar.push(value.id);
 //                    listAmigos.push(nombreCom);
-                    listId.push({"id": value.id, "name": nombreCom});
+                    listIdAmigosARecomendar.push({"id": value.id, "name": nombreCom});
                     listAmigos.push(nombreCom);
                 });
             }
@@ -1195,19 +1195,19 @@ function llegadaDatosViaje(datos) {
             );
 }
 
-function abrirPabelDetalleViajeRecomendado(viajeId) {
-    // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
-    if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
-        $("#modListaRecomendaciones").modal("hide");
-    }
-    // Elimino si ya hay un detalle escrito
-    $("#detViajeRecom").empty();
-    // Completo con los datos del pedido ajax
-    $.getJSON("http://localhost:8080/api/trips/one/" + viajeId, llegadaDatosViaje);
-    $("#modDetalleViajeRecom").modal('show');
-}
-
-$("#itemRecom").on("click", function () {
-    var viajeId = $(this).attr("trip");
-    abrirPabelDetalleViajeRecomendado(viajeId);
-});
+//function abrirPabelDetalleViajeRecomendado(viajeId) {
+//    // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
+//    if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
+//        $("#modListaRecomendaciones").modal("hide");
+//    }
+//    // Elimino si ya hay un detalle escrito
+//    $("#detViajeRecom").empty();
+//    // Completo con los datos del pedido ajax
+//    $.getJSON("http://localhost:8080/api/trips/one/" + viajeId, llegadaDatosViaje);
+//    $("#modDetalleViajeRecom").modal('show');
+//}
+//
+//$("#itemRecom").on("click", function () {
+//    var viajeId = $(this).attr("trip");
+//    abrirPabelDetalleViajeRecomendado(viajeId);
+//});

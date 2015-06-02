@@ -21,9 +21,14 @@ public class RecommendationDAOStatic implements RecommendationDAO {
     private final List<Recommendation> listaRecomendaciones;
 //claudio 10206727743494683
     public RecommendationDAOStatic() {
-        listaRecomendaciones = Arrays.asList( new Recommendation("10153253398579452", "10206028316763565", "Martin De Ciervo", "Buenos Aires", "Roma",1),
-                new Recommendation("10206028316763565", "10153253398579452", "Flavio Pietrolati","Amsterdam", "Bruselas",4),
-                new Recommendation("10206727743494683", "10153253398579452", "Claudio Yuri","Buenos Aires", "Salta",2));
+        listaRecomendaciones = new ArrayList<>();
+        Recommendation rec1 =  new Recommendation("10153253398579452", "10206028316763565", "Martin De Ciervo", "Buenos Aires", "Roma",1);
+        Recommendation rec2 = new Recommendation("10206028316763565", "10153253398579452", "Flavio Pietrolati","Amsterdam", "Bruselas",4);
+        Recommendation rec3 = new Recommendation("10206727743494683", "10153253398579452", "Claudio Yuri","Buenos Aires", "Salta",2);
+
+        listaRecomendaciones.add(rec1);
+        listaRecomendaciones.add(rec2);
+        listaRecomendaciones.add(rec3);
     }
 
     public List<Recommendation> getListaRecomendaciones() {

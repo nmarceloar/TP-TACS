@@ -272,9 +272,13 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
         String idUsuarioQueRecomienda = recBean.getIdUser();
         Trip viaje = viajeDao.searchTripById(idViajeRecom);
         Passenger psj = psjDao.getPasajeroById(idUsuarioQueRecomienda);
-        recDao.saveRecommendation(new Recommendation(idUser, idUsuarioQueRecomienda,
+        Recommendation rec = new Recommendation(idUser,
+                idUsuarioQueRecomienda,
                 psj.getName() + ' ' + psj.getSurname(),
-                viaje.getFromCity(), viaje.getToCity(), idViajeRecom));
+                viaje.getFromCity(),
+                viaje.getToCity(),
+                idViajeRecom);
+        recDao.saveRecommendation(rec);
     }
 
     @Override
