@@ -69,24 +69,24 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     }
 
     @Override
-    public List<Passenger> getFriendsOfPassenger(long idPsj) {
+    public List<Passenger> getFriendsOfPassenger(String idPsj) {
         return psjDao.getAmigos(idPsj);
     }
 
     @Override
-    public Passenger getPassengerById(long id) {
+    public Passenger getPassengerById(String id) {
         Passenger psj = psjDao.getPasajeroById(id);
         return psj;
     }
 
     @Override
-    public Passenger postPassengerByIdToken(long id, String shortToken) {
+    public Passenger postPassengerByIdToken(String id, String shortToken) {
         Passenger psj = createPassengerToPost(id, shortToken);
         return psj;
     }
 
     @Override
-    public List<Recommendation> getRecommendationsOfUser(long id) {
+    public List<Recommendation> getRecommendationsOfUser(String id) {
         return recDao.getRecomendacionesDeUsuarioPorId(id);
     }
 
@@ -100,7 +100,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     }
 
     @Override
-    public List<Trip> getTripsOfPassenger(long id) {
+    public List<Trip> getTripsOfPassenger(String id) {
         return viajeDao.searchTripByPassenger(id);
     }
 
@@ -125,7 +125,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     }
 
     @Override
-    public void assignFriend(long idUser, long idFriend) {
+    public void assignFriend(String idUser, String idFriend) {
         psjDao.assignFriend(idUser, idFriend);
     }
 
@@ -135,13 +135,13 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     }
 
     @Override
-    public List<Trip> getTripsOfFriendsOfUser(long id) {
-        List<Long> amigos = psjDao.getIdsAmigos(id);
+    public List<Trip> getTripsOfFriendsOfUser(String id) {
+        List<String> amigos = psjDao.getIdsAmigos(id);
         List<Trip> viajes = new ArrayList<>();
         if (amigos.isEmpty()) {
             return viajes;
         } else {
-            for (Long fr : amigos) {
+            for (String fr : amigos) {
                 viajes.addAll(viajeDao.searchTripByPassenger(fr));
             }
         }
@@ -156,14 +156,14 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
      * @param pass
      */
     @Override
-    public void asignarPasajeroARecomendaciones(List<Recommendation> list, long pass) {
+    public void asignarPasajeroARecomendaciones(List<Recommendation> list, String pass) {
         for (Recommendation rec : list) {
             asignarPasajeroARecomendacion(rec, pass);
         }
     }
 
     @Override
-    public void asignarPasajeroARecomendacion(Recommendation rec, long pass) {
+    public void asignarPasajeroARecomendacion(Recommendation rec, String pass) {
         Passenger pj = psjDao.getPasajeroById(pass);
         rec.setNombreYAp(pj.getName() + " " + pj.getSurname());
     }
@@ -175,7 +175,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     }
 
     // #########################################################################
-    private boolean sonAmigos(long id, long idFriend) {
+    private boolean sonAmigos(String id, String idFriend) {
         Passenger p = getPassengerById(id);
         // Chequeo que si no existe ese usuario, devuelva lista vacia
         if (p.getFriends() == null) {
@@ -211,7 +211,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
         }
     }
 
-    private Passenger createPassengerToPost(long id, String shortToken) {
+    private Passenger createPassengerToPost(String id, String shortToken) {
         Passenger buscado = null;
         for (Passenger p : psjDao.getTodosLosPasajeros()) {
             if (p.getIdUser() == id) {
@@ -267,14 +267,33 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
      * Instancia una recomendacion a partir de los datos recibidos, y la guarda
      * en el DAO correspondiente.
      */
-    public void instanceAndSaveRecommendation(RecommendationBeanFB recBean, long idUser) {
+    public void instanceAndSaveRecommendation(RecommendationBeanFB recBean, String idUser) {
         int idViajeRecom = recBean.getIdTrip();
-        long idUsuarioQueRecomienda = recBean.getIdUser();
+        String idUsuarioQueRecomienda = recBean.getIdUser();
         Trip viaje = viajeDao.searchTripById(idViajeRecom);
         Passenger psj = psjDao.getPasajeroById(idUsuarioQueRecomienda);
         recDao.saveRecommendation(new Recommendation(idUser, idUsuarioQueRecomienda,
                 psj.getName() + ' ' + psj.getSurname(),
                 viaje.getFromCity(), viaje.getToCity(), idViajeRecom));
+    }
+
+    @Override
+    public void assignStateRecommendation(int idRec, String state) {
+        Recommendation rec = recDao.getRecomendacionPorId(idRec);
+        if (state == "acp") {
+            rec.aceptarRecomendacion();
+            /**
+             * Al aceptar la recomendacion, creo un viaje con los mismos datos
+             * para el usuario que la acepto.
+             */
+            Trip viajeRecom = viajeDao.searchTripById(rec.getTripRec());
+            Trip newTrip = new Trip(rec.getIdUsuarioRecom(), viajeRecom.getFromCity(),
+                    viajeRecom.getToCity(), viajeRecom.getPrice(), viajeRecom.getItinerary());
+            viajeDao.saveTrip(newTrip);
+        } else if (state == "rej") {
+            rec.rechazarRecomendacion();
+            recDao.deleteRecommendation(idRec);
+        }
     }
 
 }

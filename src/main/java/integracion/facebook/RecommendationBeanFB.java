@@ -16,7 +16,7 @@ public class RecommendationBeanFB implements Serializable {
 
     // Usuario que envia la recomendacion
     @JsonProperty("idUsuario")
-    private long idUser;
+    private String idUser;
 
     @JsonProperty("idViaje")
     private int idTrip;
@@ -24,16 +24,16 @@ public class RecommendationBeanFB implements Serializable {
     public RecommendationBeanFB() {
     }
 
-    public RecommendationBeanFB(long idUser, int idTrip) {
+    public RecommendationBeanFB(String idUser, int idTrip) {
         this.idUser = idUser;
         this.idTrip = idTrip;
     }
 
-    public long getIdUser() {
+    public String getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(long idUser) {
+    public void setIdUser(String idUser) {
         this.idUser = idUser;
     }
 

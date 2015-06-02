@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class UserRegisteredFB implements Serializable {
     
     @JsonProperty("id")
-    long id;
+    String id;
     
     @JsonProperty("first_name")
     String firstName;
@@ -23,11 +23,11 @@ public class UserRegisteredFB implements Serializable {
     @JsonProperty("last_name")
     String surname;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -47,7 +47,7 @@ public class UserRegisteredFB implements Serializable {
         this.surname = surname;
     }
 
-    public UserRegisteredFB(long id, String firstName, String surname) {
+    public UserRegisteredFB(String id, String firstName, String surname) {
         this.id = id;
         this.firstName = firstName;
         this.surname = surname;

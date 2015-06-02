@@ -9,7 +9,7 @@ import java.util.List;
 public class IdToken implements Serializable{
 	
 	@JsonProperty("id")
-	long id;
+	String id;
 	@JsonProperty("token")
 	String token;
 	
@@ -20,13 +20,13 @@ public class IdToken implements Serializable{
 	public void settoken(String token) {
 		this.token = token;
 	}
-	public long getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
-	public IdToken(String token, long id) {
+	public IdToken(String token, String id) {
 		super();
 		this.token = token;
 		this.id = id;

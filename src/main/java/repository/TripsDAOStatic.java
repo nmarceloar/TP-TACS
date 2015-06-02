@@ -32,7 +32,7 @@ public class TripsDAOStatic implements TripsDAO {
                 DateTime.now().plusDays(30).toString(),
                 Integer.toString(25), "LAN", "A01");
 
-        Trip viaje1 = new Trip(10153253398579452L,"Buenos Aires", "San Pablo","4500 ARS", Arrays.asList(seg1));
+        Trip viaje1 = new Trip("10153253398579452","Buenos Aires", "San Pablo","4500 ARS", Arrays.asList(seg1));
         listaViajes.add(viaje1);
         
         Segment seg2 = new Segment("Roma", "Paris",
@@ -40,7 +40,7 @@ public class TripsDAOStatic implements TripsDAO {
                 DateTime.now().plusDays(45).toString(),
                 Integer.toString(30), "AA", "AA-054");
 
-        Trip viaje2 = new Trip(10153253398579452L,"Roma", "Paris","4500 ARS", Arrays.asList(seg2));
+        Trip viaje2 = new Trip("10153253398579452","Roma", "Paris","4500 ARS", Arrays.asList(seg2));
         listaViajes.add(viaje2);
         
         Segment seg3 = new Segment("Berlin", "Amsterdam",
@@ -48,7 +48,7 @@ public class TripsDAOStatic implements TripsDAO {
                 DateTime.now().plusDays(12).toString(),
                 Integer.toString(6), "LAN", "L23");
 
-        Trip viaje3 = new Trip(10206028316763565L,"Berlin", "Amsterdam","4500 ARS", Arrays.asList(seg3));
+        Trip viaje3 = new Trip("10206028316763565","Berlin", "Amsterdam","4500 ARS", Arrays.asList(seg3));
         listaViajes.add(viaje3);
         
         Segment seg4 = new Segment("Buenos Aires", "San Pablo",
@@ -56,7 +56,7 @@ public class TripsDAOStatic implements TripsDAO {
                 DateTime.now().plusDays(12).toString(),
                 Integer.toString(4), "Gol", "GO-012");
 
-        Trip viaje4 = new Trip(10206028316763565L,"Fortaleza", "Madrid","4500 ARS", Arrays.asList(seg4));
+        Trip viaje4 = new Trip("10206028316763565","Fortaleza", "Madrid","4500 ARS", Arrays.asList(seg4));
         listaViajes.add(viaje4);
     }
     
@@ -94,7 +94,7 @@ public class TripsDAOStatic implements TripsDAO {
     }
     
     @Override
-    public List<Trip> searchTripByPassenger(long id) {
+    public List<Trip> searchTripByPassenger(String id) {
         List<Trip> lista = new ArrayList<>();
         for (Trip v : getTripList()) {
             if (v.getIdPassenger() == id) {

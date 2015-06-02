@@ -41,10 +41,10 @@ public class TripsResource {
     @Produces("application/json")
     public List<Trip> getViajesPorPasajero(@PathParam("id") String id) {
         // Salvo condicion de lista vacia
-        if (vjSrv.getTripsOfPassenger(Long.parseLong(id)) == null){
+        if (vjSrv.getTripsOfPassenger(id) == null){
             return new ArrayList<>();
         }
-        return vjSrv.getTripsOfPassenger(Long.parseLong(id));
+        return vjSrv.getTripsOfPassenger(id);
     }
     
     @GET
@@ -65,10 +65,10 @@ public class TripsResource {
     @Produces("application/json")
     public List<Trip> getTripsOfFriends(@PathParam("id") String id) {
         // Salvo la posibilidad de que de null los viajes de amigos
-        if (vjSrv.getTripsOfFriendsOfUser(Long.parseLong(id)) == null){
+        if (vjSrv.getTripsOfFriendsOfUser(id) == null){
             return new ArrayList<>();
         }
-        return vjSrv.getTripsOfFriendsOfUser(Long.parseLong(id));
+        return vjSrv.getTripsOfFriendsOfUser(id);
     }
     
     @DELETE

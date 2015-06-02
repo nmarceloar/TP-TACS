@@ -19,12 +19,12 @@ public interface PassengerAPI {
     
     public void createPassenger(Passenger p);
     
-    public List<Passenger> getFriendsOfPassenger(long id);
+    public List<Passenger> getFriendsOfPassenger(String id);
     
-    public Passenger getPassengerById(long id);
+    public Passenger getPassengerById(String id);
     
-    public Passenger postPassengerByIdToken(long id, String shortToken);
+    public Passenger postPassengerByIdToken(String id, String shortToken);
     
-    public void assignFriend(long idUser, long idFriend);
+    public void assignFriend(String idUser, String idFriend);
     
 }

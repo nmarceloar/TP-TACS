@@ -19,7 +19,7 @@ public interface TripsDAO {
     
     public Trip searchTripById(int id);
     
-    public List<Trip> searchTripByPassenger(long fr);
+    public List<Trip> searchTripByPassenger(String fr);
     
     public List<Trip> getTrips();
     

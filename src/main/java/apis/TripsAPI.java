@@ -14,7 +14,7 @@ import model.Trip;
  */
 public interface TripsAPI {
     
-    public List<Trip> getTripsOfPassenger(long id);
+    public List<Trip> getTripsOfPassenger(String id);
     
     public List<Trip> getTrips();
     
@@ -22,7 +22,7 @@ public interface TripsAPI {
     
     public Trip getTrip(int id);
     
-    public List<Trip> getTripsOfFriendsOfUser(long id);
+    public List<Trip> getTripsOfFriendsOfUser(String id);
     
     public String deleteTrip(int id);
     

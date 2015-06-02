@@ -49,7 +49,7 @@ public class PassengerResource {
     @Path("{userId}")
     @Produces("application/json")
     public Passenger getPasajeroPorId(@PathParam("userId") String id){
-        return pjSrv.getPassengerById(Long.parseLong(id));
+        return pjSrv.getPassengerById(id);
     }
     
     @GET
@@ -57,7 +57,7 @@ public class PassengerResource {
     public  String   getTokenById(
     		@NotNull @QueryParam("id") String userId)
     {    	
-    	Passenger pass=pjSrv.getPassengerById(Long.parseLong( userId));
+    	Passenger pass=pjSrv.getPassengerById(userId);
     	return pass.getToken();
     	    	
 	}

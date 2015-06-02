@@ -39,10 +39,10 @@ public class FriendsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public List<Passenger> getAmigosDeUsuario(@PathParam("id") String id) {
         // Chequeo que si no existe ese usuario, devuelva lista vacia
-        if ( pjSrv.getFriendsOfPassenger(Long.parseLong(id)) == null){
+        if ( pjSrv.getFriendsOfPassenger(id) == null){
             return new ArrayList<>();
         }
-        return pjSrv.getFriendsOfPassenger(Long.parseLong(id));
+        return pjSrv.getFriendsOfPassenger(id);
     }
     
     @GET
@@ -50,10 +50,10 @@ public class FriendsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public boolean getSonAmigos(@PathParam("idUser") String id,@PathParam("idFriend") String idFriend) {
         // Chequeo que si no existe ese usuario, devuelva lista vacia
-    	if ( pjSrv.getFriendsOfPassenger(Long.parseLong(id)) == null){
+    	if ( pjSrv.getFriendsOfPassenger(id) == null){
             return false;
         }
-    	if(pjSrv.getFriendsOfPassenger(Long.parseLong(id)).contains(idFriend)){
+    	if(pjSrv.getFriendsOfPassenger(id).contains(idFriend)){
         return true;
     	}
     	return false;
@@ -63,8 +63,8 @@ public class FriendsResource {
     @POST
     @Path("{idUser}/{idFriend}")
     @Consumes("application/json")
-    public Response assignFriend(@PathParam("idUser") long idUser,
-            @PathParam("idFriend") long idFriend) {
+    public Response assignFriend(@PathParam("idUser") String idUser,
+            @PathParam("idFriend") String idFriend) {
         pjSrv.assignFriend(idUser, idFriend);
         pjSrv.assignFriend(idFriend, idUser);
         String result = "El usuario " + idUser

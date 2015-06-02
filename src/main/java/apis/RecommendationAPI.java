@@ -16,7 +16,7 @@ import model.Recommendation;
  */
 public interface RecommendationAPI {
     
-    public List<Recommendation> getRecommendationsOfUser(long id);
+    public List<Recommendation> getRecommendationsOfUser(String id);
     
     public String getRecommendationToString(int id);
     
@@ -24,10 +24,12 @@ public interface RecommendationAPI {
     
     public void saveRecommendation(Recommendation rec);
     
-    public void asignarPasajeroARecomendaciones(List<Recommendation> list, long pass);
+    public void asignarPasajeroARecomendaciones(List<Recommendation> list, String pass);
     
-    public void asignarPasajeroARecomendacion(Recommendation rec, long pass);
+    public void asignarPasajeroARecomendacion(Recommendation rec, String pass);
     
-    public void instanceAndSaveRecommendation(RecommendationBeanFB recBean, long idUser);
+    public void instanceAndSaveRecommendation(RecommendationBeanFB recBean, String idUser);
+    
+    public void assignStateRecommendation(int idRec, String state);
     
 }

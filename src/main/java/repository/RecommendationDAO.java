@@ -20,6 +20,8 @@ public interface RecommendationDAO {
     
     public void saveRecommendation(Recommendation rec);
     
-    public List<Recommendation> getRecomendacionesDeUsuarioPorId(long idUser);
+    public List<Recommendation> getRecomendacionesDeUsuarioPorId(String idUser);
+    
+    public void deleteRecommendation(int id);
     
 }

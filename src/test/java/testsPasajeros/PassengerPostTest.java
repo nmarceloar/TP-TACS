@@ -37,8 +37,7 @@ public class PassengerPostTest {
 
         WebTarget target = client.target("http://localhost:8080/pasajeros");
         
-        Passenger pasajero8 = new Passenger(8,"pasajero8", "apellido8", "888888", new ArrayList<Long>());
-        pasajero8.setIdUser(8);
+        Passenger pasajero8 = new Passenger("8","pasajero8", "apellido8", "888888", new ArrayList<String>());
         
         Response response = target.request()
                 .post(Entity.entity(

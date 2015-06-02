@@ -17,10 +17,10 @@ public class Passenger implements Serializable {
     private String token;
 
     @JsonProperty("id")
-    private long idUser;
+    private String idUser;
 
     @JsonProperty("amigos")
-    private List<Long> friends;
+    private List<String> friends;
     
 //    @JsonProperty("recomendaciones")
 //    private List<Integer> recommendations;
@@ -33,8 +33,8 @@ public class Passenger implements Serializable {
 //        this.recommendations = recommendations;
 //    }
 
-    public Passenger(long id,String nombre, String apellido, String token,
-            List<Long> amigos) {
+    public Passenger(String id,String nombre, String apellido, String token,
+            List<String> amigos) {
         this.name = nombre;
         this.surname = apellido;
         this.token = token;
@@ -47,11 +47,11 @@ public class Passenger implements Serializable {
     	
     }
 
-    public long getIdUser() {
+    public String getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(long idUser) {
+    public void setIdUser(String idUser) {
         this.idUser = idUser;
     }
 
@@ -79,17 +79,17 @@ public class Passenger implements Serializable {
         this.token = token;
     }
 
-    public List<Long> getFriends() {
+    public List<String> getFriends() {
         return friends;
     }
 
-    public void setFriends(List<Long> friends) {
+    public void setFriends(List<String> friends) {
         this.friends = friends;
     }
 
     public boolean esAmigo(Passenger pj) {
         boolean resul = false;
-        for (Long idAm : getFriends()) {
+        for (String idAm : getFriends()) {
             if (idAm == pj.getIdUser()) {
                 resul = true;
             }
@@ -97,7 +97,7 @@ public class Passenger implements Serializable {
         return resul;
     }
     
-    public void agregarAmigo(Long idAmigo){
+    public void agregarAmigo(String idAmigo){
         getFriends().add(idAmigo);
     }
     
@@ -105,12 +105,12 @@ public class Passenger implements Serializable {
         getFriends().add(p.getIdUser());
     }
     
-    public void agregarAmigos(List<Long> amigos){
+    public void agregarAmigos(List<String> amigos){
         getFriends().addAll(amigos);
     }
     
     public void agregarAmigosPorPasajeros(List<Passenger> amigos){
-        List<Long> listaIds = new ArrayList<>();
+        List<String> listaIds = new ArrayList<>();
         for (Passenger p : amigos) {
             listaIds.add(p.getIdUser());
         }

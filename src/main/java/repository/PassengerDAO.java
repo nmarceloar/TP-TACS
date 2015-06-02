@@ -17,18 +17,18 @@ public interface PassengerDAO {
     
     public void guardarPasajero(Passenger p);
     
-    public Passenger getPasajeroById(long id);
+    public Passenger getPasajeroById(String id);
     
 //    public Passenger postPasajeroByIdToken(long id, String shortToken);
     
     public List<Passenger> getTodosLosPasajeros();
     
-    public List<Passenger> getAmigos(long id);
+    public List<Passenger> getAmigos(String id);
     
-    public List<Long> getIdsAmigos(long id);
+    public List<String> getIdsAmigos(String id);
     
 //    public List<Integer> getRecomendacionesDeUsuario(long pas);
     
-    public void assignFriend(long idUser, long idFriend);
+    public void assignFriend(String idUser, String idFriend);
     
 }

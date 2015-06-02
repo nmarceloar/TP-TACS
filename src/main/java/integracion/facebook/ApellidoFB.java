@@ -12,7 +12,7 @@ public class ApellidoFB implements Serializable{
 	@JsonProperty("last_name")
 	String last_name;
 	@JsonProperty("id")
-	long id;
+	String id;
 	
 	public String getLast_name() {
 		return last_name;
@@ -20,13 +20,13 @@ public class ApellidoFB implements Serializable{
 	public void setlast_name(String last_name) {
 		this.last_name = last_name;
 	}
-	public long getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
-	public ApellidoFB(String last_name, long id) {
+	public ApellidoFB(String last_name, String id) {
 		super();
 		this.last_name = last_name;
 		this.id = id;

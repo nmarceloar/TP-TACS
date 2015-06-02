@@ -12,7 +12,7 @@ public class Trip implements Serializable {
     private static int contadorId = 1;
 
     @JsonProperty("idPassenger")
-    private long idPassenger;
+    private String idPassenger;
 
     @JsonProperty("fromCity")
     private String fromCity;
@@ -49,7 +49,7 @@ public class Trip implements Serializable {
         idTrip = contadorId++;
     }
 
-    public Trip(long idPassenger, String fromCity, String toCity, String price, List<Segment> itinerary) {
+    public Trip(String idPassenger, String fromCity, String toCity, String price, List<Segment> itinerary) {
         this.idPassenger = idPassenger;
         this.fromCity = fromCity;
         this.toCity = toCity;
@@ -66,11 +66,11 @@ public class Trip implements Serializable {
         this.price = price;
     }
 
-    public void setIdPassenger(long idPassenger) {
+    public void setIdPassenger(String idPassenger) {
         this.idPassenger = idPassenger;
     }
 
-    public long getIdPassenger() {
+    public String getIdPassenger() {
         return idPassenger;
     }
 
@@ -82,7 +82,7 @@ public class Trip implements Serializable {
         this.idTrip = idTrip;
     }
 
-    public void setViajante(int viajante) {
+    public void setViajante(String viajante) {
         this.idPassenger = viajante;
     }
 

@@ -30,8 +30,8 @@ public class PassengerDAOStatic implements PassengerDAO {
         // ID Tincho 10204737549535191 segun el 10206028316763565
         // ID Flavio 10153326807009452 o el 10153253398579452
         // Simulo la carga de amigos existentes en Facebook
-        Passenger pMartin = new Passenger(10206028316763565L, "Martin", "De Ciervo", "11", new ArrayList()); 
-        Passenger pFlavio = new Passenger(10153253398579452L, "Flavio", "Pietrolati", "22", new ArrayList());
+        Passenger pMartin = new Passenger("10206028316763565", "Martin", "De Ciervo", "11", new ArrayList()); 
+        Passenger pFlavio = new Passenger("10153253398579452", "Flavio", "Pietrolati", "22", new ArrayList());
 
 //        listaPasajeros.addAll(Arrays.asList(pMartin, pFlavio));
         listaPasajeros.addAll(Arrays.asList(pMartin));
@@ -47,7 +47,7 @@ public class PassengerDAOStatic implements PassengerDAO {
     }
 
     @Override
-    public Passenger getPasajeroById(long id) {
+    public Passenger getPasajeroById(String id) {
         Passenger buscado = null;
         for (Passenger p : getListaPasajeros()) {
             if (p.getIdUser() == id) {
@@ -63,11 +63,11 @@ public class PassengerDAOStatic implements PassengerDAO {
     }
 
     @Override
-    public List<Passenger> getAmigos(long id) {
+    public List<Passenger> getAmigos(String id) {
         List<Passenger> amigos = new ArrayList();
         for (Passenger psj : getListaPasajeros()) {
             if (psj.getIdUser() == id) {
-                for (long idPas : psj.getFriends()) {
+                for (String idPas : psj.getFriends()) {
                     amigos.add(getPasajeroById(idPas));
                 }
                 return amigos;
@@ -77,7 +77,7 @@ public class PassengerDAOStatic implements PassengerDAO {
     }
 
     @Override
-    public List<Long> getIdsAmigos(long id) {
+    public List<String> getIdsAmigos(String id) {
         for (Passenger psj : getListaPasajeros()) {
             if (psj.getIdUser() == id) {
                 return psj.getFriends();
@@ -87,7 +87,7 @@ public class PassengerDAOStatic implements PassengerDAO {
     }
 
     @Override
-    public void assignFriend(long idUser, long idFriend) {
+    public void assignFriend(String idUser, String idFriend) {
         Passenger pass = getPasajeroById(idUser);
         pass.agregarAmigo(idFriend);
     }

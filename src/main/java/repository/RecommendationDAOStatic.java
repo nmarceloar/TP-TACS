@@ -21,9 +21,9 @@ public class RecommendationDAOStatic implements RecommendationDAO {
     private final List<Recommendation> listaRecomendaciones;
 //claudio 10206727743494683
     public RecommendationDAOStatic() {
-        listaRecomendaciones = Arrays.asList( new Recommendation(10153253398579452L, 10206028316763565L, "Martin De Ciervo", "Buenos Aires", "Roma",1),
-                new Recommendation(10206028316763565L, 10153253398579452L, "Flavio Pietrolati","Amsterdam", "Bruselas",4),
-                new Recommendation(10206727743494683L, 10153253398579452L, "Claudio Yuri","Buenos Aires", "Salta",4));
+        listaRecomendaciones = Arrays.asList( new Recommendation("10153253398579452", "10206028316763565", "Martin De Ciervo", "Buenos Aires", "Roma",1),
+                new Recommendation("10206028316763565", "10153253398579452", "Flavio Pietrolati","Amsterdam", "Bruselas",4),
+                new Recommendation("10206727743494683", "10153253398579452", "Claudio Yuri","Buenos Aires", "Salta",2));
     }
 
     public List<Recommendation> getListaRecomendaciones() {
@@ -59,7 +59,7 @@ public class RecommendationDAOStatic implements RecommendationDAO {
     }
 
     @Override
-    public List<Recommendation> getRecomendacionesDeUsuarioPorId(long idUser) {
+    public List<Recommendation> getRecomendacionesDeUsuarioPorId(String idUser) {
         List<Recommendation> recomend = new ArrayList<>();
         for (Recommendation rec : getListaRecomendaciones()){
             if (rec.getIdUsuarioRecom() == idUser){
@@ -67,6 +67,15 @@ public class RecommendationDAOStatic implements RecommendationDAO {
             }
         }
         return recomend;
+    }
+
+    @Override
+    public void deleteRecommendation(int id) {
+        for (Recommendation rec : getListaRecomendaciones()){
+            if (rec.getIdRecomendacion() == id){
+                listaRecomendaciones.remove(rec);
+            }
+        }
     }
 
 }

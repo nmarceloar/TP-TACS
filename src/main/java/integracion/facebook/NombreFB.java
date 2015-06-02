@@ -12,7 +12,7 @@ public class NombreFB implements Serializable{
 	@JsonProperty("first_name")
 	String first_name;
 	@JsonProperty("id")
-	long id;
+	String id;
 	
 	public String getFirst_name() {
 		return first_name;
@@ -20,13 +20,13 @@ public class NombreFB implements Serializable{
 	public void setFirst_name(String first_name) {
 		this.first_name = first_name;
 	}
-	public long getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
-	public NombreFB(String first_name, long id) {
+	public NombreFB(String first_name, String id) {
 		super();
 		this.first_name = first_name;
 		this.id = id;
