@@ -67,7 +67,7 @@ public class PassengerDAOStatic implements PassengerDAO {
         List<Passenger> amigos = new ArrayList();
         for (Passenger psj : getListaPasajeros()) {
             if (psj.getIdUser() == id) {
-                for (Long idPas : psj.getFriends()) {
+                for (long idPas : psj.getFriends()) {
                     amigos.add(getPasajeroById(idPas));
                 }
                 return amigos;

@@ -76,8 +76,9 @@ var contViajes = 0;
 //###############################VARIABLES DE FACEBOOK#######################
 var id;
 var token;
-var listAmigos = [[], []];
-var listIdAmigosARecomendar = [];
+var listAmigos = [];
+//var listIdAmigosARecomendar = [];
+var listIdAmigosARecomendar = new Array();
 var amigosSelecRecomendar = [];
 var idViajeARecomendar;
 //###############################VARIABLES DE FACEBOOK#######################
@@ -162,12 +163,17 @@ $(function () {
     $("#btnRecomendar").click(function (event) {
         event.preventDefault();
         $("#modRecomendar").hide();
+        console.log(listIdAmigosARecomendar);
 
         $.each(listIdAmigosARecomendar, function (i, val) {
             // Posteo de recomendacion    
+            console.log('Recomendacion posteada ------');
+            console.log('usuario a postearle: ' + listIdAmigosARecomendar[0]);
+            console.log('usuario que postea: ' + id);
+            console.log('id viaje recomendado: ' + idViajeARecomendar);
             $.ajax({
                 type: 'POST',
-                url: 'http://localhost:8080/api/recommendations/' + val,
+                url: 'http://localhost:8080/api/recommendations/' + listIdAmigosARecomendar[0],
                 data: JSON.stringify({
                     "idUsuario": id,
                     "idViaje": idViajeARecomendar
@@ -221,6 +227,8 @@ $(function () {
 //        source: listaAmigosTrucha,
         source: listAmigos,
         select: function (event, ui) {
+            console.log('El ui vale: ' + ui.item.value);
+//            listIdAmigosARecomendar.push(ui.item.value);
             $("#amigosList").append("<li>" + ui.item.value + "</li>");
             $("#boxAmigos").val('');
         }
@@ -679,6 +687,8 @@ function initClickDetalle(id) {
         url: "http://localhost:8080/api/trips/one/" + id.data,
         dataType: 'json',
         success: function (data) {
+            console.log('El viaje a recomendar es: ' + data.idTrip);
+            idViajeARecomendar = data.idTrip;
             console.log("Respuesta trip");
             //console.log(data);
             precio = data.price;
@@ -1032,7 +1042,7 @@ function updateStatusCallback(response) {
             success: function (data) {
                 $.each(data, function (index, value) {
                     var nombreCom = value.nombre + ' ' + value.apellido;
-                    listIdAmigosARecomendar.push(value.id);
+                    listIdAmigosARecomendar[index] = value.id;
                     listAmigos.push(nombreCom);
                 });
             }
@@ -1148,7 +1158,6 @@ function compartir(viaje) {
 //Salís el 23/04/2015 desde Ezeiza, Buenos Aires a las 14:35 hs y llegás al Aeropuerto Internacional de la ciudad de Panamá a las 23:35 del mismo día
 
 function llegadaDatosViaje(datos) {
-    idViajeARecomendar = datos.idTrip;
     $("#detViajeRecom").append(
             'Salio el '
             + datos.tripDepartureDate
