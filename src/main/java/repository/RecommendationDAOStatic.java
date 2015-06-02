@@ -62,7 +62,7 @@ public class RecommendationDAOStatic implements RecommendationDAO {
     public List<Recommendation> getRecomendacionesDeUsuarioPorId(String idUser) {
         List<Recommendation> recomend = new ArrayList<>();
         for (Recommendation rec : getListaRecomendaciones()){
-            if (rec.getIdUsuarioRecom() == idUser){
+            if (rec.getIdUsuarioRecom().equals(idUser)){
                 recomend.add(rec);
             }
         }

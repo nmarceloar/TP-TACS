@@ -97,7 +97,7 @@ public class TripsDAOStatic implements TripsDAO {
     public List<Trip> searchTripByPassenger(String id) {
         List<Trip> lista = new ArrayList<>();
         for (Trip v : getTripList()) {
-            if (v.getIdPassenger() == id) {
+            if (v.getIdPassenger().equals(id)) {
                 lista.add(v);
             }
         }
