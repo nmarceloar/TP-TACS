@@ -160,8 +160,8 @@ $(function () {
         $.ajax({
             url: 'http://localhost:8080/api/recommendations/one/' + recomActiva,
             type: 'PUT',
-            data: "st=acp",
-            success: function (data) {
+            data: 'st=acp',
+            success: function () {
                 alert('Se ha aceptado la recomendacion');
             }
         });
@@ -171,8 +171,8 @@ $(function () {
         $.ajax({
             url: 'http://localhost:8080/api/recommendations/one/' + recomActiva,
             type: 'PUT',
-            data: "st=rej",
-            success: function (data) {
+            data: 'st=rej',
+            success: function () {
                 alert('Se ha rechazado la recomendacion');
             }
         });

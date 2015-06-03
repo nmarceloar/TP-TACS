@@ -33,8 +33,8 @@ public class PassengerDAOStatic implements PassengerDAO {
         Passenger pMartin = new Passenger("10206028316763565", "Martin", "De Ciervo", "11", new ArrayList()); 
         Passenger pFlavio = new Passenger("10153253398579452", "Flavio", "Pietrolati", "22", new ArrayList());
 
-//        listaPasajeros.addAll(Arrays.asList(pMartin, pFlavio));
-        listaPasajeros.addAll(Arrays.asList(pMartin));
+        listaPasajeros.addAll(Arrays.asList(pMartin, pFlavio));
+//        listaPasajeros.addAll(Arrays.asList(pMartin));
     }
 
     public List<Passenger> getListaPasajeros() {
