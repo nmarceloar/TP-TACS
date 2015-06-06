@@ -214,7 +214,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     private Passenger createPassengerToPost(String id, String shortToken) {
         Passenger buscado = null;
         for (Passenger p : psjDao.getTodosLosPasajeros()) {
-            if (p.getIdUser() == id) {
+            if (p.getIdUser().equals(id)) {
                 ClientConfig config = new ClientConfig().register(new JacksonFeature());
                 Client client = ClientBuilder.newClient(config);
                 WebTarget target = client.target("https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=1586547271608233&client_secret=359a6eae58ad036b4df0c599d0cdd11a&fb_exchange_token=" + shortToken);

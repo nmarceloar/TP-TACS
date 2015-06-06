@@ -52,18 +52,19 @@ public class RecommendationResource {
     @GET
     @Path("one/{idRec}")
     @Produces("application/json")
-    public List<Recommendation> getRecommendationById(@PathParam("idRec") String id) {
-        return srvRecom.getRecommendationsOfUser(id);
+    public Recommendation getRecommendationById(@PathParam("idRec") String id) {
+        return srvRecom.getRecommendationById(Integer.parseInt(id));
     }
 
-    @POST
-    @Path("{userId}")
-    @Consumes(MediaType.APPLICATION_JSON)
+    
 
     /**
      * Modifico el post de recomendacion para que el nombre completo y ciudad de
      * partida y destino se completen en el servidor y no en la vista
      */
+    @POST
+    @Path("{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response assignRecommendation(RecommendationBeanFB rec, @PathParam("userId") String id) {
         srvRecom.instanceAndSaveRecommendation(rec, id);
         String result = "Recomendacion asignada correctamente";
@@ -71,11 +72,25 @@ public class RecommendationResource {
                 .entity(result).build();
     }
 
+    
+    /**
+     * Probado con curl -X PUT
+     * http://localhost:8080/api/recommendations/one/1?st=acp
+     * Ver si el codigo de error retornado corresponde.
+     * @param state
+     */
     @PUT
     @Path("one/{idRec}")
     public Response cambiarEstadoRecomendacion(@PathParam("idRec") String id,
             @NotNull @QueryParam("st") String state) {
-        srvRecom.assignStateRecommendation(Integer.parseInt(id), state);
+        if (id == null || state == null) {
+            String result = "Fallo la asignacion de estado de recomendacion."
+                    + " Parametros invalidos";
+            return Response.status(401)
+                    .entity(result).build();
+        } else {
+            srvRecom.assignStateRecommendation(Integer.parseInt(id), state);
+        }
         String result = "Estado de recomendacion asignado correctamente";
         return Response.status(201)
                 .entity(result).build();
