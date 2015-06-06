@@ -156,24 +156,29 @@ $(function () {
         $("#modRecomendar").modal("show");
     });
 
-    $("btnAceptarRecom").click(function (event) {
+    $("#btnAceptarRecom").click(function (event) {
+        console.log('Recomendacion activa es: ' + recomActiva);
         $.ajax({
-            url: 'http://localhost:8080/api/recommendations/one/' + recomActiva,
+            url: 'http://localhost:8080/api/recommendations/one/' + recomActiva + '?st=acp',
             type: 'PUT',
-            data: "st=acp",
             success: function (data) {
                 alert('Se ha aceptado la recomendacion');
+            },
+            error: function (data){
+                alert('Fallo la aceptacion de recomendacion');
             }
         });
     });
 
-    $("btnRechazarRecom").click(function (event) {
+    $("#btnRechazarRecom").click(function (event) {
         $.ajax({
-            url: 'http://localhost:8080/api/recommendations/one/' + recomActiva,
+            url: 'http://localhost:8080/api/recommendations/one/' + recomActiva + '?st=rej',
             type: 'PUT',
-            data: "st=rej",
             success: function (data) {
                 alert('Se ha rechazado la recomendacion');
+            },
+            error: function (data){
+                alert('Fallo el rechazo de recomendacion');
             }
         });
     });

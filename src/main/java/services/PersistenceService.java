@@ -284,7 +284,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     @Override
     public void assignStateRecommendation(int idRec, String state) {
         Recommendation rec = recDao.getRecomendacionPorId(idRec);
-        if (state == "acp") {
+        if (state.equals("acp")) {
             rec.aceptarRecomendacion();
             /**
              * Al aceptar la recomendacion, creo un viaje con los mismos datos
@@ -294,9 +294,9 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
             Trip newTrip = new Trip(rec.getIdUsuarioRecom(), viajeRecom.getFromCity(),
                     viajeRecom.getToCity(), viajeRecom.getPrice(), viajeRecom.getItinerary());
             viajeDao.saveTrip(newTrip);
-        } else if (state == "rej") {
+        } else if (state.equals("rej")) {
             rec.rechazarRecomendacion();
-            recDao.deleteRecommendation(idRec);
+//            recDao.deleteRecommendation(idRec);
         }
     }
 
