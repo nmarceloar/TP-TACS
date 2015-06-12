@@ -7,7 +7,6 @@ package apis;
 
 import integracion.facebook.RecommendationBeanFB;
 import java.util.List;
-import model.Passenger;
 import model.Recommendation;
 
 /**

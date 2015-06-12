@@ -93,7 +93,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     @Override
     public String getRecommendationToString(int id) {
         Recommendation rec = recDao.getRecomendacionPorId(id);
-        Passenger pass = psjDao.getPasajeroById(rec.getIdUsuarioRecom());
+        Passenger pass = psjDao.getPasajeroById(rec.getIdUserFromRecom());
         return pass.getName() + " " + pass.getSurname()
                 + " te recomienda viajar de " + rec.getCiudadOrig()
                 + " a " + rec.getCiudadDest();
