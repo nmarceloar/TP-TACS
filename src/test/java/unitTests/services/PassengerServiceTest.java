@@ -6,11 +6,12 @@
 package unitTests.services;
 
 import apis.PassengerAPI;
+import apis.RecommendationAPI;
+import apis.TripsAPI;
 import config.SpringConfig;
 import java.util.List;
 import model.Passenger;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,14 +53,6 @@ public class PassengerServiceTest {
         p.setName("NombrePrueba");
         p.setSurname("ApellidoPrueba");
         psjServ.createPassenger(p);
-        Assert.assertEquals(3, psjServ.getListOfPassengers().size());
-    }
-
-    @Ignore
-    @Test
-    public void newPassengerTest() {
-        Assert.assertEquals(2, psjServ.getListOfPassengers().size());
-        psjServ.postPassengerByIdToken("1111", "token");
         Assert.assertEquals(3, psjServ.getListOfPassengers().size());
     }
 
