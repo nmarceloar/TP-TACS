@@ -7,13 +7,9 @@ package unitTests.services;
 
 import apis.TripsAPI;
 import config.SpringConfig;
-import java.util.Arrays;
 import java.util.List;
-import model.Segment;
 import model.Trip;
-import org.joda.time.DateTime;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +31,7 @@ public class TripsServiceTest {
     public void getTripsOfPassengerTest() {
         List<Trip> lista = tripServ.getTripsOfPassenger("10153253398579452");
         Assert.assertNotNull(lista);
-        Assert.assertEquals(2, lista.size());
+        Assert.assertEquals(3, lista.size());
     }
 
     @Test
@@ -55,7 +51,7 @@ public class TripsServiceTest {
     @Test
     public void getTripsOfFriendsOfUserTest() {
         List<Trip> viajes = tripServ.getTripsOfPassenger("10153253398579452");
-        Assert.assertEquals(2, viajes.size());
+        Assert.assertEquals(3, viajes.size());
         Assert.assertEquals(1, viajes.get(0).getIdTrip());
         Assert.assertEquals(2, viajes.get(1).getIdTrip());
     }

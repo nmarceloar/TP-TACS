@@ -25,12 +25,18 @@ import org.junit.Test;
  * @author flavio
  */
 public class PassengerResourceTests {
+    
+    private String url;
+    
+    public PassengerResourceTests(){
+        url = "http://localhost:8080/api/passengers";
+    }
  
     @Test
     public void testGetListaDePasajeros() {
         ClientConfig config = new ClientConfig().register(new JacksonFeature());
         Client client = ClientBuilder.newClient(config);
-        WebTarget target = client.target("http://localhost:8080/api/passengers");
+        WebTarget target = client.target(url);
         final Invocation.Builder invocationBuilder = target.request()
                 .accept(MediaType.APPLICATION_JSON);
         Response response = invocationBuilder.get();
@@ -41,15 +47,28 @@ public class PassengerResourceTests {
     }
 
     @Test
-    public void testGetPasajero() {
+    public void getPasajeroExistenteTest() {
         ClientConfig config = new ClientConfig().register(new JacksonFeature());
         Client client = ClientBuilder.newClient(config);
-        WebTarget target = client.target("http://localhost:8080/api/passengers/10153253398579452");       
+        WebTarget target = client.target(url + "/" + "10153253398579452");       
         final Invocation.Builder invocationBuilder = target.request()
                 .accept(MediaType.APPLICATION_JSON);
         Response response = invocationBuilder.get();
         Passenger pass = response.readEntity(new GenericType<Passenger>() {});
         Assert.assertEquals("10153253398579452", pass.getIdUser());
         Assert.assertEquals(200, response.getStatusInfo().getStatusCode());
+    }
+    
+    @Test
+    public void getPasajeroInexistenteTest(){
+        ClientConfig config = new ClientConfig().register(new JacksonFeature());
+        Client client = ClientBuilder.newClient(config);
+        WebTarget target = client.target(url + "/" + "11111111111111111");       
+        final Invocation.Builder invocationBuilder = target.request()
+                .accept(MediaType.APPLICATION_JSON);
+        Response response = invocationBuilder.get();
+//        Passenger pass = response.readEntity(new GenericType<Passenger>() {});
+//        Assert.assertEquals("10153253398579452", pass.getIdUser());
+        Assert.assertEquals(404, response.getStatusInfo().getStatusCode());
     }
 }

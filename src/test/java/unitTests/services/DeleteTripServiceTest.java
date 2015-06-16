@@ -30,7 +30,7 @@ public class DeleteTripServiceTest {
     @Test
     public void deleteTripTest() {
         List<Trip> viajes = tripServ.getTrips();
-        Assert.assertEquals(4, viajes.size());
+        Assert.assertEquals(5, viajes.size());
         Assert.assertEquals(1, viajes.get(0).getIdTrip());
         Assert.assertEquals(2, viajes.get(1).getIdTrip());
         Assert.assertEquals(3, viajes.get(2).getIdTrip());

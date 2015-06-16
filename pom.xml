@@ -218,16 +218,38 @@
                     <artifactId>appengine-maven-plugin</artifactId>
                     <version>1.9.19</version>
                 </plugin>
-    
-                <!-- ################ ###################### JACOCO para test de cobertura ####################### -->
+                
+                <!-- ***************** -->
+                <!-- ejecución de test -->
+                <!-- ***************** -->
+            
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.17</version>
+                    <configuration>
+                        <!-- Sets the VM argument line used when unit tests are run. -->
+                        <argLine>${surefireArgLine}</argLine>
+                        <!-- Skips unit tests if the value of skip.unit.tests property is true -->
+                        <skipTests>${skip.unit.tests}</skipTests>
+                        <!-- Excludes tests files when unit tests are run. -->
+                        <excludes>                        
+                        </excludes>
+                    </configuration>
+                </plugin>
+                
+                <!-- ***************** -->
+                <!-- test de cobertura -->
+                <!-- ***************** -->
+            
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.6.4</version>
+                    <version>0.7.1.201405082137</version>
                     <executions>
                         <!--
-                            Prepara la propiedad para que el agente JaCoCo runtime será pasado
-                            como argumento VM cuando el plugin maven surefire sea ejecutado.
+                            Prepares the property pointing to the JaCoCo runtime agent which
+                            is passed as VM argument when Maven the Surefire plugin is executed.
                         -->
                         <execution>
                             <id>pre-unit-test</id>
@@ -235,17 +257,18 @@
                                 <goal>prepare-agent</goal>
                             </goals>
                             <configuration>
-                                <!-- Establece el path al archivo el cual contiene los datos de la ejecución. -->
+                                <!-- Sets the path to the file which contains the execution data. -->
                                 <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
                                 <!--
-                                    Establece el nombre de la propiedad que contiene la configuracion del agente VM runtime JaCoCo.
+                                    Sets the name of the property containing the settings
+                                    for JaCoCo runtime agent.
                                 -->
                                 <propertyName>surefireArgLine</propertyName>
                             </configuration>
                         </execution>
                         <!--
-                            Asegura que el informe de cobertura de codigo para test unitarios es
-                            creado después de ejecutar los test unitarios.
+                            Ensures that the code coverage report for unit tests is created after
+                            unit tests have been run.
                         -->
                         <execution>
                             <id>post-unit-test</id>
@@ -254,90 +277,14 @@
                                 <goal>report</goal>
                             </goals>
                             <configuration>
-                                <!-- Establece el path del archivo que contiene los datos de ejecución. -->
+                                <!-- Sets the path to the file which contains the execution data. -->
                                 <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
-                                <!-- Establece el directorio de salida para los informes de cobertura. -->
+                                <!-- Sets the output directory for the code coverage report. -->
                                 <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
                             </configuration>
                         </execution>
-                        <!-- Las ejecuciones requeridas para test unitarios son omitidas. -->
-                        <!--
-                        Prepara la propiedad para el agente runtime JaCoCo  el cual es pasado como argumento de la VM cuando maven failsafe sea ejecutado. -->
-                        <execution>
-                            <id>pre-integration-test</id>
-                            <phase>pre-integration-test</phase>
-                            <goals>
-                                <goal>prepare-agent</goal>
-                            </goals>
-                            <configuration>
-                                <!-- Establece el path al archivo que contiene la información de ejecución. -->
-                                <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
-                                <!--
-                                    Establece la propiedad que contiene la configuración del agente
-                 JaCoCo runtime agent.
-                                -->
-                                <propertyName>failsafeArgLine</propertyName>
-                            </configuration>
-                        </execution>
-                        <!--
-                            Asegura que los informes de cobertura para los test de integración seran ejecutados despues de ejecutar los test de integracion.
-                        -->
-                        <execution>
-                            <id>post-integration-test</id>
-                            <phase>post-integration-test</phase>
-                            <goals>
-                                <goal>report</goal>
-                            </goals>
-                            <configuration>
-                                <!-- Establece el path al archivo que contiene los datos de ejecucion. -->
-                                <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
-                                <!-- Establece el directorio de salida para los test de cobertura. -->
-                                <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
-                            </configuration>
-                        </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.15</version>
-                    <configuration>
-                        <!-- Establece el argumento VM que sera usado cuando los test unitarios son ejecutados. -->
-                        <argLine>${surefireArgLine}</argLine>
-                        <!-- Salta los test unitarios cuando el valor de la propiedad skip.unit.tests es   true -->
-                        <skipTests>${skip.unit.tests}</skipTests>
-                        <!-- Excluye los test de integracion cuando los test unitarios son ejecutados.. -->
-                        <excludes>
-                            <exclude>**/IT*.java</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.15</version>
-                    <executions>
-                        <!--
-                            Asegura que tanto los test de integracion y los objetivos de failsafe maven plugin seran ejecutados.
-                        -->
-                        <execution>
-                            <id>integration-tests</id>
-                            <goals>
-                                <goal>integration-test</goal>
-                                <goal>verify</goal>
-                            </goals>
-                            <configuration>
-                                <!-- Establece el argumento VM usado cuando los test de integracion son ejecutados. -->
-                                <argLine>${failsafeArgLine}</argLine>
-                                <!--
-                                    Salta los test de integracion si el valor de la propiedad skip.integration.tests es true
-                                -->
-                                <skipTests>${skip.integration.tests}</skipTests>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!--################### ###################### JACOCO para test de cobertura ####################### -->
                                     
             </plugins>
         </pluginManagement>
