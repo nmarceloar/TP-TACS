@@ -49,7 +49,7 @@ var Trip = function (org, dst, start, end) {
 var mapaNuevoViaje; //el de la pantalla de creación de viaje
 var mapaVuelo; //el de la pantalla de selección de vuelos
 var mapaReview; //el de detalle de vuelo
-
+var mapaReviewRecom;
 var markerOrigen;
 var markerDestino;
 
@@ -76,6 +76,7 @@ var contViajes = 0;
 //###############################VARIABLES DE FACEBOOK#######################
 var id;
 var token;
+var appToken;
 var listAmigos = []; // Se guardan los nombres para llenar el autocomplete
 var listIdAmigosARecomendar = []; // Se guardan pares id, nombre de los posibles a recibir recomendaciones
 var amigosSelecRecomendar = []; // Se colocan los finalmente seleccionados para recomendar
@@ -87,6 +88,7 @@ var recomActiva;
 //** main *******************************************************************
 
 $(function () {
+	
     //####################### FACEBOOK #######################################
 
     //GET DEL TOKEN
@@ -131,6 +133,11 @@ $(function () {
         //hack para que el mapa se dibuje bien
         google.maps.event.trigger(mapaReview, "resize");
     });
+    
+    $("#modDetalleViajeRecom").on("shown.bs.modal", function (e) {
+        //hack para que el mapa se dibuje bien
+        google.maps.event.trigger(mapaReviewRecom, "resize");
+    });
 
     // notificaciones de recomendación *******************************
     /* TODO
@@ -151,21 +158,21 @@ $(function () {
     // notificaciones de recomendación *******************************
 
 
-    $("#btnRecomendarViaje").click(function (event) {
-        event.preventDefault();
-        $("#modRecomendar").modal("show");
-    });
-
     $("#btnAceptarRecom").click(function (event) {
         console.log('Recomendacion activa es: ' + recomActiva);
         $.ajax({
             url: 'http://localhost:8080/api/recommendations/one/' + recomActiva + '?st=acp',
             type: 'PUT',
+            dataType: 'text' ,
             success: function (data) {
-                alert('Se ha aceptado la recomendacion');
+            	console.log(data);
+            	bootbox.alert('Se ha aceptado la recomendacion', function () {
+                });
             },
             error: function (data){
-                alert('Fallo la aceptacion de recomendacion');
+            	console.log(data);
+            	bootbox.alert('Fallo la aceptacion de recomendacion', function () {
+                });
             }
         });
     });
@@ -174,19 +181,34 @@ $(function () {
         $.ajax({
             url: 'http://localhost:8080/api/recommendations/one/' + recomActiva + '?st=rej',
             type: 'PUT',
+            dataType: 'text' ,
             success: function (data) {
-                alert('Se ha rechazado la recomendacion');
+            	console.log(data);
+                bootbox.alert('Se ha rechazado la recomendacion', function () {
+                });
             },
             error: function (data){
-                alert('Fallo el rechazo de recomendacion');
+            	console.log(data);
+                bootbox.alert('Fallo el rechazo de recomendacion', function () {
+                });
             }
         });
     });
 
+    $("#btnRecomendarViaje").click(function (event) {
+        event.preventDefault();
+        $("#modRecomendar").modal("show");
+        $("#amigosList").html("");
+        $("#boxAmigos").val('');
+        amigosSelecRecomendar=[];
+    });
+    
     /**
      * Agrego la funcionalidad de efectivamente recomendar y notificar por un viaje
      */
     $("#btnRecomendar").click(function (event) {
+    	console.log("TOQUE RECOMENDAR DESDE DETALLE VIAJE");
+    	
         event.preventDefault();
         $("#modRecomendar").hide();
 
@@ -204,24 +226,41 @@ $(function () {
                     "idViaje": idViajeARecomendar
                 }),
                 contentType: 'application/json',
-                dataType: 'json',
+                dataType: 'text',
                 success: function (data) {
-                    console.log(data.result);
-                    alert("Has recomendado el viaje satisfactoriamente");
+                	console.log("el app token es");
+                    appToken="1586547271608233|"+data;
+                    console.log(appToken);
+                    FB.api('/' + val + '/notifications', 'post', {
+                    	template:"Recibiste una recomendacion de un viaje",
+                    	href:'http://localhost:8080',
+                        access_token: appToken
+                    }, function (data) {
+                        console.log(data);
+                    });
+                    bootbox.alert("Has recomendado el viaje satisfactoriamente", function () {
+                    });
                 }
             });
-            // Posteo notificacion //CORREGIR °!!!!!!!!!!!!!!!!!!!!
+            
+//             Posteo notificacion //CORREGIR °!!!!!!!!!!!!!!!!!!!!
 //            $.ajax({
 //                type: 'POST',
-//                url: 'http://graph.facebook.com/v2.3/' + val + '/notifications',
-//                data: "template=Recibiste una recomendacion de un viaje&href=http://localhost:8080",
+//                url: 'http://graph.facebook.com/v2.3/' + val + '/notifications?template=Recibiste una recomendacion de un viaje&href=http://localhost:8080',
+////                data: "template=Recibiste una recomendacion de un viaje&href=http://localhost:8080",
 ////                contentType: 'application/json',
 //                dataType: 'json',
 //                success: function (data) {
 //                    console.log('Parametros notification: ' + data);
-//                }
+//                },
+//            	error:function(data){
+//            		console.log(data);
+//            	}
 //            });
+            
         });
+        
+        
     });
 
 
@@ -437,7 +476,8 @@ $(function () {
                                 formResetVuelos();
                             }
                         });
-                $("div[id=" + data.id + "] a[role=linkViaje]").click({"viaje": data.id, "idRec":0, "tipo": '1'}, initClickDetalle);
+                $("div[id=" + data.id + "] a[role=linkViaje]").click(data.id, initClickDetalle);
+                $("div[id=" + data.id + "] button[id=btnRecomendarViaje]").click(data.id,initClickRecomendar);
                 $("div[id=" + data.id + "] a[id=eliminarViaje]").click(data.id, initClickEliminar);
                 $("div[id=" + data.id + "] a[id=compartirViaje]").click(data.id, initClickCompartir);
             }
@@ -505,7 +545,7 @@ function getViajesDeAmigosHTML(data) {
 //function insertarRecomendacionesDeViajes(data, count) {
 function insertarRecomendacionesDeViajes(data) {
 //    return '<li><a href="#" role="linkViajeRecom" id="itemRecom'
-    return '<li><a href="#" role="linkViajeRecom" id="itemRecom" trip="'
+    return '<li><a href="#" role="linkViajeRecom" id="'+data.id+'" trip="'
             + data.viajeAsoc
             + '">'
             + data.nombreyap
@@ -684,34 +724,34 @@ function getInfoAirportsAndMap(flight) {
 //** funciones ajax **************************************************************
 
 
-//function initClickDetalle(id) {
-function initClickDetalle(event) {
-    var idDet = event.data.viaje;
-    var tipoDet = event.data.tipo;
-    recomActiva = event.data.idRec;
-    console.log('click detalle: tipo ' + tipoDet + ' - idViaje: ' + idDet + ' - recom: ' + recomActiva);
+function initClickDetalle(id) {
+//function initClickDetalle(event) {
+//    var idDet = event.data.viaje;
+//    var tipoDet = event.data.tipo;
+//    recomActiva = event.data.idRec;
+//    console.log('click detalle: tipo ' + tipoDet + ' - idViaje: ' + idDet + ' - recom: ' + recomActiva);
 
     // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
     if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
         $("#modListaRecomendaciones").modal("hide");
     }
-
-    if (tipoDet === '2') {
-        
-        $("#botoneraViaje").hide();
-        $("#botoneraRecomendacion").show();
-    } else {
-        $("#botoneraViaje").show();
-        $("#botoneraRecomendacion").hide();
-    }
+//
+//    if (tipoDet === '2') {
+//        
+//        $("#botoneraViaje").hide();
+//        $("#botoneraRecomendacion").show();
+//    } else {
+//        $("#botoneraViaje").show();
+//        $("#botoneraRecomendacion").hide();
+//    }
 
     var precio;
     var desde;
     var hasta;
 
     $.ajax({
-//        url: "http://localhost:8080/api/trips/one/" + id.data,
-        url: "http://localhost:8080/api/trips/one/" + idDet,
+        url: "http://localhost:8080/api/trips/one/" + id.data,
+//        url: "http://localhost:8080/api/trips/one/" + idDet,
         dataType: 'json',
         success: function (data) {
             console.log('El viaje a recomendar es: ' + data.idTrip);
@@ -747,6 +787,71 @@ function initClickDetalle(event) {
     });
 
 }
+
+function initClickDetalleRecom(datos){
+	event.preventDefault();
+	var idViaje = datos.data.viaje;
+	recomActiva = datos.data.idRec;
+	console.log('click detalle: idViaje: ' + idViaje + ' - recom: ' + recomActiva);
+	
+	
+	// reviso si la lista de recomendaciones está abierta y la cierro si hace falta
+    if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
+        $("#modListaRecomendaciones").modal("hide");
+    }
+    var precio;
+    var desde;
+    var hasta;
+    $.ajax({
+        url: "http://localhost:8080/api/trips/one/" + idViaje,
+//        url: "http://localhost:8080/api/trips/one/" + idDet,
+        dataType: 'json',
+        success: function (data) {
+        	console.log(data);
+            precio = data.price;
+            desde = data.fromCity;
+            hasta = data.toCity;
+            var titulo = "\u00A1Tu viaje desde " + desde + " hasta " + hasta + "!";
+            $("div[id=modDetalleViajeRecom] h4").html(titulo);
+            var itinerario = "";
+            var enter = "<br>";
+            $.each(data.itinerary, function (index, value) {
+                console.log(value);
+                var fechaSalida = value.departure_datetime;
+                var fechaLlegada = value.arrival_datetime;
+                if (fechaSalida.toString("dd/MM/yyyy") == fechaLlegada.toString("dd/MM/yyyy")) {
+                    itinerario = itinerario + "Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.from + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                            "y lleg\u00e1s a " + value.to + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda";
+                }
+                else
+                {
+                    itinerario = itinerario + "Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.from + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                            "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.to + " a las " + fechaLlegada.toString("HH:mm");
+                }
+                itinerario = itinerario + enter;
+            });
+            $("div[id=modDetalleViajeRecom] div[class=col-md-6]").html(itinerario);
+            //TODO llenar el mapa de detalle del viaje
+            $("#modDetalleViajeRecom").modal('show');
+        }
+    });
+	
+}
+
+function initClickRecomendar(idViajeParaRecomendar){
+	// reviso si la lista de recomendaciones está abierta y la cierro si hace falta
+    if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
+        $("#modListaRecomendaciones").modal("hide");
+    }
+    event.preventDefault();
+    idViajeARecomendar=idViajeParaRecomendar.data;
+    $("#modRecomendar").modal("show");
+    $("#amigosList").html("");
+    $("#boxAmigos").val('');
+    amigosSelecRecomendar=[];
+    console.log("recomende por boton");
+}
+
 
 function initClickEliminar(idViajeAEliminar) {
     console.log(idViajeAEliminar.data);
@@ -890,7 +995,7 @@ function initialize() {
     mapaNuevoViaje = new google.maps.Map(document.getElementById("googleMapViaje"), mapProp);
     mapaVuelo = new google.maps.Map(document.getElementById("googleMapVuelo"), mapProp);
     mapaReview = new google.maps.Map(document.getElementById("googleMapViajeReview"), mapProp);
-
+    mapaReviewRecom = new google.maps.Map(document.getElementById("googleMapViajeReviewRecom"), mapProp);
     var markerBounds = new google.maps.LatLngBounds();
 }
 
@@ -1011,7 +1116,8 @@ function updateStatusCallback(response) {
                     $("#itemSinViaje").hide();
                     $.each(data, function (index, value) {
                         $("#listViajes").append(getViajesPropiosHTML(value));
-                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click({"viaje": value.idTrip, "idRec":0, "tipo": '1'}, initClickDetalle);
+                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip, initClickDetalle);
+                        $("div[id=" + value.idTrip + "] button[id=btnRecomendarViaje]").click(value.idTrip,initClickRecomendar);
                         $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
                         $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
                     });
@@ -1030,7 +1136,8 @@ function updateStatusCallback(response) {
                 if (data.length !== 0) {
                     $.each(data, function (index, value) {
                         $("#listViajesAmigos").append(getViajesDeAmigosHTML(value));
-                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click({"viaje": value.idTrip, "idRec":0, "tipo": '1'}, initClickDetalle);
+                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip, initClickDetalle);
+                        $("div[id=" + value.idTrip + "] button[id=btnRecomendarViaje]").click(value.idTrip,initClickRecomendar);
                         $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
                         $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
                     });
@@ -1042,20 +1149,21 @@ function updateStatusCallback(response) {
          * Lleno con las recomendaciones que me hicieron
          */
         $.ajax({
-            url: 'http://localhost:8080/api/recommendations/' + id,
-            dataType: 'json',
-            success: function (data) {
-//                var i = 1;
-                $.each(data, function (index, value) {
-//                    $("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value, i));
-//                    i++;
-                    $("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value));
-                    //<a href="#" role="linkViajeRecom" id="itemRecom" trip="4">
-                    $("a[trip=" + value.viajeAsoc + "][role=linkViajeRecom]").click({"viaje": value.viajeAsoc, "idRec":value.id, "tipo": '2'}, initClickDetalle);
-                });
-                $("#listRecomendaciones").append("<li class=\"divider\"></li>");
-                $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
-            }
+        	url: 'http://localhost:8080/api/recommendations/' + id,
+        	dataType: 'json',
+        	success: function (data) {
+//      		var i = 1;
+        		if (data.length != 0) {
+        			$.each(data, function (index, value) {
+//      				$("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value, i));
+//      				i++;
+        				$("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value));
+        				//<a href="#" role="linkViajeRecom" id="itemRecom" trip="4">
+        				$("a[role=linkViajeRecom][id="+value.id+"][trip=" + value.viajeAsoc + "]").click({"viaje": value.viajeAsoc, "idRec":value.id}, initClickDetalleRecom);
+        			});
+        			$("#listRecomendaciones").append("<li class=\"divider\"></li>");
+        			$("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
+        		}}
 
         });
 
@@ -1077,6 +1185,7 @@ function updateStatusCallback(response) {
                 });
             }
         });
+        
 
 
         //#############################################################
@@ -1116,7 +1225,7 @@ function getViajeParaFB(from, to, salida, vuelta) {
             + ' y volviendo el dia '
             + vuelta;
 }
-
+//PUBLICAR EN MURO CUANDO SE CREA UN VIAJE
 function publicar() {
 //	pruebo las cosas del mapa
     console.log("https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
@@ -1152,7 +1261,7 @@ function publicar() {
     formResetViaje();
     formResetVuelos();
 }
-
+//COMPARTIR UN VIAJE EN EL MURO YA CREADO PREVIAMENTE
 function compartir(viaje) {
 //	pruebo las cosas del mapa
 //	console.log("https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
