@@ -56,23 +56,22 @@ public class RecommendationResource {
         return srvRecom.getRecommendationById(Integer.parseInt(id));
     }
 
-    
-
     /**
      * Modifico el post de recomendacion para que el nombre completo y ciudad de
      * partida y destino se completen en el servidor y no en la vista
      */
+    
+    
     @POST
     @Path("{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response assignRecommendation(RecommendationBeanFB rec, @PathParam("userId") String id) {
-        srvRecom.instanceAndSaveRecommendation(rec, id);
-        String result = "Recomendacion asignada correctamente";
+        
+        String result = srvRecom.instanceAndSaveRecommendation(rec, id);
         return Response.status(201)
                 .entity(result).build();
     }
 
-    
     /**
      * Probado con curl -X PUT
      * http://localhost:8080/api/recommendations/one/1?st=acp

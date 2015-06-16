@@ -28,7 +28,7 @@ public interface RecommendationAPI {
     
     public void asignarPasajeroARecomendacion(Recommendation rec, String pass);
     
-    public void instanceAndSaveRecommendation(RecommendationBeanFB recBean, String idUser);
+    public String instanceAndSaveRecommendation(RecommendationBeanFB recBean, String idUser);
     
     public void assignStateRecommendation(int idRec, String state);
     

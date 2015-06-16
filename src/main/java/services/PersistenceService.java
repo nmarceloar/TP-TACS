@@ -54,8 +54,11 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
 
     @Autowired
     private RecommendationDAO recDao;
+    
+    private String appToken ="";
 
-    public PersistenceService() {
+
+	public PersistenceService() {
     }
 
     @Override
@@ -133,6 +136,14 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
     public Trip getTrip(int id) {
         return viajeDao.searchTripById(id);
     }
+    
+    private String getAppToken() {
+		return appToken;
+	}
+
+	private void setAppToken(String appToken) {
+		this.appToken = appToken;
+	}
 
     @Override
     public List<Trip> getTripsOfFriendsOfUser(String id) {
@@ -267,7 +278,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
      * Instancia una recomendacion a partir de los datos recibidos, y la guarda
      * en el DAO correspondiente.
      */
-    public void instanceAndSaveRecommendation(RecommendationBeanFB recBean, String idUser) {
+    public String instanceAndSaveRecommendation(RecommendationBeanFB recBean, String idUser) {
         int idViajeRecom = recBean.getIdTrip();
         String idUsuarioQueRecomienda = recBean.getIdUser();
         Trip viaje = viajeDao.searchTripById(idViajeRecom);
@@ -279,6 +290,21 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
                 viaje.getToCity(),
                 idViajeRecom);
         recDao.saveRecommendation(rec);
+        
+        //notificacion facebook
+        if(appToken==""){
+        	ClientConfig config = new ClientConfig().register(new JacksonFeature());
+            Client client = ClientBuilder.newClient(config);
+            WebTarget target = client.target("https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=1586547271608233&client_secret=359a6eae58ad036b4df0c599d0cdd11a&grant_type=client_credentials");
+            Invocation.Builder invocationBuilder = target.request();
+            Response response = invocationBuilder.get();
+            appToken = response.readEntity(new GenericType<String>() {
+            });
+            appToken = appToken.substring(30);
+        }else{
+        	
+        }
+        return appToken;
     }
 
     @Override
