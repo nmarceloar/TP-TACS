@@ -5,10 +5,11 @@
  */
 package api.rest;
 
-import apis.RecommendationAPI;
 import integracion.facebook.RecommendationBeanFB;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -21,7 +22,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import model.Recommendation;
+import apis.RecommendationAPI;
 
 /**
  *

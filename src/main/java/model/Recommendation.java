@@ -5,8 +5,9 @@
  */
 package model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  *

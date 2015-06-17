@@ -5,8 +5,9 @@
  */
 package integracion.facebook;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  *

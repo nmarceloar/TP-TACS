@@ -1,6 +1,6 @@
 $(function() {
 	// cargo los distintos pedazos de html
-	var cities = ['Londres', 'Salta', 'New York', 'Río de Janeiro', 'Beirut'];
+	var cities = [ 'Londres', 'Salta', 'New York', 'Río de Janeiro', 'Beirut' ];
 	$("#destino").autocomplete({
 		source : cities
 	});
@@ -25,9 +25,8 @@ $(function() {
 	// ******************************************************
 });
 
-
-//**************************************************************FACEBOOK
-//This is called with the results from from FB.getLoginStatus().
+// **************************************************************FACEBOOK
+// This is called with the results from from FB.getLoginStatus().
 function statusChangeCallback(response) {
 	console.log('statusChangeCallback');
 	console.log(response);
@@ -37,7 +36,6 @@ function statusChangeCallback(response) {
 	// for FB.getLoginStatus().
 	if (response.status === 'connected') {
 
-		
 		console.log("Esta logueado y acepto");
 		console.log("TOKEN");
 		console.log(response.authResponse.accessToken);
@@ -46,33 +44,32 @@ function statusChangeCallback(response) {
 		console.log("ID");
 		console.log(response.authResponse.userID);
 		console.log("API--");
-		
-		
-//		FB.api('/me', function(response) {
-//			console.log(JSON.stringify(response));
-//		});
+
+		// FB.api('/me', function(response) {
+		// console.log(JSON.stringify(response));
+		// });
 
 		// Logged into your app and Facebook.
 		$.ajax({
-			
-			type:'POST',
-			url : 'http://localhost:8080/api/passengers/idToken',
-			data: JSON.stringify( {
-				'id':response.authResponse.userID,
-				'token':response.authResponse.accessToken
-			}),
-			contentType: "application/json",
-			dataType : 'text',
-			success : function(data) {
-				console.log("LLEGO BIEN");
+			type : 'POST',
+			url : './api/login',
+			data : "token=" + response.authResponse.accessToken,
+			success : function(data, textStatus, jQxhr) {
+				console.log(textStatus);
 				console.log(data);
-				var url = "html/dashboard.html";    
-				$(location).attr('href',url);
+				console.log(jQxhr);
+			},
+			error : function(jqXhr, textStatus, errorThrown) {
+				console.log(textStatus);
+				console.log(errorThrown);
+				console.log(jQxhr);
+
 			}
 		});
+
 		console.log("esto seguro primero");
-		
-		//testAPI();
+
+		// testAPI();
 
 	} else if (response.status === 'not_authorized') {
 		console.log("Esta logueado en face, pero todavia no acepto")
@@ -89,7 +86,7 @@ function statusChangeCallback(response) {
 }
 
 // This function is called when someone finishes with the Login
-// Button.  See the onlogin handler attached to it in the sample
+// Button. See the onlogin handler attached to it in the sample
 // code below.
 function checkLoginState() {
 	FB.getLoginStatus(function(response) {
@@ -112,21 +109,21 @@ function checkLoginState() {
 window.fbAsyncInit = function() {
 	FB.init({
 		appId : '1586547271608233',
-		cookie : true, // enable cookies to allow the server to access 
+		cookie : true, // enable cookies to allow the server to access
 		// the session
 		xfbml : true, // parse social plugins on this page
 		version : 'v2.3' // use version 2.2
 	});
 
-	// Now that we've initialized the JavaScript SDK, we call 
-	// FB.getLoginStatus().  This function gets the state of the
+	// Now that we've initialized the JavaScript SDK, we call
+	// FB.getLoginStatus(). This function gets the state of the
 	// person visiting this page and can return one of three states to
-	// the callback you provide.  They can be:
+	// the callback you provide. They can be:
 	//
 	// 1. Logged into your app ('connected')
 	// 2. Logged into Facebook, but not your app ('not_authorized')
 	// 3. Not logged into Facebook and can't tell if they are logged into
-	//    your app or not.
+	// your app or not.
 	//
 	// These three cases are handled in the callback function.
 
@@ -137,18 +134,15 @@ window.fbAsyncInit = function() {
 };
 
 // Here we run a very simple test of the Graph API after login is
-// successful.  See statusChangeCallback() for when this call is made.
+// successful. See statusChangeCallback() for when this call is made.
 function testAPI() {
 	console.log('Welcome!  Fetching your information.... ');
-	FB
-			.api(
-					'/me',
-					function(response) {
-						console.log('Successful login for: '
-								+ response.name);
-						document.getElementById('status').innerHTML = 'Thanks for logging in, '
-								+ response.name + '!';
-					});
+	FB.api('/me', function(response) {
+		console.log('Successful login for: ' + response.name);
+		document.getElementById('status').innerHTML = 'Thanks for logging in, '
+				+ response.name + '!';
+	});
 }
 
-//*************************************************************************TERMINA FACEBOOK
+// *************************************************************************TERMINA
+// FACEBOOK

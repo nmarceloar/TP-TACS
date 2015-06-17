@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import model.Trip;
 import model.Segment;
+import model.Trip;
 
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;

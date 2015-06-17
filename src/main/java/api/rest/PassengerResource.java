@@ -1,28 +1,31 @@
 /*
  * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this template file, choose Tools | Templates and open the template
+ * in the editor.
  */
+
+
+
 package api.rest;
 
-import apis.PassengerAPI;
+import integracion.facebook.IdToken;
 
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
-import integracion.facebook.*;
 import model.Passenger;
+import apis.PassengerAPI;
 
 /**
  *
@@ -31,36 +34,39 @@ import model.Passenger;
 @Path("/passengers")
 @Produces(MediaType.APPLICATION_JSON)
 public class PassengerResource {
-
+    
     private final PassengerAPI pjSrv;
-
+    
     @Inject
     public PassengerResource(PassengerAPI passgService) {
+    
         this.pjSrv = passgService;
     }
-
+    
     @GET
     @Produces("application/json")
     public List<Passenger> getPasajeros() {
+    
         return pjSrv.getListOfPassengers();
     }
     
     @GET
     @Path("{userId}")
     @Produces("application/json")
-    public Passenger getPasajeroPorId(@PathParam("userId") String id){
+    public Passenger getPasajeroPorId(@PathParam("userId") String id) {
+    
         return pjSrv.getPassengerById(id);
     }
     
     @GET
     @Path("/query")
-    public  String   getTokenById(
-    		@NotNull @QueryParam("id") String userId)
-    {    	
-    	Passenger pass=pjSrv.getPassengerById(userId);
-    	return pass.getToken();
-    	    	
-	}
+    public String getTokenById(@NotNull @QueryParam("id") String userId) {
+    
+        Passenger pass = pjSrv.getPassengerById(userId);
+        return pass.getToken();
+        
+    }
+    
     /**
      * Probar mediante un test si esta bien este metodo. De alguna manera tiene
      * que tomar los datos del usuario a crear.
@@ -71,20 +77,25 @@ public class PassengerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response guardarPasajero(Passenger psj) {
+    
         pjSrv.createPassenger(psj);
+        
         return Response.status(201)
-                .entity("Creado nuevo pasajero " + psj.getIdUser())
-                .build();
+            .entity("Creado nuevo pasajero " + psj.getIdUser())
+            .build();
+        
     }
     
     @POST
     @Path("/idToken")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response nuevoPasajero(IdToken idToken) {
-    	Passenger pass = pjSrv.postPassengerByIdToken(idToken.getId(),idToken.gettoken());
+    
+        Passenger pass =
+            pjSrv.postPassengerByIdToken(idToken.getId(), idToken.gettoken());
         return Response.status(201)
-                .entity("Logueado correctamente el pasajero " + pass.getIdUser())
-                .build();
+            .entity("Logueado correctamente el pasajero " + pass.getIdUser())
+            .build();
     }
-
+    
 }

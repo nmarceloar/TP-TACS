@@ -4,22 +4,26 @@
  * and open the template in the editor.
  */
 package api.rest;
-import org.json.*;
-import apis.TripsAPI;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import model.Trip;
+
+import org.json.JSONObject;
+
+import apis.TripsAPI;
 
 /**
  *
@@ -27,6 +31,7 @@ import model.Trip;
  */
 @Path("/trips")
 @Produces(MediaType.APPLICATION_JSON)
+@Security
 public class TripsResource {
 
     private final TripsAPI vjSrv;

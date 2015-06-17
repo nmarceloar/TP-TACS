@@ -1,7 +1,7 @@
-package api.rest;
 
-import integracion.despegar.City;
-import apis.CityProvider;
+
+
+package api.rest;
 
 import java.util.List;
 
@@ -12,26 +12,28 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import services.City;
+import apis.CitiesService;
+
 @Path("/cities")
+@Security
 public class CitiesResource {
-
-
-    private final CityProvider provider;
-
+    
+    private final CitiesService provider;
+    
     @Inject
-    public CitiesResource(final CityProvider provider) {
-
+    public CitiesResource(final CitiesService provider) {
+    
         this.provider = provider;
     }
-
+    
     @GET
     @Produces("application/json")
-    public List<City> getByCityName(
-            @NotNull @QueryParam("name") final String name) {
-
+    public List<City>
+        getByCityName(@NotNull @QueryParam("name") final String name) {
+    
         return this.provider.findByName(name);
-
+        
     }
-
-
+    
 }
