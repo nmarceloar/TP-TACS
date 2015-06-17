@@ -73,6 +73,20 @@ public class Recommendation implements Serializable {
         estado = 0;
     }
 
+    public Recommendation(int idRecomendacion, String idUsuarioRecom, String idUserFromRecom, String nombreYAp, String ciudadOrig, String ciudadDest, int tripRec) {
+        this.idRecomendacion = idRecomendacion;
+        this.idUsuarioRecom = idUsuarioRecom;
+        this.idUserFromRecom = idUserFromRecom;
+        this.nombreYAp = nombreYAp;
+        this.ciudadOrig = ciudadOrig;
+        this.ciudadDest = ciudadDest;
+        this.tripRec = tripRec;
+    }
+
+    public void setIdRecomendacion(int idRecomendacion) {
+        this.idRecomendacion = idRecomendacion;
+    }
+
     public int getIdRecomendacion() {
         return idRecomendacion;
     }

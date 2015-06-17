@@ -8,23 +8,33 @@ package unitTests.services;
 import apis.RecommendationAPI;
 import com.google.appengine.repackaged.com.google.protobuf.ServiceException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.validation.ValidationException;
+import model.Passenger;
 import model.Recommendation;
+import model.Segment;
+import model.Trip;
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import static org.mockito.Matchers.any;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import static org.mockito.Mockito.when;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import repository.PassengerDAO;
 import repository.RecommendationDAO;
+import repository.TripsDAO;
 import services.PersistenceService;
 
 /**
@@ -46,58 +56,77 @@ public class RecommendationsServiceTest {
     private RecommendationAPI recServ = new PersistenceService();
 
     @Mock
-    private RecommendationDAO dao;
+    private RecommendationDAO rDao;
+
+    @Mock
+    private PassengerDAO pDao;
+
+    @Mock
+    private TripsDAO tDao;
 
     @Before
     public void prepare() throws ServiceException, ValidationException {
-        Recommendation rec1 = new Recommendation("10153253398579452",
-                "10206028316763565", "Martin De Ciervo",
-                "Groenlandia", "Butan", 1);
-        List<Recommendation> listaRecomendaciones = new ArrayList<>();
-        listaRecomendaciones.add(rec1);
 
-        // getTodosLosUsuarios
-        when(dao.getRecomendacionPorId(1)).thenReturn(listaRecomendaciones.get(0));
-        when(dao.getRecomendacionesDeUsuarioPorId("10153253398579452"))
-                .thenReturn(listaRecomendaciones);
+        final List<Recommendation> listaRec = new ArrayList<>();
+        Recommendation rec1 = new Recommendation(1, "10153253398579452", "10206028316763565", "Martin De Ciervo", "Buenos Aires", "Roma", 1);
+        Recommendation rec2 = new Recommendation(2, "10206028316763565", "10153253398579452", "Flavio Pietrolati", "Amsterdam", "Bruselas", 4);
+        Recommendation rec3 = new Recommendation(3, "10206727743494683", "10153253398579452", "Claudio Yuri", "Buenos Aires", "Salta", 2);
+
+        Passenger pMartin = new Passenger("10206028316763565", "Martin", "De Ciervo", "11", new ArrayList());
+        Passenger pFlavio = new Passenger("10153253398579452", "Flavio", "Pietrolati", "22", new ArrayList());
+
+        Segment seg1 = new Segment("Buenos Aires", "San Pablo",
+                DateTime.now().plusDays(5).toString(),
+                DateTime.now().plusDays(30).toString(),
+                Integer.toString(25), "LAN", "A01");
+
+        Trip viaje1 = new Trip("10153253398579452", "Buenos Aires", "San Pablo", "4500 ARS", Arrays.asList(seg1));
+
+        // Configuracion del mock
+        when(rDao.getRecomendacionPorId(1)).thenReturn(rec1);
+        when(rDao.getRecomendacionesDeUsuarioPorId("10153253398579452"))
+                .thenReturn(Arrays.asList(rec1));
+        when(pDao.getPasajeroById("10206028316763565")).thenReturn(pMartin);
+        when(tDao.searchTripById(1)).thenReturn(viaje1);
+        when(rDao.getRecomendaciones()).thenReturn(listaRec);
+        Mockito.doAnswer(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocation) {
+                Object[] args = invocation.getArguments();
+                Recommendation rec = (Recommendation) args[0];
+                listaRec.add(rec);
+                return null;
+            }
+        }).when(rDao).saveRecommendation(any(Recommendation.class));
     }
 
     @Test
     public void getRecommendationsOfUserTest() {
         List<Recommendation> lista = recServ.getRecommendationsOfUser("10153253398579452");
-//        org.junit.Assert.assertEquals(2, lista.size());
-//        org.junit.Assert.assertEquals(1, lista.get(0).getIdRecomendacion());
-//        org.junit.Assert.assertEquals("10153253398579452", lista.get(0).getIdUsuarioRecom());
-//        org.junit.Assert.assertEquals("10206028316763565", lista.get(0).getIdUserFromRecom());
-//        org.junit.Assert.assertEquals("Buenos Aires", lista.get(0).getCiudadOrig());
-//        org.junit.Assert.assertEquals("Roma", lista.get(0).getCiudadDest());
-        Assert.assertEquals(1, lista.size());
+        org.junit.Assert.assertEquals(1, lista.size());
+        org.junit.Assert.assertEquals(1, lista.get(0).getIdRecomendacion());
     }
 
-    @Ignore
     @Test
-    public void getRecommendatieonToStringTest() {
+    public void getRecommendationToStringTest() {
         org.junit.Assert.assertEquals("Martin De Ciervo te recomienda viajar de Buenos Aires a Roma",
                 recServ.getRecommendationToString(1));
     }
 
-    @Ignore
     @Test
     public void getRecommendationByIdTest() {
         org.junit.Assert.assertEquals(1, recServ.getRecommendationById(1).getIdRecomendacion());
     }
 
-    @Ignore
     @Test
     public void asignarPasajeroARecomendacionTest() {
         Recommendation rec = new Recommendation("10153253398579452", "User2",
                 null, "Sao Paulo", "Viena", 1);
         org.junit.Assert.assertNull(rec.getNombreYAp());
-        recServ.asignarPasajeroARecomendacion(rec, "10153253398579452");
-        org.junit.Assert.assertEquals("Flavio Pietrolati", rec.getNombreYAp());
+        recServ.asignarPasajeroARecomendacion(rec, "10206028316763565");
+        org.junit.Assert.assertEquals("Martin De Ciervo", rec.getNombreYAp());
     }
 
-    @Ignore
     @Test
     public void assignStateRecommendationTest() {
         Recommendation rec = recServ.getRecommendationById(1);
@@ -106,6 +135,16 @@ public class RecommendationsServiceTest {
         org.junit.Assert.assertEquals(1, rec.getEstado());
         recServ.assignStateRecommendation(1, "rej");
         org.junit.Assert.assertEquals(-1, rec.getEstado());
+    }
+
+    @Test
+    public void saveRecommendationTest() {
+//        org.junit.Assert.assertEquals(1, recServ
+//                .getRecommendationsOfUser("10153253398579452").size());
+        Assert.assertEquals(0, recServ.getRecommendations().size());
+        recServ.saveRecommendation(new Recommendation(4, "10153253398579452", "123",
+                "Luis Lopez", "Budapest", "Estambul", 2));
+        Assert.assertEquals(1, recServ.getRecommendations().size());
     }
 
 }

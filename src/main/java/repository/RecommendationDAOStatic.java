@@ -83,4 +83,9 @@ public class RecommendationDAOStatic implements RecommendationDAO {
         }
     }
 
+    @Override
+    public List<Recommendation> getRecomendaciones() {
+        return listaRecomendaciones;
+    }
+
 }

@@ -6,8 +6,6 @@
 package unitTests.services;
 
 import apis.PassengerAPI;
-import apis.RecommendationAPI;
-import apis.TripsAPI;
 import config.SpringConfig;
 import java.util.List;
 import model.Passenger;

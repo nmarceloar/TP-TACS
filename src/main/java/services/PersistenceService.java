@@ -322,8 +322,12 @@ public class PersistenceService implements PassengerAPI, TripsAPI, Recommendatio
             viajeDao.saveTrip(newTrip);
         } else if (state.equals("rej")) {
             rec.rechazarRecomendacion();
-//            recDao.deleteRecommendation(idRec);
         }
+    }
+
+    @Override
+    public List<Recommendation> getRecommendations() {
+        return recDao.getRecomendaciones();
     }
 
 }
