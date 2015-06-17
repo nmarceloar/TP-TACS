@@ -6,27 +6,85 @@
 package unitTests.services;
 
 import apis.PassengerAPI;
+import com.google.appengine.repackaged.com.google.protobuf.ServiceException;
 import config.SpringConfig;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import javax.validation.ValidationException;
 import model.Passenger;
+import model.Recommendation;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import static org.mockito.Matchers.any;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import repository.PassengerDAO;
+import repository.RecommendationDAO;
+import repository.TripsDAO;
+import services.PersistenceService;
 
 /**
  *
  * @author flpitu88
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SpringConfig.class)
+@RunWith(MockitoJUnitRunner.class)
+@TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class,
+    DirtiesContextTestExecutionListener.class,
+    TransactionalTestExecutionListener.class})
 public class PassengerServiceTest {
+    
+    @InjectMocks
+    private PassengerAPI psjServ = new PersistenceService();
 
-    @Autowired
-    PassengerAPI psjServ;
+    @Mock
+    private RecommendationDAO rDao;
 
+    @Mock
+    private PassengerDAO pDao;
+
+    @Mock
+    private TripsDAO tDao;
+
+    @Before
+    public void prepare() throws ServiceException, ValidationException {
+        
+        final List<Passenger> lista = new ArrayList<>();
+        Passenger pMartin = new Passenger("10206028316763565", "Martin", "De Ciervo", "11", new ArrayList()); 
+        Passenger pFlavio = new Passenger("10153253398579452", "Flavio", "Pietrolati", "22", new ArrayList());
+        lista.add(pMartin);
+        lista.add(pFlavio);
+        
+        //Configuracion del mock
+        when(pDao.getTodosLosPasajeros()).thenReturn(lista);
+        when(pDao.getPasajeroById("10206028316763565")).thenReturn(pMartin);
+        when(pDao.getPasajeroById("10153253398579452")).thenReturn(pFlavio);
+        Mockito.doAnswer(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocation) {
+                Object[] args = invocation.getArguments();
+                Passenger pas = (Passenger) args[0];
+                lista.add(pas);
+                return null;
+            }
+        }).when(pDao).guardarPasajero(any(Passenger.class));
+        
+    }
+    
     @Test
     public void getAllPassengersTest() {
         List<Passenger> lista = psjServ.getListOfPassengers();

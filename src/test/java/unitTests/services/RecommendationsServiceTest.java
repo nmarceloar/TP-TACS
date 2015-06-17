@@ -7,6 +7,7 @@ package unitTests.services;
 
 import apis.RecommendationAPI;
 import com.google.appengine.repackaged.com.google.protobuf.ServiceException;
+import integracion.facebook.RecommendationBeanFB;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +19,7 @@ import model.Trip;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -41,17 +43,12 @@ import services.PersistenceService;
  *
  * @author flpitu88
  */
-//@RunWith(SpringJUnit4ClassRunner.class)
 @RunWith(MockitoJUnitRunner.class)
 @TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class,
     DirtiesContextTestExecutionListener.class,
     TransactionalTestExecutionListener.class})
-//@ContextConfiguration(classes = SpringConfig.class)
-
 public class RecommendationsServiceTest {
 
-//    @Autowired
-//    RecommendationAPI recServ;
     @InjectMocks
     private RecommendationAPI recServ = new PersistenceService();
 
@@ -98,6 +95,7 @@ public class RecommendationsServiceTest {
                 return null;
             }
         }).when(rDao).saveRecommendation(any(Recommendation.class));
+
     }
 
     @Test
@@ -139,12 +137,20 @@ public class RecommendationsServiceTest {
 
     @Test
     public void saveRecommendationTest() {
-//        org.junit.Assert.assertEquals(1, recServ
-//                .getRecommendationsOfUser("10153253398579452").size());
         Assert.assertEquals(0, recServ.getRecommendations().size());
         recServ.saveRecommendation(new Recommendation(4, "10153253398579452", "123",
                 "Luis Lopez", "Budapest", "Estambul", 2));
         Assert.assertEquals(1, recServ.getRecommendations().size());
     }
 
+    @Ignore
+    @Test
+    public void instanceAndSaveRecommendationTest() {
+        int tam = recServ.getRecommendationsOfUser("10153253398579452").size();
+        RecommendationBeanFB recB = new RecommendationBeanFB("10206028316763565", 1);
+        recServ.instanceAndSaveRecommendation(recB, "10153253398579452");
+        org.junit.Assert.assertEquals(tam + 1,
+                recServ.getRecommendationsOfUser("10153253398579452").size());
+    }
+    
 }
