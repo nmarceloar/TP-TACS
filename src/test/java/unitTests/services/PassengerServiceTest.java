@@ -7,13 +7,10 @@ package unitTests.services;
 
 import apis.PassengerAPI;
 import com.google.appengine.repackaged.com.google.protobuf.ServiceException;
-import config.SpringConfig;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.validation.ValidationException;
 import model.Passenger;
-import model.Recommendation;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,16 +23,11 @@ import static org.mockito.Mockito.when;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import repository.PassengerDAO;
-import repository.RecommendationDAO;
-import repository.TripsDAO;
 import services.PersistenceService;
 
 /**
@@ -52,13 +44,7 @@ public class PassengerServiceTest {
     private PassengerAPI psjServ = new PersistenceService();
 
     @Mock
-    private RecommendationDAO rDao;
-
-    @Mock
     private PassengerDAO pDao;
-
-    @Mock
-    private TripsDAO tDao;
 
     @Before
     public void prepare() throws ServiceException, ValidationException {

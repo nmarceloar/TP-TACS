@@ -58,6 +58,15 @@ public class Trip implements Serializable {
         idTrip = contadorId++;
     }
 
+    public Trip(String idPassenger, String fromCity, String toCity, String price, List<Segment> itinerary, int idTrip) {
+        this.idPassenger = idPassenger;
+        this.fromCity = fromCity;
+        this.toCity = toCity;
+        this.price = price;
+        this.itinerary = itinerary;
+        this.idTrip = idTrip;
+    }   
+
     public String getPrice() {
         return price;
     }
