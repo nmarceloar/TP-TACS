@@ -25,4 +25,6 @@ public interface RecommendationDAO {
     
     public void deleteRecommendation(int id);
     
+    public List<Recommendation> getAllRecommendations();
+    
 }

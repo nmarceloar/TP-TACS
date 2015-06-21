@@ -19,25 +19,25 @@ public class Recommendation implements Serializable {
 
     @JsonProperty("id")
     private int idRecomendacion;
-    
+
     @JsonProperty("Usuario")
     private String idUsuarioRecom;
-    
+
     @JsonProperty("DesdeUsuario")
     private String idUserFromRecom;
-    
+
     @JsonProperty("nombreyap")
     private String nombreYAp;
 
     @JsonProperty("origen")
     private String ciudadOrig;
-    
+
     @JsonProperty("destino")
     private String ciudadDest;
-    
+
     @JsonProperty("viajeAsoc")
     private int tripRec;
-    
+
     @JsonProperty("estado")
     private int estado;
 
@@ -63,7 +63,8 @@ public class Recommendation implements Serializable {
         estado = 0;
     }
 
-    public Recommendation(String idUser, String idFromUser, String nomYap, String origen, String destino, int viaje) {
+    public Recommendation(String idUser, String idFromUser, String nomYap,
+            String origen, String destino, int viaje) {
         idRecomendacion = generadorId++;
         idUsuarioRecom = idUser;
         idUserFromRecom = idFromUser;
@@ -71,6 +72,18 @@ public class Recommendation implements Serializable {
         ciudadDest = destino;
         nombreYAp = nomYap;
         tripRec = viaje;
+        estado = 0;
+    }
+
+    public Recommendation(int idRecomendacion, String idUsuarioRecom,
+            String idUserFromRecom, String nombreYAp, String ciudadOrig, String ciudadDest, int tripRec) {
+        this.idRecomendacion = idRecomendacion;
+        this.idUsuarioRecom = idUsuarioRecom;
+        this.idUserFromRecom = idUserFromRecom;
+        this.nombreYAp = nombreYAp;
+        this.ciudadOrig = ciudadOrig;
+        this.ciudadDest = ciudadDest;
+        this.tripRec = tripRec;
         estado = 0;
     }
 
@@ -109,12 +122,12 @@ public class Recommendation implements Serializable {
     public void setNombreYAp(String nombreYAp) {
         this.nombreYAp = nombreYAp;
     }
-    
-    public void aceptarRecomendacion(){
+
+    public void aceptarRecomendacion() {
         estado = 1;
     }
-    
-    public void rechazarRecomendacion(){
+
+    public void rechazarRecomendacion() {
         estado = -1;
     }
 
@@ -125,5 +138,5 @@ public class Recommendation implements Serializable {
     public void setIdUserFromRecom(String idUserFromRecom) {
         this.idUserFromRecom = idUserFromRecom;
     }
-    
+
 }

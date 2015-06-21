@@ -104,7 +104,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI,
     public String getRecommendationToString(int id) {
     
         Recommendation rec = recDao.getRecomendacionPorId(id);
-        Passenger pass = psjDao.getPasajeroById(rec.getIdUsuarioRecom());
+        Passenger pass = psjDao.getPasajeroById(rec.getIdUserFromRecom());
         return pass.getName() + " " + pass.getSurname() +
             " te recomienda viajar de " + rec.getCiudadOrig() + " a " +
             rec.getCiudadDest();
@@ -350,6 +350,11 @@ public class PersistenceService implements PassengerAPI, TripsAPI,
             rec.rechazarRecomendacion();
             // recDao.deleteRecommendation(idRec);
         }
+    }
+
+    @Override
+    public List<Recommendation> getRecommendations() {
+        return recDao.getAllRecommendations();
     }
     
 }
