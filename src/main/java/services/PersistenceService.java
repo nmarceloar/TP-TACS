@@ -96,7 +96,6 @@ public class PersistenceService implements PassengerAPI, TripsAPI,
     
     @Override
     public List<Recommendation> getRecommendationsOfUser(String id) {
-    
         return recDao.getRecomendacionesDeUsuarioPorId(id);
     }
     
@@ -315,9 +314,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI,
      * Instancia una recomendacion a partir de los datos recibidos, y la guarda
      * en el DAO correspondiente.
      */
-    public void instanceAndSaveRecommendation(RecommendationBeanFB recBean,
-        String idUser) {
-    
+    public void instanceAndSaveRecommendation(RecommendationBeanFB recBean, String idUser) {
         int idViajeRecom = recBean.getIdTrip();
         String idUsuarioQueRecomienda = recBean.getIdUser();
         Trip viaje = viajeDao.searchTripById(idViajeRecom);

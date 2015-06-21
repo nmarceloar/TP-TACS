@@ -137,10 +137,9 @@ public class RecommendationsServiceTest {
         Assert.assertEquals(1, recServ.getRecommendations().size());
     }
 
-    @Ignore
     @Test
     public void instanceAndSaveRecommendationTest() {
-        int tam = recServ.getRecommendationsOfUser("10153253398579452").size();
+        int tam = recServ.getRecommendations().size();
         RecommendationBeanFB recB = new RecommendationBeanFB("10206028316763565", 1);
         recServ.instanceAndSaveRecommendation(recB, "10153253398579452");
         org.junit.Assert.assertEquals(tam + 1,
