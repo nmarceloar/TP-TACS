@@ -1,94 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta
-    http-equiv="Content-Type"
-    content="text/html; charset=iso-8859-1" />
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1">
-<link
-    rel="stylesheet"
-    href="lib/bootstrap-3.3.4-dist/css/bootstrap.min.css">
-<link
-    rel="stylesheet"
-    href="lib/jquery-ui-1.11.4.custom/jquery-ui.css">
-<link
-    rel="stylesheet"
-    href="css/base.css" />
-<link
-    href="css/cover.css"
-    rel="stylesheet">
-<link
-    href="/../img/favicon.ico"
-    rel="icon"
-    type="image/x-icon" />
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="lib/bootstrap-3.3.4-dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="lib/jquery-ui-1.11.4.custom/jquery-ui.css">
+<link rel="stylesheet" href="css/base.css" />
+<link href="css/cover.css" rel="stylesheet">
+<link href="/../img/favicon.ico" rel="icon" type="image/x-icon" />
 <title>TACS por el mundo!</title>
 </head>
 <body>
-    <div class="site-wrapper">
+	<div class="site-wrapper">
 
-        <div class="site-wrapper-inner">
+		<div class="site-wrapper-inner">
 
-            <div class="cover-container">
+			<div class="cover-container">
 
-                <div class="masthead clearfix">
-                    <div class="inner">
-                        <h3 class="masthead-brand">Portada</h3>
-                        <nav>
-                            <ul class="nav masthead-nav">
-                                <li class="active"><a href="#">Home</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
+				<div class="masthead clearfix">
+					<div class="inner">
+						<h3 class="masthead-brand">Portada</h3>
+						<nav>
+							<ul class="nav masthead-nav">
+								<li class="active"><a href="#">Home</a></li>
+							</ul>
+						</nav>
+					</div>
+				</div>
 
-                <div class="inner cover">
-                    <!--
+				<div class="inner cover">
+					<!--
   Below we include the Login Button social plugin. This button uses
   the JavaScript SDK to present a graphical Login button that triggers
   the FB.login() function when clicked.
 	-->
-                    <div id="fb-root"></div>
-                    <h1
-                        class="cover-heading"
-                        style="font-weight: bold;">Tacs por el mundo</h1>
-                    <div
-                        id="status"
-                        class="lead"></div>
-                    <div
-                        class="fb-login-button"
-                        scope="public_profile,email,user_friends"
-                        data-max-rows="0"
-                        data-size="xlarge"
-                        data-auto-logout-link="false"
-                        onlogin="checkLoginState();"></div>
-                    <!--  -->
+					<div id="fb-root"></div>
+					<h1 class="cover-heading" style="font-weight: bold;">Tacs por
+						el mundo</h1>
+					<div id="status" class="lead"></div>
+					<div class="fb-login-button"
+						scope="public_profile,email,user_friends" data-max-rows="0"
+						data-size="xlarge" data-auto-logout-link="false"
+						onlogin="checkLoginState();"></div>
+					<br /> <br /> <br />
+					<p id="beforeButton"></p>
+				</div>
 
-                </div>
+				<div class="mastfoot">
+					<div class="inner">
+						<p>
+							Cover template for <a href="http://getbootstrap.com">Bootstrap</a>,
+							by <a href="https://twitter.com/mdo">@mdo</a>.
+						</p>
+					</div>
+				</div>
 
-                <div class="mastfoot">
-                    <div class="inner">
-                        <p>
-                            Cover template for <a href="http://getbootstrap.com">Bootstrap</a>,
-                            by <a href="https://twitter.com/mdo">@mdo</a>.
-                        </p>
-                    </div>
-                </div>
+			</div>
 
-            </div>
+		</div>
 
-        </div>
-
-    </div>
-    <!-- Bootstrap core JavaScript
+	</div>
+	<!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
+	<!-- Placed at the end of the document so the pages load faster -->
 
-    <script src="lib/jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
-    <script src="lib/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
-    <script src="js/index.js"></script>
-    <script src="lib/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+	<script src="lib/jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
+	<script src="lib/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+	<script src="js/index.js"></script>
+	<script src="lib/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+
+
 
 </body>
 </html>

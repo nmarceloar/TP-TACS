@@ -2,8 +2,6 @@
  * 
  */
 
-
-
 package api.rest.views;
 
 // en este package deberiamos tener todas las "vistas" que enviamos al front.

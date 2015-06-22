@@ -7,12 +7,18 @@ var Viaje = function() {
 
 var City = function() {
 	this.description = null;
-	this.geolocation = null;
+	// this.geolocation = null;
+	this.latitude = null;
+	this.longitude = null;
 	this.code = null;
 	this.setCityInfo = function(item) {
-		this.description = item.label;
-		this.code = item.id;
-		this.geolocation = item.geolocation;
+		// this.description = item.label;
+		this.description = item.name;
+		// this.code = item.id;
+		this.code = item.code;
+		// this.geolocation = item.geolocation;
+		this.latitude = item.latitude;
+		this.longitude = item.longitude;
 	};
 };
 
@@ -110,7 +116,7 @@ $(function() {
 		});
 		$.getScript('//connect.facebook.net/en_US/sdk.js', function() {
 			FB.init({
-				appId : '1586547271608233',
+				appId : '1431380883824864',
 				version : 'v2.3' // or v2.0, v2.1, v2.0
 			});
 			$('#loginbutton,#feedbutton').removeAttr('disabled');
@@ -123,6 +129,13 @@ $(function() {
 
 	$("#cerrarSesion").click(function() {
 
+		$.ajax({
+			url : '/api/logout/',
+			datatype : 'text',
+			success : function(data) {
+				console.log(data);
+			},
+		});
 		FB.logout(function(response) {
 			// Person is now logged out
 
@@ -130,7 +143,6 @@ $(function() {
 			$(location).attr('href', url);
 
 		});
-
 	});
 
 	// ####################### FACEBOOK #######################################
@@ -167,36 +179,32 @@ $(function() {
 		$("#modRecomendar").modal("show");
 	});
 
-	$("#btnAceptarRecom").click(
-			function(event) {
-				console.log('Recomendacion activa es: ' + recomActiva);
-				$.ajax({
-					url : 'http://localhost:8080/api/recommendations/one/'
-							+ recomActiva + '?st=acp',
-					type : 'PUT',
-					success : function(data) {
-						alert('Se ha aceptado la recomendacion');
-					},
-					error : function(data) {
-						alert('Fallo la aceptacion de recomendacion');
-					}
-				});
-			});
+	$("#btnAceptarRecom").click(function(event) {
+		console.log('Recomendacion activa es: ' + recomActiva);
+		$.ajax({
+			url : '/api/recommendations/one/' + recomActiva + '?st=acp',
+			type : 'PUT',
+			success : function(data) {
+				alert('Se ha aceptado la recomendacion');
+			},
+			error : function(data) {
+				alert('Fallo la aceptacion de recomendacion');
+			}
+		});
+	});
 
-	$("#btnRechazarRecom").click(
-			function(event) {
-				$.ajax({
-					url : 'http://localhost:8080/api/recommendations/one/'
-							+ recomActiva + '?st=rej',
-					type : 'PUT',
-					success : function(data) {
-						alert('Se ha rechazado la recomendacion');
-					},
-					error : function(data) {
-						alert('Fallo el rechazo de recomendacion');
-					}
-				});
-			});
+	$("#btnRechazarRecom").click(function(event) {
+		$.ajax({
+			url : '/api/recommendations/one/' + recomActiva + '?st=rej',
+			type : 'PUT',
+			success : function(data) {
+				alert('Se ha rechazado la recomendacion');
+			},
+			error : function(data) {
+				alert('Fallo el rechazo de recomendacion');
+			}
+		});
+	});
 
 	/**
 	 * Agrego la funcionalidad de efectivamente recomendar y notificar por un
@@ -214,7 +222,7 @@ $(function() {
 			console.log('id viaje recomendado: ' + idViajeARecomendar);
 			$.ajax({
 				type : 'POST',
-				url : 'http://localhost:8080/api/recommendations/' + val,
+				url : '/api/recommendations/' + val,
 				data : JSON.stringify({
 					"idUsuario" : id,
 					"idViaje" : idViajeARecomendar
@@ -284,7 +292,7 @@ $(function() {
 			{
 				source : function(request, response) {
 					$.ajax({
-						url : 'http://localhost:8080/api/cities',
+						url : '/api/cities',
 						dataType : 'json',
 						data : {
 							'name' : request.term
@@ -300,7 +308,8 @@ $(function() {
 					orgCity.setCityInfo(ui.item);
 					$("#desc-origen").html(orgCity.description);
 					markerOrigen = setMapMarker(mapaNuevoViaje,
-							orgCity.geolocation, orgCity.description);
+							orgCity.latitude, orgCity.longitude,
+							orgCity.description);
 					// me centro en el marker
 					mapaNuevoViaje.setCenter(markerOrigen.getPosition());
 					mapaNuevoViaje.setZoom(10);
@@ -325,7 +334,7 @@ $(function() {
 			{
 				source : function(request, response) {
 					$.ajax({
-						url : 'http://localhost:8080/api/cities',
+						url : '/api/cities',
 						dataType : 'json',
 						data : {
 							'name' : request.term
@@ -342,7 +351,8 @@ $(function() {
 					dstCity.setCityInfo(ui.item);
 					$("#desc-destino").html(dstCity.description);
 					markerDestino = setMapMarker(mapaNuevoViaje,
-							dstCity.geolocation, dstCity.description);
+							dstCity.latitude, dstCity.longitude,
+							dstCity.description);
 					// hago zoom out para que se vean los dos puntos marcados
 					setMapBounds(mapaNuevoViaje);
 					$("#fechaHasta").focus();
@@ -399,7 +409,7 @@ $(function() {
 						$
 								.ajax({
 									type : 'POST',
-									url : 'http://localhost:8080/api/trips',
+									url : '/api/trips',
 									data : JSON
 											.stringify({
 												"idPassenger" : id,
@@ -558,18 +568,18 @@ function getViajeHTML(idViaje) {
 function getViajesPropiosHTML(data) {
 	contViajes++;
 	return '<div class="list-group-item" id="'
-			+ data.idTrip
+			+ data.id
 			+ '">'
 			+ '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje '
 			+ contViajes
 			+ '. Desde '
-			+ data.fromCity
+			+ data.tripDetails.fromCity.name
 			+ ' a '
-			+ data.toCity
+			+ data.tripDetails.toCity.name
 			+ ' saliendo el d&iacute;a '
-			+ data.tripDepartureDate
+			+ data.tripDetails.outboundItinerary[0].departure
 			+ ' y volviendo el d&iacute;a '
-			+ data.tripArrivalDate
+			+ data.tripDetails.inboundItinerary[data.tripDetails.inboundItinerary.length - 1].arrival
 			+ '</a></h3>'
 			+ '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a> <a href="#" id="eliminarViaje">Eliminar</a></p>'
 			+ '</div>';
@@ -691,17 +701,21 @@ function formResetVuelos() {
 function getVuelos() {
 	$
 			.ajax({
-				url : 'http://localhost:8080/api/trip-options',
+				url : '/api/trip-options',
+				type : 'GET',
+				async: true,
 				dataType : 'json',
 				data : {
 					'fromCity' : currentTrip.fromCity.code,
 					'toCity' : currentTrip.toCity.code,
 					'startDate' : currentTrip.startDate,
 					'endDate' : currentTrip.endDate,
-					'offset' : 0, // TODO falta paginación!
-					'limit' : 5
+					'offset' : 0,
+					'limit' : 1
 				},
+				
 				success : function(data) {
+					
 					$("#cargandoVuelos").hide();
 					var datalen = data.items.length;
 					if (datalen > 0) {
@@ -792,7 +806,7 @@ function getInfoAirportsAndMap(flight) {
 	var prep = '';
 	prep = "&code=" + flight.airportCodesAsSet.join("&code=")
 	$.ajax({
-		url : 'http://localhost:8080/api/airports?' + prep,
+		url : '/api/airports?' + prep,
 		dataType : 'json',
 		success : function(data) {
 			result = data;
@@ -835,8 +849,8 @@ function initClickDetalle(event) {
 	var hasta;
 
 	$.ajax({
-		// url: "http://localhost:8080/api/trips/one/" + id.data,
-		url : "http://localhost:8080/api/trips/one/" + idDet,
+		// url: "/api/trips/one/" + id.data,
+		url : "/api/trips/one/" + idDet,
 		dataType : 'json',
 		success : function(data) {
 			console.log('El viaje a recomendar es: ' + data.idTrip);
@@ -894,8 +908,7 @@ function initClickEliminar(idViajeAEliminar) {
 	}
 	$
 			.ajax({
-				url : "http://localhost:8080/api/trips/"
-						+ idViajeAEliminar.data,
+				url : "/api/trips/" + idViajeAEliminar.data,
 				dataType : "text",
 				method : "DELETE",
 				success : function(data) {
@@ -905,7 +918,7 @@ function initClickEliminar(idViajeAEliminar) {
 									'<div class="list-group-item active"><h4>Tus viajes</h4></div>'
 											+ '<div class="list-group-item" id="itemSinViaje">Todav\u00eda no hiciste ning\u00fan viaje <span class="glyphicon glyphicon-thumbs-down"></span></div>');
 					$.ajax({
-						url : 'http://localhost:8080/api/trips/' + id,
+						url : '/api/trips/' + id,
 						dataType : 'json',
 						success : function(data) {
 							if (data.length != 0) {
@@ -949,8 +962,7 @@ function initClickCompartir(idViajeACompartir) {
 	}
 	$
 			.ajax({
-				url : 'http://localhost:8080/api/trips/one/'
-						+ idViajeACompartir.data,
+				url : '/api/trips/one/' + idViajeACompartir.data,
 				dataType : 'json',
 				success : function(data) {
 					console.log(data);
@@ -1048,9 +1060,13 @@ function autocomplete_processCities(data, response) {
 		response($.map(data, function(item) {
 			return {
 				id : item.code,
-				label : item.description,
-				value : item.description,
-				geolocation : item.geolocation
+				// label: item.description,
+				// value: item.description,
+				label : item.name,
+				value : item.name,
+				// geolocation: item.geolocation
+				latitude : item.latitude,
+				longitude : item.longitude
 			}
 		}));
 	}
@@ -1088,10 +1104,9 @@ function initialize() {
 	var markerBounds = new google.maps.LatLngBounds();
 }
 
-function setMapMarker(map, geolocation, description) {
+function setMapMarker(map, latitude, longitude, description) {
 	var marker = new google.maps.Marker({
-		position : new google.maps.LatLng(geolocation.latitude,
-				geolocation.longitude),
+		position : new google.maps.LatLng(latitude, longitude),
 		map : map,
 		title : description
 	});
@@ -1173,20 +1188,23 @@ function updateStatusCallback(response) {
 			$("#imagenPerfil").attr("src", response.picture.data.url);
 		});
 
-		var url = 'http://localhost:8080/api/passengers/query?id=' + id;
-		console.log("logueo url cambiada posta");
-		console.log(url);
-		$(document).ready(function() {
-			$.ajax({
-				url : url,
-				dataType : 'text',
-				success : function(data) {
-					console.log("LLEGO BIEN el token");
-					console.log(data);
-					token = data;
-				}
-			});
-		})
+		// var url = '/api/passengers/query?id=' + id;
+		// console.log("logueo url cambiada posta");
+		// console.log(url);
+		// $(document).ready(function () {
+		// $.ajax({
+		// url: url,
+		// dataType: 'text',
+		// success: function (data) {
+		// console.log("LLEGO BIEN el token");
+		// console.log(data);
+		// token = data;
+		// }
+		// });
+		// })
+
+		token = response.authResponse.accessToken;
+
 		// #############################################################
 
 		/**
@@ -1197,7 +1215,7 @@ function updateStatusCallback(response) {
 		 * Lleno mis viajes anteriores
 		 */
 		$.ajax({
-			url : 'http://localhost:8080/api/trips/' + id,
+			url : '/api/me/created-trips',
 			dataType : 'json',
 			success : function(data) {
 				if (data.length != 0) {
@@ -1223,7 +1241,7 @@ function updateStatusCallback(response) {
 		 * LLeno los viajes de los amigos
 		 */
 		$.ajax({
-			url : 'http://localhost:8080/api/trips/friends/' + id,
+			url : '/api/trips/friends/' + id,
 			dataType : 'json',
 			success : function(data) {
 				if (data.length !== 0) {
@@ -1250,7 +1268,7 @@ function updateStatusCallback(response) {
 		 */
 		$
 				.ajax({
-					url : 'http://localhost:8080/api/recommendations/' + id,
+					url : '/api/recommendations/' + id,
 					dataType : 'json',
 					success : function(data) {
 						// var i = 1;
@@ -1283,7 +1301,7 @@ function updateStatusCallback(response) {
 		 * LLeno los amigos que pueden ser destino de recomendaciones
 		 */
 		$.ajax({
-			url : 'http://localhost:8080/api/friends/' + id,
+			url : '/api/friends/' + id,
 			dataType : 'json',
 			success : function(data) {
 				$.each(data, function(index, value) {
@@ -1314,12 +1332,6 @@ function updateStatusCallback(response) {
 		var url = "/";
 		$(location).attr('href', url);
 	}
-
-}
-
-function dameLongToken() {
-
-	return token;
 
 }
 
@@ -1435,7 +1447,7 @@ function llegadaDatosViaje(datos) {
 // // Elimino si ya hay un detalle escrito
 // $("#detViajeRecom").empty();
 // // Completo con los datos del pedido ajax
-// $.getJSON("http://localhost:8080/api/trips/one/" + viajeId,
+// $.getJSON("/api/trips/one/" + viajeId,
 // llegadaDatosViaje);
 // $("#modDetalleViajeRecom").modal('show');
 // }

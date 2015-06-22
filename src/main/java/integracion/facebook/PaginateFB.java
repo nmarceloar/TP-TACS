@@ -13,25 +13,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @author flpitu88
  */
-public class PaginateFB implements Serializable{
-    
-    @JsonProperty("next")
-    String next;
+public class PaginateFB implements Serializable {
 
-    public String getNext() {
-        return next;
-    }
+	@JsonProperty("next")
+	String next;
 
-    public void setNext(String next) {
-        this.next = next;
-    }
+	public String getNext() {
+		return next;
+	}
 
-    public PaginateFB(String next) {
-        this.next = next;
-    }
+	public void setNext(String next) {
+		this.next = next;
+	}
 
-    public PaginateFB() {
-    }
-    
-    
+	public PaginateFB(String next) {
+		this.next = next;
+	}
+
+	public PaginateFB() {
+	}
+
 }

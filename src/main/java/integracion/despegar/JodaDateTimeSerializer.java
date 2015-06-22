@@ -1,6 +1,3 @@
-
-
-
 package integracion.despegar;
 
 import java.io.IOException;
@@ -15,15 +12,13 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
 public class JodaDateTimeSerializer extends JsonSerializer<DateTime> {
-    
-    private static DateTimeFormatter formatter =
-        DateTimeFormat.forPattern("yyyy/MM/dd HH:mm");
-    
-    public void serialize(final DateTime dateTime,
-        final JsonGenerator generator,
-        final SerializerProvider provider) throws IOException,
-        JsonProcessingException {
-    
-        generator.writeString(JodaDateTimeSerializer.formatter.print(dateTime));
-    }
+
+	private static DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm");
+
+	public void serialize(final DateTime dateTime,
+			final JsonGenerator generator, final SerializerProvider provider)
+			throws IOException, JsonProcessingException {
+
+		generator.writeString(JodaDateTimeSerializer.formatter.print(dateTime));
+	}
 }

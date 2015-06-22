@@ -10,198 +10,204 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Segment {
 
-    @JsonProperty("from")
-    private String from;
+	@JsonProperty("from")
+	private String from;
 
-    @JsonProperty("to")
-    private String to;
+	@JsonProperty("to")
+	private String to;
 
-    @JsonProperty("departure_datetime")
-    private String departureDatetime;
+	@JsonProperty("departure_datetime")
+	private String departureDatetime;
 
-    @JsonProperty("arrival_datetime")
-    private String arrivalDatetime;
+	@JsonProperty("arrival_datetime")
+	private String arrivalDatetime;
 
-    @JsonProperty("duration")
-    private String duration;
+	@JsonProperty("duration")
+	private String duration;
 
-    @JsonProperty("airline")
-    private String airline;
+	@JsonProperty("airline")
+	private String airline;
 
-    @JsonProperty("flight_id")
-    private String flightId;
+	@JsonProperty("flight_id")
+	private String flightId;
 
-    public Segment(){
-    }
-    
-    /**
-     * Constructor con parametros
-     *
-     * @param from
-     * @param to
-     * @param departureDatetime
-     * @param arrivalDatetime
-     * @param duration
-     * @param airline
-     * @param flightId
-     */
-    public Segment(String from, String to, String departureDatetime,
-            String arrivalDatetime, String duration, String airline, String flightId) {
-        this.from = from;
-        this.to = to;
-        this.departureDatetime = departureDatetime;
-        this.arrivalDatetime = arrivalDatetime;
-        this.duration = duration;
-        this.airline = airline;
-        this.flightId = flightId;
-    }
-    
+	public Segment() {
+	}
 
-    /**
-     *
-     * @return The from
-     */
-//    @JsonProperty("from")
-    public String getFrom() {
+	/**
+	 * Constructor con parametros
+	 *
+	 * @param from
+	 * @param to
+	 * @param departureDatetime
+	 * @param arrivalDatetime
+	 * @param duration
+	 * @param airline
+	 * @param flightId
+	 */
+	public Segment(String from, String to, String departureDatetime,
+			String arrivalDatetime, String duration, String airline,
+			String flightId) {
+		this.from = from;
+		this.to = to;
+		this.departureDatetime = departureDatetime;
+		this.arrivalDatetime = arrivalDatetime;
+		this.duration = duration;
+		this.airline = airline;
+		this.flightId = flightId;
+	}
 
-        return from;
-    }
+	/**
+	 *
+	 * @return The from
+	 */
+	// @JsonProperty("from")
+	public String getFrom() {
 
-    /**
-     *
-     * @param from The from
-     */
-//    @JsonProperty("from")
-    public void setFrom(String from) {
+		return from;
+	}
 
-        this.from = from;
-    }
+	/**
+	 *
+	 * @param from
+	 *            The from
+	 */
+	// @JsonProperty("from")
+	public void setFrom(String from) {
 
-    /**
-     *
-     * @return The to
-     */
-//    @JsonProperty("to")
-    public String getTo() {
+		this.from = from;
+	}
 
-        return to;
-    }
+	/**
+	 *
+	 * @return The to
+	 */
+	// @JsonProperty("to")
+	public String getTo() {
 
-    /**
-     *
-     * @param to The to
-     */
-//    @JsonProperty("to")
-    public void setTo(String to) {
+		return to;
+	}
 
-        this.to = to;
-    }
+	/**
+	 *
+	 * @param to
+	 *            The to
+	 */
+	// @JsonProperty("to")
+	public void setTo(String to) {
 
-    /**
-     *
-     * @return The departureDatetime
-     */
-//    @JsonProperty("departure_datetime")
-    public String getDepartureDatetime() {
+		this.to = to;
+	}
 
-        return departureDatetime;
-    }
+	/**
+	 *
+	 * @return The departureDatetime
+	 */
+	// @JsonProperty("departure_datetime")
+	public String getDepartureDatetime() {
 
-    /**
-     *
-     * @param departureDatetime The departure_datetime
-     */
-//    @JsonProperty("departure_datetime")
-    public void setDepartureDatetime(String departureDatetime) {
+		return departureDatetime;
+	}
 
-        this.departureDatetime = departureDatetime;
-    }
+	/**
+	 *
+	 * @param departureDatetime
+	 *            The departure_datetime
+	 */
+	// @JsonProperty("departure_datetime")
+	public void setDepartureDatetime(String departureDatetime) {
 
-    /**
-     *
-     * @return The arrivalDatetime
-     */
-//    @JsonProperty("arrival_datetime")
-    public String getArrivalDatetime() {
+		this.departureDatetime = departureDatetime;
+	}
 
-        return arrivalDatetime;
-    }
+	/**
+	 *
+	 * @return The arrivalDatetime
+	 */
+	// @JsonProperty("arrival_datetime")
+	public String getArrivalDatetime() {
 
-    /**
-     *
-     * @param arrivalDatetime The arrival_datetime
-     */
-//    @JsonProperty("arrival_datetime")
-    public void setArrivalDatetime(String arrivalDatetime) {
+		return arrivalDatetime;
+	}
 
-        this.arrivalDatetime = arrivalDatetime;
-    }
+	/**
+	 *
+	 * @param arrivalDatetime
+	 *            The arrival_datetime
+	 */
+	// @JsonProperty("arrival_datetime")
+	public void setArrivalDatetime(String arrivalDatetime) {
 
-    /**
-     *
-     * @return The duration
-     */
-//    @JsonProperty("duration")
-    public String getDuration() {
+		this.arrivalDatetime = arrivalDatetime;
+	}
 
-        return duration;
-    }
+	/**
+	 *
+	 * @return The duration
+	 */
+	// @JsonProperty("duration")
+	public String getDuration() {
 
-    /**
-     *
-     * @param duration The duration
-     */
-//    @JsonProperty("duration")
-    public void setDuration(String duration) {
+		return duration;
+	}
 
-        this.duration = duration;
-    }
+	/**
+	 *
+	 * @param duration
+	 *            The duration
+	 */
+	// @JsonProperty("duration")
+	public void setDuration(String duration) {
 
-    /**
-     *
-     * @return The airline
-     */
-//    @JsonProperty("airline")
-    public String getAirline() {
+		this.duration = duration;
+	}
 
-        return airline;
-    }
+	/**
+	 *
+	 * @return The airline
+	 */
+	// @JsonProperty("airline")
+	public String getAirline() {
 
-    /**
-     *
-     * @param airline The airline
-     */
-//    @JsonProperty("airline")
-    public void setAirline(String airline) {
+		return airline;
+	}
 
-        this.airline = airline;
-    }
+	/**
+	 *
+	 * @param airline
+	 *            The airline
+	 */
+	// @JsonProperty("airline")
+	public void setAirline(String airline) {
 
-    /**
-     *
-     * @return The flightId
-     */
-//    @JsonProperty("flight_id")
-    public String getFlightId() {
+		this.airline = airline;
+	}
 
-        return flightId;
-    }
+	/**
+	 *
+	 * @return The flightId
+	 */
+	// @JsonProperty("flight_id")
+	public String getFlightId() {
 
-    /**
-     *
-     * @param flightId The flight_id
-     */
-//    @JsonProperty("flight_id")
-    public void setFlightId(String flightId) {
+		return flightId;
+	}
 
-        this.flightId = flightId;
-    }
+	/**
+	 *
+	 * @param flightId
+	 *            The flight_id
+	 */
+	// @JsonProperty("flight_id")
+	public void setFlightId(String flightId) {
 
-    @Override
-    public String toString() {
+		this.flightId = flightId;
+	}
 
-        return ToStringBuilder
-                .reflectionToString(this);
-    }
+	@Override
+	public String toString() {
+
+		return ToStringBuilder.reflectionToString(this);
+	}
 
 }

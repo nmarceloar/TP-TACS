@@ -14,48 +14,47 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author flpitu88
  */
 public class UserRegisteredFB implements Serializable {
-    
-    @JsonProperty("id")
-    String id;
-    
-    @JsonProperty("first_name")
-    String firstName;
-    
-    @JsonProperty("last_name")
-    String surname;
 
-    public String getId() {
-        return id;
-    }
+	@JsonProperty("id")
+	String id;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	@JsonProperty("first_name")
+	String firstName;
 
-    public String getFirstName() {
-        return firstName;
-    }
+	@JsonProperty("last_name")
+	String surname;
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public String getSurname() {
-        return surname;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
+	public String getFirstName() {
+		return firstName;
+	}
 
-    public UserRegisteredFB(String id, String firstName, String surname) {
-        this.id = id;
-        this.firstName = firstName;
-        this.surname = surname;
-    }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-    public UserRegisteredFB() {
-    }
-    
-    
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+	public UserRegisteredFB(String id, String firstName, String surname) {
+		this.id = id;
+		this.firstName = firstName;
+		this.surname = surname;
+	}
+
+	public UserRegisteredFB() {
+	}
+
 }

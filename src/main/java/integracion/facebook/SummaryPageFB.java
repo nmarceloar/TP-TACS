@@ -13,25 +13,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @author flpitu88
  */
-public class SummaryPageFB implements Serializable{
-    
-    @JsonProperty("total_count")
-    int total;
+public class SummaryPageFB implements Serializable {
 
-    public int getTotal() {
-        return total;
-    }
+	@JsonProperty("total_count")
+	int total;
 
-    public void setTotal(int total) {
-        this.total = total;
-    }
+	public int getTotal() {
+		return total;
+	}
 
-    public SummaryPageFB(int total) {
-        this.total = total;
-    }
+	public void setTotal(int total) {
+		this.total = total;
+	}
 
-    public SummaryPageFB() {
-    }
-    
-    
+	public SummaryPageFB(int total) {
+		this.total = total;
+	}
+
+	public SummaryPageFB() {
+	}
+
 }

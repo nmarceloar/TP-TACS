@@ -6,49 +6,47 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AirportBean implements Serializable {
 
-    @JsonProperty("codigo")
-    private String code;
+	@JsonProperty("codigo")
+	private String code;
 
-    @JsonProperty("pais")
-    private String country;
+	@JsonProperty("pais")
+	private String country;
 
-    @JsonProperty("ciudad")
-    private String city;
+	@JsonProperty("ciudad")
+	private String city;
 
-    public AirportBean() {
+	public AirportBean() {
 
-    }
+	}
 
-    public AirportBean(String codigo, String pais, String ciudad) {
-        this.code = codigo;
-        this.country = pais;
-        this.city = ciudad;
-    }
+	public AirportBean(String codigo, String pais, String ciudad) {
+		this.code = codigo;
+		this.country = pais;
+		this.city = ciudad;
+	}
 
-    public String getCode() {
-        return code;
-    }
+	public String getCode() {
+		return code;
+	}
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+	public void setCode(String code) {
+		this.code = code;
+	}
 
-    public String getCountry() {
-        return country;
-    }
+	public String getCountry() {
+		return country;
+	}
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
+	public void setCountry(String country) {
+		this.country = country;
+	}
 
-    public String getCity() {
-        return city;
-    }
+	public String getCity() {
+		return city;
+	}
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+	public void setCity(String city) {
+		this.city = city;
+	}
 
-    
-    
 }

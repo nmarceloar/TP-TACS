@@ -1,6 +1,16 @@
 $(function() {
 	// cargo los distintos pedazos de html
-	var cities = [ 'Londres', 'Salta', 'New York', 'Río de Janeiro', 'Beirut' ];
+	// var cities = [ 'Londres', 'Salta', 'New York', 'Río de Janeiro', 'Beirut'
+	// ];
+
+	$('#ok').click(function(event) {
+		event.preventDefault();
+		$(location).attr('href', '/html/dashboard.html');
+
+	});
+
+	$("#ok").hide();
+
 	$("#destino").autocomplete({
 		source : cities
 	});
@@ -13,7 +23,7 @@ $(function() {
 		event.preventDefault();
 		// comunicación con facebook
 		// si devuelve bien
-		document.location.href = 'html/dashboard.html';
+		// document.location.href = 'html/dashboard.html';
 		// si falla, lo saco
 	});
 
@@ -22,9 +32,24 @@ $(function() {
 		event.preventDefault();
 		console.log('cancel log in fb');
 	});
+
 	// ******************************************************
 });
 
+function appendButton(text) {
+
+	var button = $("<button id=\"ok\" type=\"button\" class=\"btn btn-success\"></button>");
+
+	button.text(text);
+
+	button.click(function(event) {
+		event.preventDefault();
+		$(location).attr('href', '/html/dashboard.html');
+	});
+
+	$("#beforeButton").append(button);
+
+}
 // **************************************************************FACEBOOK
 // This is called with the results from from FB.getLoginStatus().
 function statusChangeCallback(response) {
@@ -52,12 +77,21 @@ function statusChangeCallback(response) {
 		// Logged into your app and Facebook.
 		$.ajax({
 			type : 'POST',
-			url : './api/login',
+			url : '/api/login',
+			async : true,
 			data : "token=" + response.authResponse.accessToken,
+
 			success : function(data, textStatus, jQxhr) {
+
 				console.log(textStatus);
 				console.log(data);
 				console.log(jQxhr);
+
+				appendButton(data);
+				
+
+				// $(location).attr('href', '/html/dashboard.html');
+
 			},
 			error : function(jqXhr, textStatus, errorThrown) {
 				console.log(textStatus);
@@ -108,7 +142,7 @@ function checkLoginState() {
 // ACA SE PONEN LOS DATOS DE LA APP
 window.fbAsyncInit = function() {
 	FB.init({
-		appId : '1586547271608233',
+		appId : '1431380883824864',
 		cookie : true, // enable cookies to allow the server to access
 		// the session
 		xfbml : true, // parse social plugins on this page

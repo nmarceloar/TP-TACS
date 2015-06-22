@@ -16,21 +16,23 @@ import model.Recommendation;
  * @author Flavio L. Pietrolati
  */
 public interface RecommendationAPI {
-    
-    public List<Recommendation> getRecommendationsOfUser(String id);
-    
-    public String getRecommendationToString(int id);
-    
-    public Recommendation getRecommendationById(int id);
-    
-    public void saveRecommendation(Recommendation rec);
-    
-    public void asignarPasajeroARecomendaciones(List<Recommendation> list, String pass);
-    
-    public void asignarPasajeroARecomendacion(Recommendation rec, String pass);
-    
-    public void instanceAndSaveRecommendation(RecommendationBeanFB recBean, String idUser);
-    
-    public void assignStateRecommendation(int idRec, String state);
-    
+
+	public List<Recommendation> getRecommendationsOfUser(String id);
+
+	public String getRecommendationToString(int id);
+
+	public Recommendation getRecommendationById(int id);
+
+	public void saveRecommendation(Recommendation rec);
+
+	public void asignarPasajeroARecomendaciones(List<Recommendation> list,
+			String pass);
+
+	public void asignarPasajeroARecomendacion(Recommendation rec, String pass);
+
+	public void instanceAndSaveRecommendation(RecommendationBeanFB recBean,
+			String idUser);
+
+	public void assignStateRecommendation(int idRec, String state);
+
 }
