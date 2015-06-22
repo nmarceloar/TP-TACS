@@ -7,12 +7,18 @@ var Viaje = function () {
 
 var City = function () {
     this.description = null;
-    this.geolocation = null;
+//    this.geolocation = null;
+    this.latitude = null;
+    this.longitude = null;
     this.code = null;
     this.setCityInfo = function (item) {
         this.description = item.label;
+//        this.description = item.name;
         this.code = item.id;
-        this.geolocation = item.geolocation;
+//        this.code = item.code;
+//        this.geolocation = item.geolocation;
+        this.latitude = item.latitude;
+        this.longitude = item.longitude;
     };
 };
 
@@ -305,32 +311,33 @@ $(function () {
         $("#modNuevoViaje").modal('show');
     });
 
-    $("#ciudadOrigen").autocomplete({
-        source: function (request, response) {
-            $.ajax({
-                url: 'http://localhost:8080/api/cities',
-                dataType: 'json',
-                data: {
-                    'name': request.term
+    $("#ciudadOrigen").autocomplete(
+            {
+                source: function (request, response) {
+                    $.ajax({
+                        url: 'http://localhost:8080/api/cities',
+                        dataType: 'json',
+                        data: {
+                            'name': request.term
+                        },
+                        success: function (data) {
+                            autocomplete_processCities(data, response);
+                        }
+                    });
                 },
-                success: function (data) {
-                    autocomplete_processCities(data, response);
+                minLength: 3,
+                select: function (event, ui) {
+                    $("#fechaDesdeContainer").show();
+                    orgCity.setCityInfo(ui.item);
+                    $("#desc-origen").html(orgCity.description);
+                    markerOrigen = setMapMarker(mapaNuevoViaje,
+                            orgCity.latitude, orgCity.longitude, orgCity.description);
+                    // me centro en el marker
+                    mapaNuevoViaje.setCenter(markerOrigen.getPosition());
+                    mapaNuevoViaje.setZoom(10);
+                    $("#fechaDesde").focus();
                 }
-            });
-        },
-        minLength: 3,
-        select: function (event, ui) {
-            $("#fechaDesdeContainer").show();
-            orgCity.setCityInfo(ui.item);
-            $("#desc-origen").html(orgCity.description);
-            markerOrigen = setMapMarker(mapaNuevoViaje, orgCity.geolocation, orgCity.description);
-            //me centro en el marker
-            mapaNuevoViaje.setCenter(markerOrigen.getPosition());
-            mapaNuevoViaje.setZoom(10);
-            $("#fechaDesde").focus();
-        }
-    })
-            .data("ui-autocomplete")._renderItem = autocomplete_renderItemCiudades;
+            }).data("ui-autocomplete")._renderItem = autocomplete_renderItemCiudades;
 
     $("#fechaDesde").datepicker({
         dateFormat: 'dd/mm/yy',
@@ -346,33 +353,33 @@ $(function () {
                 $("#ciudadDestino").focus();
             });
 
-    $("#ciudadDestino").autocomplete({
-        source: function (request, response) {
-            $.ajax({
-                url: 'http://localhost:8080/api/cities',
-                dataType: 'json',
-                data: {
-                    'name': request.term
+    $("#ciudadDestino").autocomplete(
+            {
+                source: function (request, response) {
+                    $.ajax({
+                        url: 'http://localhost:8080/api/cities',
+                        dataType: 'json',
+                        data: {
+                            'name': request.term
+                        },
+                        success: function (data) {
+                            autocomplete_processCities(data, response);
+                        }
+                    });
                 },
-                success: function (data) {
-                    autocomplete_processCities(data, response);
+                minLength: 3,
+                select: function (event, ui) {
+                    // destino
+                    $("#fechaHastaContainer").show();
+                    dstCity.setCityInfo(ui.item);
+                    $("#desc-destino").html(dstCity.description);
+                    markerDestino = setMapMarker(mapaNuevoViaje,
+                            dstCity.latitude, dstCity.longitude, dstCity.description);
+                    // hago zoom out para que se vean los dos puntos marcados
+                    setMapBounds(mapaNuevoViaje);
+                    $("#fechaHasta").focus();
                 }
-            });
-        },
-        minLength: 3,
-        select: function (event, ui) {
-            //destino
-            $("#fechaHastaContainer").show();
-            dstCity.setCityInfo(ui.item);
-            $("#desc-destino").html(dstCity.description);
-            markerDestino = setMapMarker(mapaNuevoViaje, dstCity.geolocation, dstCity.description);
-            //hago zoom out para que se vean los dos puntos marcados
-            setMapBounds(mapaNuevoViaje);
-            $("#fechaHasta").focus();
-        }
-    })
-            .data("ui-autocomplete")._renderItem = autocomplete_renderItemCiudades;
-
+            }).data("ui-autocomplete")._renderItem = autocomplete_renderItemCiudades;
 
 
     $("#fechaHasta").datepicker({
@@ -944,37 +951,40 @@ function initClickCompartir(idViajeACompartir) {
 
 }
 
-//helpers autocomplete ******************************************************************
+//helpers autocomplete
+//******************************************************************
 function autocomplete_processCities(data, response) {
-    if (data.length == 0) {
-        data.push({
-            'id': '',
-            'label': 'No se encotraron ciudades con este nombre',
-            'value': ''
-        });
-        response(data);
-    }
-    else {
-        response($.map(data, function (item) {
-            return {
-                id: item.code,
-                label: item.description,
-                value: item.description,
-                geolocation: item.geolocation
-            }
-        }));
-    }
+ if (data.length == 0) {
+     data.push({
+         'id': '',
+         'label': 'No se encotraron ciudades con este nombre',
+         'value': ''
+     });
+     response(data);
+ } else {
+     response($.map(data, function (item) {
+         return {
+             id: item.code,
+//             label: item.description,
+//             value: item.description,
+             label: item.name,
+             value: item.name,
+//             geolocation: item.geolocation
+             latitude: item.latitude,
+             longitude: item.longitude
+         }
+     }));
+ }
 }
 
 var autocomplete_renderItemCiudades = function (ul, item) {
-    //Add the .ui-state-disabled class and don't wrap in <a> if value is empty
-    if (item.id == '') {
-        return $('<li class="ui-state-disabled">' + item.label + '</li>').appendTo(ul);
-    } else {
-        return $("<li>")
-                .append("<a>" + item.label + "</a>")
-                .appendTo(ul);
-    }
+ // Add the .ui-state-disabled class and don't wrap in <a> if value is empty
+ if (item.id == '') {
+     return $('<li class="ui-state-disabled">' + item.label + '</li>')
+             .appendTo(ul);
+ } else {
+     return $("<li>").append("<a>" + item.label + "</a>").appendTo(ul);
+ }
 };
 //*************************************************************************************
 
@@ -995,15 +1005,14 @@ function initialize() {
     var markerBounds = new google.maps.LatLngBounds();
 }
 
-function setMapMarker(map, geolocation, description) {
+function setMapMarker(map, latitude, longitude, description) {
     var marker = new google.maps.Marker({
-        position: new google.maps.LatLng(geolocation.latitude, geolocation.longitude),
+        position: new google.maps.LatLng(latitude, longitude),
         map: map,
         title: description
     });
     return marker;
 }
-
 function setMapBounds(map) {
     var latlngbounds = new google.maps.LatLngBounds();
     latlngbounds.extend(markerOrigen.getPosition());
