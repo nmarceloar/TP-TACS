@@ -13,7 +13,7 @@ $(function() {
 		event.preventDefault();
 		// comunicación con facebook
 		// si devuelve bien
-		document.location.href = 'html/dashboard.html';
+//		document.location.href = 'html/dashboard.html';
 		// si falla, lo saco
 	});
 
@@ -54,10 +54,13 @@ function statusChangeCallback(response) {
 			type : 'POST',
 			url : './api/login',
 			data : "token=" + response.authResponse.accessToken,
+			dataType : 'text',
 			success : function(data, textStatus, jQxhr) {
 				console.log(textStatus);
 				console.log(data);
 				console.log(jQxhr);
+				var url = "html/dashboard.html";    
+				$(location).attr('href',url);
 			},
 			error : function(jqXhr, textStatus, errorThrown) {
 				console.log(textStatus);
