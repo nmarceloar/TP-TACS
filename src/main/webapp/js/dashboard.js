@@ -1122,10 +1122,33 @@ function updateStatusCallback(response) {
                     $("#itemSinViaje").hide();
                     $.each(data, function (index, value) {
                         $("#listViajes").append(getViajesPropiosHTML(value));
-                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip, initClickDetalle);
-                        $("div[id=" + value.idTrip + "] button[id=btnRecomendarViaje]").click(value.idTrip,initClickRecomendar);
-                        $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
-                        $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
+                        console.log(value.id);
+                        $("div[id=" + value.id + "] a[role=linkViaje]").click(value.id, initClickDetalle);
+                        $("div[id=" + value.id + "] button[id=btnRecomendarViaje]").click(value.id,initClickRecomendar);
+                        $("div[id=" + value.id + "] a[id=eliminarViaje]").click(value.id, initClickEliminar);
+                        $("div[id=" + value.id + "] a[id=compartirViaje]").click(value.id, initClickCompartir);
+                    });
+                }
+            }
+        }
+        );
+        
+        /**
+         * Lleno mis viajes aceptados
+         */
+        $.ajax({
+            url: 'http://localhost:8080/api/me/accepted-trips',
+            dataType: 'json',
+            success: function (data) {
+                if (data.length != 0) {
+                    $("#itemSinViajeAceptado").hide();
+                    $.each(data, function (index, value) {
+                        $("#listViajesAceptados").append(getViajesPropiosHTML(value));
+                        console.log(value.id);
+                        $("div[id=" + value.id + "] a[role=linkViaje]").click(value.id, initClickDetalle);
+                        $("div[id=" + value.id + "] button[id=btnRecomendarViaje]").click(value.id,initClickRecomendar);
+                        $("div[id=" + value.id + "] a[id=eliminarViaje]").click(value.id, initClickEliminar);
+                        $("div[id=" + value.id + "] a[id=compartirViaje]").click(value.id, initClickCompartir);
                     });
                 }
             }
@@ -1172,7 +1195,7 @@ function updateStatusCallback(response) {
         		}}
 
         });
-
+        
 
         /**
          * LLeno los amigos que pueden ser destino de recomendaciones
