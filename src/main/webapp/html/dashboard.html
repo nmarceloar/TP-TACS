@@ -91,6 +91,19 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+	                <div class="col-md-12">
+                        <!-- viajes recientes -->
+                        <div class="list-group" id="listViajesAceptados">
+                            <div class="list-group-item active"><h4>Viajes Aceptados por recomendaciones</h4></div>
+                            <div class="list-group-item" id="itemSinViaje">Todavía no hiciste ningún viaje <span class="glyphicon glyphicon-thumbs-down"></span></div>
+                            <!--  <div class="list-group-item" id="b">
+                                <h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje aaaaaaaaaaaaaa</a></h3>
+                                                        <p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#">Compartir</a> <a href="#">Eliminar</a></p>
+                                                </div>-->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- fin cuerpo del dashboard -->
@@ -202,23 +215,16 @@
                         </div>
                     </div>
                     <div class="modal-footer" id="footDetalle">
-                        <div id="botoneraViaje">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal" id="btnVolverViaje">Volver</button>
-                        </div>
-                        <div id="botoneraRecomendacion">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnAceptarRecom">Aceptar <span class="glyphicon glyphicon-share-alt"></span></button>
-                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnRechazarRecom">Rechazar <span class="glyphicon glyphicon-share-alt"></span></button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal" id="btnVolverViaje">Volver</button>
-                        </div>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="btnVolverViaje">Volver</button>
                     </div>
                 </div>
                 <!-- fin contenido del modal-->
             </div>
         </div>
         <!-- Fin Modal detalle de viaje -->
-
-        <!-- Inicio Modal lista de recomendaciones -->
+	
+		<!-- Inicio Modal lista de recomendaciones -->
         <div class="modal fade" id="modListaRecomendaciones" role="dialog">
             <div class="modal-dialog modal-lg">
                 <!-- contenido del modal -->
@@ -275,7 +281,7 @@
                         <h4>¡Recomendale el viaje desde Buenos Aires a Panamá a tus amigos!</h4>
                     </div>  
                     <div class="modal-body">
-                        <p>Salís el 23/04/2015 desde Ezeiza, Buenos Aires a las 14:35 hs y llegás al Aeropuerto Internacional de la ciudad de Panamá a las 23:35 del mismo día
+                        <p>Salís el 23/04/2015 desde reeEzeiza, Buenos Aires a las 14:35 hs y llegás al Aeropuerto Internacional de la ciudad de Panamá a las 23:35 del mismo día
                         </p>
                         <!--<p>-->
                         <div class="form-group">
@@ -301,19 +307,22 @@
                 <!-- contenido del modal -->
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4>Viaje</h4>
+                        <h4></h4>
                     </div>  
                     <div class="modal-body">
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-6" id="detViajeRecom">  </div>
+                                <div class="col-md-6">  
+                                </div>
                                 <div class="col-md-5">
-                                    <div id="googleMapViajeReview" class="map-crea-viaje"></div>
+                                    <div id="googleMapViajeReviewRecom" class="map-crea-viaje"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnAceptarRecom">Aceptar <span class="glyphicon glyphicon-share-alt"></span></button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnRechazarRecom">Rechazar <span class="glyphicon glyphicon-share-alt"></span></button>
                         <button type="button" class="btn btn-default" data-dismiss="modal" id="btnVolverViaje">Volver</button>
                     </div>
                 </div>
@@ -322,12 +331,12 @@
         </div>
         <!-- Fin Modal detalle de viaje -->
 
-        <!--Modal de aceptacion o rechazo de recomendacion-->
+        <!--Modal de aceptacion o rechazo de recomendacion
         <div id="dialog-recom" title="¿Aceptar Recomendacion?">
             <p>
                 <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;">   </span>
             </p>
         </div>
-
+		-->
     </body>
 </html>
