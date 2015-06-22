@@ -129,6 +129,13 @@ $(function () {
 
     $("#cerrarSesion").click(function () {
 
+    	$.ajax({
+            url: 'http://localhost:8080/api/logout/',
+            datatype:'text',
+            success: function (data) {
+                console.log(data);
+            },
+        });
         FB.logout(function (response) {
             // Person is now logged out
 
@@ -136,7 +143,6 @@ $(function () {
             $(location).attr('href', url);
 
         });
-
     });
 
     // ####################### FACEBOOK #######################################
@@ -564,18 +570,18 @@ function getViajeHTML(idViaje) {
 function getViajesPropiosHTML(data) {
     contViajes++;
     return '<div class="list-group-item" id="'
-            + data.idTrip
+            + data.id
             + '">'
             + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje '
             + contViajes
             + '. Desde '
-            + data.fromCity
+            + data.tripDetails.fromCity.name
             + ' a '
-            + data.toCity
+            + data.tripDetails.toCity.name
             + ' saliendo el d&iacute;a '
-            + data.tripDepartureDate
+            + data.tripDetails.outboundItinerary[0].departure
             + ' y volviendo el d&iacute;a '
-            + data.tripArrivalDate
+            + data.tripDetails.inboundItinerary[data.tripDetails.inboundItinerary.length - 1].arrival
             + '</a></h3>'
             + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a> <a href="#" id="eliminarViaje">Eliminar</a></p>'
             + '</div>';
@@ -1182,20 +1188,23 @@ function updateStatusCallback(response) {
             $("#imagenPerfil").attr("src", response.picture.data.url);
         });
 
-        var url = 'http://localhost:8080/api/passengers/query?id=' + id;
-        console.log("logueo url cambiada posta");
-        console.log(url);
-        $(document).ready(function () {
-            $.ajax({
-                url: url,
-                dataType: 'text',
-                success: function (data) {
-                    console.log("LLEGO BIEN el token");
-                    console.log(data);
-                    token = data;
-                }
-            });
-        })
+//        var url = 'http://localhost:8080/api/passengers/query?id=' + id;
+//        console.log("logueo url cambiada posta");
+//        console.log(url);
+//        $(document).ready(function () {
+//            $.ajax({
+//                url: url,
+//                dataType: 'text',
+//                success: function (data) {
+//                    console.log("LLEGO BIEN el token");
+//                    console.log(data);
+//                    token = data;
+//                }
+//            });
+//        })
+        
+        token=response.authResponse.accessToken;
+        
         // #############################################################
 
         /**
@@ -1206,7 +1215,7 @@ function updateStatusCallback(response) {
          * Lleno mis viajes anteriores
          */
         $.ajax({
-            url: 'http://localhost:8080/api/trips/' + id,
+            url: 'http://localhost:8080/api/me/created-trips',
             dataType: 'json',
             success: function (data) {
                 if (data.length != 0) {
@@ -1323,12 +1332,6 @@ function updateStatusCallback(response) {
         var url = "/";
         $(location).attr('href', url);
     }
-
-}
-
-function dameLongToken() {
-
-    return token;
 
 }
 

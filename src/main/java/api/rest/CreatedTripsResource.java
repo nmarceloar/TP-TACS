@@ -29,7 +29,7 @@ public class CreatedTripsResource {
     
     @POST
     @Consumes("application/json")
-    @Produces("application/Json")
+    @Produces("application/json")
     public OfyTrip createTripForUser(@NotNull @LoggedUserId final Long userId,
         TripDetails tripDetails) {
     
