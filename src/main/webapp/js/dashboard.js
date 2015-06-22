@@ -863,7 +863,7 @@ function initClickEliminar(idViajeAEliminar) {
         $("#modListaRecomendaciones").modal("hide");
     }
     $.ajax({
-        url: "http://localhost:8080/api/trips/" + idViajeAEliminar.data,
+        url: "http://localhost:8080/api/me/created-trips/" + idViajeAEliminar.data,
         dataType: "text",
         method: "DELETE",
         success: function (data) {
@@ -871,16 +871,16 @@ function initClickEliminar(idViajeAEliminar) {
             $("#listViajes").html('<div class="list-group-item active"><h4>Tus viajes</h4></div>' +
                     '<div class="list-group-item" id="itemSinViaje">Todav\u00eda no hiciste ning\u00fan viaje <span class="glyphicon glyphicon-thumbs-down"></span></div>');
             $.ajax({
-                url: 'http://localhost:8080/api/trips/' + id,
+                url: 'http://localhost:8080/api/me/created-trips/',
                 dataType: 'json',
                 success: function (data) {
                     if (data.length != 0) {
                         $("#itemSinViaje").hide();
                         $.each(data, function (index, value) {
                             $("#listViajes").append(getViajesPropiosHTML(value));
-                            $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip, initClickDetalle);
-                            $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
-                            $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
+                            $("div[id=" + value.id + "] a[role=linkViaje]").click(value.id, initClickDetalle);
+                            $("div[id=" + value.id + "] a[id=eliminarViaje]").click(value.id, initClickEliminar);
+                            $("div[id=" + value.id + "] a[id=compartirViaje]").click(value.id, initClickCompartir);
                         });
                     }
                 }
