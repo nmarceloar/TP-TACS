@@ -1,8 +1,12 @@
 //** clases **********************************************************
 var Viaje = function () {
-    this.pricedetail = null;
-    this.ida = null;
-    this.vuelta = null;
+    this.fromAirport = null;
+    this.toAirport = null;
+    this.airline = null;
+    this.flightid = null;
+    this.departure = null;
+    this.arrival = null;
+    this.duration = null;
 };
 
 var City = function () {
@@ -34,12 +38,17 @@ var Trip = function (org, dst, start, end) {
         return this.outbound != null && this.inbound != null;
     };
     //convierto los datos del viaje para ser enviados a la api
-    this.toJSON = function () {
+    this.toJSONoutbound = function () {
         var segments = new Array();
         for (var i = 0; i < this.outbound.segments.length; i++) {
             this.outbound.segments[i].duration = dateDifference(this.outbound.segments[i].departure_datetime, this.outbound.segments[i].arrival_datetime).toString();
             segments.push(this.outbound.segments[i]);
         }
+//    	return JSON.stringify(segments);
+        return segments;
+    };
+    this.toJSONinbound = function () {
+        var segments = new Array();
         for (var i = 0; i < this.inbound.segments.length; i++) {
             this.inbound.segments[i].duration = dateDifference(this.inbound.segments[i].departure_datetime, this.inbound.segments[i].arrival_datetime).toString();
             segments.push(this.inbound.segments[i]);
@@ -59,6 +68,7 @@ var mapaReviewRecom;
 var markerOrigen;
 var markerDestino;
 var airports; // Variable global para guardar aeropertos
+var airlines; // Variable global para guardar aerolineas
 
 //array con los puntos marcados en el mapa
 var markersVuelos = new Array();
@@ -427,22 +437,29 @@ $(function () {
     $("#btnViajar").click(function (event) {
         event.preventDefault();
         $("#itemSinViaje").hide();
+        console.log("SUPER LOG DEL VIAJE MANS");
+        console.log(JSON.stringify({
+            "fromCity": armarJsonCiudad(currentTrip.fromCity),
+            "toCity": armarJsonCiudad(currentTrip.toCity),
+            "priceDetail": currentTrip.price,
+            "outboundItinerary": armarItinerario(currentTrip.outbound),
+            "inboundItinerary": armarItinerario(currentTrip.inbound),
+        }));
         $.ajax({
             type: 'POST',
-            url: 'http://localhost:8080/api/trips',
+            url: 'http://localhost:8080/api/me/created-trips',
             data: JSON.stringify({
-                "idPassenger": id,
-                "fromCity": currentTrip.fromCity.description,
-                "toCity": currentTrip.toCity.description,
-                "price": currentTrip.price.total + " " + currentTrip.price.currency,
-                "itinerary": currentTrip.toJSON()
+              "fromCity": armarJsonCiudad(currentTrip.fromCity),
+              "toCity": armarJsonCiudad(currentTrip.toCity),
+              "priceDetail": currentTrip.price,
+              "outboundItinerary": armarItinerario(currentTrip.outbound),
+              "inboundItinerary": armarItinerario(currentTrip.inbound)
             }),
             contentType: 'application/json',
             dataType: 'json',
             success: function (data) {
-                console.log(data.result);
-                contViajes++;
-                $("#listViajes").append(getViajeHTML(data.id));
+                console.log(data);
+                $("#listViajes").append(getViajesPropiosHTML(data));
                 bootbox.confirm("Felicitaciones por tu viaje! Queres publicarlo en tu muro de Facebook?",
                         function (result) {
                             if (result) {
@@ -507,18 +524,23 @@ $(function () {
 });
 
 // ** templates ************************************************
-function getViajeHTML(idViaje) {
-    return '<div class="list-group-item" id="' + idViaje + '">'
-            + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje ' + contViajes + '. Desde '
-            + currentTrip.fromCity.description
+function getViajesAceptadosHTML(data) {
+    contViajes++;
+    return '<div class="list-group-item" id="'
+            + data.id
+            + '">'
+            + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje '
+            + contViajes
+            + '. Desde '
+            + data.tripDetails.fromCity.name
             + ' a '
-            + currentTrip.toCity.description
+            + data.tripDetails.toCity.name
             + ' saliendo el d&iacute;a '
-            + currentTrip.outbound.segments[0].departure_datetime
+            + data.tripDetails.outboundDate
             + ' y volviendo el d&iacute;a '
-            + currentTrip.inbound.segments[(currentTrip.inbound.segments.length - 1)].arrival_datetime
+            + data.tripDetails.inboundDate
             + '</a></h3>'
-            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a> <a href="#" id="eliminarViaje">Eliminar</a></p>'
+            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a></p>'
             + '</div>';
 }
 
@@ -536,9 +558,9 @@ function getViajesPropiosHTML(data) {
             + ' a '
             + data.tripDetails.toCity.name
             + ' saliendo el d&iacute;a '
-            + data.tripDetails.outboundItinerary[0].departure
+            + data.tripDetails.outboundDate
             + ' y volviendo el d&iacute;a '
-            + data.tripDetails.inboundItinerary[data.tripDetails.inboundItinerary.length - 1].arrival
+            + data.tripDetails.inboundDate
             + '</a></h3>'
             + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a> <a href="#" id="eliminarViaje">Eliminar</a></p>'
             + '</div>';
@@ -548,15 +570,15 @@ function getViajesPropiosHTML(data) {
 function getViajesDeAmigosHTML(data) {
     return '<div class="list-group-item" id="itemAmigo">'
             + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje Desde '
-            + data.fromCity
+            + data.tripDetails.fromCity.name
             + ' a '
-            + data.toCity
+            + data.tripDetails.toCity.name
             + ' saliendo el d&iacute;a '
-            + data.tripDepartureDate
+            + data.tripDetails.outboundDate
             + ' y volviendo el d&iacute;a '
-            + data.tripArrivalDate
+            + data.tripDetails.inboundDate
             + '</a></h3>'
-            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a> <a href="#" id="eliminarViaje">Eliminar</a></p>'
+            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a></p>'
             + '</div>';
 }
 
@@ -621,6 +643,26 @@ function dateDifference(date1, date2) {
     var timeDiff = Math.abs(d2.getTime() - d1.getTime());
     return Math.ceil(timeDiff / (1000 * 3600));
 }
+function armarJsonCiudad(ciudad){
+	var json = '{"name":"'+ciudad.description+'","latitude":"'+ciudad.latitude+'","longitude":"'+ciudad.longitude+'","code":"'+ciudad.code+'"}',
+    	obj = JSON.parse(json);
+	return(obj);
+}
+function armarItinerario(iti){
+	var itinerario = new Array();
+	var viaje = new Viaje();
+	for (var i = 0; i < iti.segments.length; i++){
+		viaje.fromAirport = getAirportData(iti.segments[i].from,airports);
+		viaje.toAirport = getAirportData(iti.segments[i].to,airports);
+		viaje.duration = iti.segments[i].duration;
+		viaje.flightid = iti.segments[i].flight_id;
+		viaje.departure = iti.segments[i].departure_datetime;
+		viaje.arrival = iti.segments[i].arrival_datetime;
+		viaje.airline = getAirlineData(iti.segments[i].airline,airlines);
+		itinerario.push(viaje);
+	};
+	return (itinerario);
+}
 //** manejo de datos ********************************************
 
 //** manejo de forms *********************************************
@@ -664,6 +706,7 @@ function getVuelos() {
         success: function (data) {
             $("#cargandoVuelos").hide();
             airports = data.airports;
+            airlines = data.airlines;
             var datalen = data.items.length;
             if (datalen > 0) {
                 $("#sinVuelos").hide();
@@ -748,6 +791,15 @@ function getAirportData(code, airportlist) {
     for (var i = 0; i < airportlist.length; i++) {
         if (code == airportlist[i].code) {
             return airportlist[i];
+        }
+    }
+    return null;
+}
+//busco la aerolinea que quiero por codigo
+function getAirlineData(code, airlinelist) {
+    for (var i = 0; i < airlinelist.length; i++) {
+        if (code == airlinelist[i].code) {
+            return airlinelist[i];
         }
     }
     return null;
@@ -1151,7 +1203,6 @@ function updateStatusCallback(response) {
                     $("#itemSinViaje").hide();
                     $.each(data, function (index, value) {
                         $("#listViajes").append(getViajesPropiosHTML(value));
-                        console.log(value.id);
                         $("div[id=" + value.id + "] a[role=linkViaje]").click(value.id, initClickDetalle);
                         $("div[id=" + value.id + "] button[id=btnRecomendarViaje]").click(value.id, initClickRecomendar);
                         $("div[id=" + value.id + "] a[id=eliminarViaje]").click(value.id, initClickEliminar);
@@ -1176,7 +1227,6 @@ function updateStatusCallback(response) {
                         console.log(value.id);
                         $("div[id=" + value.id + "] a[role=linkViaje]").click(value.id, initClickDetalle);
                         $("div[id=" + value.id + "] button[id=btnRecomendarViaje]").click(value.id, initClickRecomendar);
-                        $("div[id=" + value.id + "] a[id=eliminarViaje]").click(value.id, initClickEliminar);
                         $("div[id=" + value.id + "] a[id=compartirViaje]").click(value.id, initClickCompartir);
                     });
                 }
@@ -1185,21 +1235,38 @@ function updateStatusCallback(response) {
         );
 
         /**
-         * LLeno los viajes de los amigos
+         * LLeno los viajes de los amigos y LLeno los amigos que pueden ser destino de recomendaciones
          */
         $.ajax({
-            url: 'http://localhost:8080/api/trips/friends/' + id,
+            url: 'http://localhost:8080/api/me/friends',
             dataType: 'json',
             success: function (data) {
-                if (data.length !== 0) {
-                    $.each(data, function (index, value) {
-                        $("#listViajesAmigos").append(getViajesDeAmigosHTML(value));
-                        $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip, initClickDetalle);
-                        $("div[id=" + value.idTrip + "] button[id=btnRecomendarViaje]").click(value.idTrip, initClickRecomendar);
-                        $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
-                        $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
+                $.each(data.data, function (index, value) {
+                    var nombreCom = value.name;
+//                    console.log('Agrego ' + value.id + ' a lista de amigos.')
+//                    listIdAmigosARecomendar.push(value.id);
+//                    listAmigos.push(nombreCom);
+                    listIdAmigosARecomendar.push({"id": value.id, "name": nombreCom});
+                    listAmigos.push(nombreCom);
+//                  Aca lleno los viajes de este amigo  
+                    $.ajax({
+                        url: 'http://localhost:8080/api/me/friends-trips?friend-id=' + value.id,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.length !== 0) {
+                                $.each(data, function (index, values) {
+                                    $("#listViajesAmigos").append(getViajesDeAmigosHTML(values));
+                                    $("div[id=" + values.id + "] a[role=linkViaje]").click(values.id, initClickDetalle);
+                                    $("div[id=" + values.id + "] button[id=btnRecomendarViaje]").click(values.id, initClickRecomendar);
+                                    $("div[id=" + values.id + "] a[id=compartirViaje]").click(values.id, initClickCompartir);
+                                });
+                            }
+                        },
+                        error: function(data){
+                        	console.log(data.responseText);
+                        }
                     });
-                }
+                });
             }
         });
 
@@ -1225,27 +1292,6 @@ function updateStatusCallback(response) {
             }
 
         });
-
-
-        /**
-         * LLeno los amigos que pueden ser destino de recomendaciones
-         */
-        $.ajax({
-            url: 'http://localhost:8080/api/friends/' + id,
-            dataType: 'json',
-            success: function (data) {
-                $.each(data, function (index, value) {
-                    var nombreCom = value.nombre + ' ' + value.apellido;
-//                    console.log('Agrego ' + value.id + ' a lista de amigos.')
-//                    listIdAmigosARecomendar.push(value.id);
-//                    listAmigos.push(nombreCom);
-                    listIdAmigosARecomendar.push({"id": value.id, "name": nombreCom});
-                    listAmigos.push(nombreCom);
-                });
-            }
-        });
-
-
 
         //#############################################################
 
