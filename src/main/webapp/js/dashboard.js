@@ -123,12 +123,13 @@ $(function() {
     $("#cerrarSesion").click(function() {
 
 	$.ajax({
-	    url : '/api/logout/',
+	    url : '/api/logout',
 	    datatype : 'text',
 	    success : function(data) {
 		console.log(data);
 	    },
 	});
+
 	FB.logout(function(response) {
 	    // Person is now logged out
 
