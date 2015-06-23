@@ -687,25 +687,41 @@ function getVuelos() {
                     var i_alternativa = $(this).attr('alternativa');
                     var i_type = $(this).parents("div[role=opciones-vuelo]").attr("type");
                     var airportdata = new Array();
+                    
                     if (i_type == "ida") {
                         currentTrip.outbound = opcionesViaje[i_vuelo].outbound_choices[i_alternativa];
-//                        getInfoAirportsAndMap(currentTrip.outbound);
+                        var tam = currentTrip.outbound.segments.length - 1; //Maxima posicion de segmento
+
                         for (var x in airports) {
                             if (airports[x].code == currentTrip.outbound.segments[0].from) {
-                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude)
-                                drawFlightRoute(airports[x].latitude, airports[x].longitude);
+                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude + ' - ' + airports[x].descripcion);
+                                airportdata.push({"latitude": airports[x].latitude, "longitude": airports[x].longitude, "descripcion": airports[x].descripcion});
+                            }
+                        }
+                        for (var x in airports) {
+                            if (airports[x].code == currentTrip.outbound.segments[tam].to) {
+                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude + ' - ' + airports[x].descripcion);
+                                airportdata.push({"latitude": airports[x].latitude, "longitude": airports[x].longitude, "descripcion": airports[x].descripcion});
                             }
                         }
                     } else {
                         currentTrip.inbound = opcionesViaje[i_vuelo].inbound_choices[i_alternativa];
-//                        getInfoAirportsAndMap(currentTrip.inbound);
+                        var tam = currentTrip.inbound.segments.length - 1;
+
                         for (var x in airports) {
                             if (airports[x].code == currentTrip.inbound.segments[0].from) {
-                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude)
-                                drawFlightRoute(airports[x].latitude, airports[x].longitude);
+                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude + ' - ' + airports[x].descripcion);
+                                airportdata.push({"latitude": airports[x].latitude, "longitude": airports[x].longitude, "descripcion": airports[x].descripcion});
+                            }
+                        }
+                        for (var x in airports) {
+                            if (airports[x].code == currentTrip.inbound.segments[tam].to) {
+                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude + ' - ' + airports[x].descripcion);
+                                airportdata.push({"latitude": airports[x].latitude, "longitude": airports[x].longitude, "descripcion": airports[x].descripcion});
                             }
                         }
                     }
+                    drawFlightRoute(airportdata);
                     currentTrip.price = opcionesViaje[i_vuelo].price_detail;
                     if (currentTrip.isReady()) {
                         $("#btnViajar").show();
@@ -737,21 +753,21 @@ function getAirportData(code, airportlist) {
     return null;
 }
 
-//function getInfoAirportsAndMap(flight) {
-//    var prep = '';
-//    prep = "&code=" + flight.airportCodesAsSet.join("&code=")
-//    $.ajax({
-//        url: 'http://localhost:8080/api/airports?' + prep,
-//        dataType: 'json',
-//        success: function (data) {
-//            result = data;
-//            drawFlightRoute(data);
-//        },
-//        error: function () {
-//            console.log("ERROR no se puede dibujar ruta");
-//        }
-//    });
-//}
+function getInfoAirportsAndMap(flight) {
+    var prep = '';
+    prep = "&code=" + flight.airportCodesAsSet.join("&code=")
+    $.ajax({
+        url: 'http://localhost:8080/api/airports?' + prep,
+        dataType: 'json',
+        success: function (data) {
+            result = data;
+            drawFlightRoute(data);
+        },
+        error: function () {
+            console.log("ERROR no se puede dibujar ruta");
+        }
+    });
+}
 //** funciones ajax **************************************************************
 
 
@@ -1033,39 +1049,14 @@ function setMapBounds(map) {
     map.fitBounds(latlngbounds);
 }
 
-//function drawFlightRoute(airportdata) {
-//    markersVuelos = [];
-//    var latlngbounds = new google.maps.LatLngBounds();
-//    for (var i = 0; i < airportdata.length; i++) {
-//        var marker = setMapMarker(currentMap, airportdata[i].geolocation, airportdata[i].description);
-//        markersVuelos.push(marker);
-//        latlngbounds.extend(marker.getPosition());
-//    }
-//
-//    currentMap.fitBounds(latlngbounds);
-//
-//    var path = [];
-//    for (var i = 0; i < markersVuelos.length; i++) {
-//        path.push(markersVuelos[i].getPosition());
-//    }
-//    var color = getRandomColor();
-//    flightPath = new google.maps.Polyline({
-//        path: path,
-//        strokeColor: color,
-//        strokeOpacity: 0.8,
-//        strokeWeight: 2,
-//        map: currentMap
-//    });
-//}
-
-function drawFlightRoute(latitude, longitude) {
+function drawFlightRoute(airportdata) {
     markersVuelos = [];
     var latlngbounds = new google.maps.LatLngBounds();
-//    for (var i = 0; i < airportdata.length; i++) {
-        var marker = setMapMarker(currentMap, latitude, longitude);
+    for (var i = 0; i < airportdata.length; i++) {
+        var marker = setMapMarker(currentMap, airportdata[i].latitude, airportdata[i].longitude, airportdata[i].description);
         markersVuelos.push(marker);
         latlngbounds.extend(marker.getPosition());
-//    }
+    }
 
     currentMap.fitBounds(latlngbounds);
 
@@ -1162,7 +1153,7 @@ function updateStatusCallback(response) {
                         $("#listViajes").append(getViajesPropiosHTML(value));
                         console.log(value.id);
                         $("div[id=" + value.id + "] a[role=linkViaje]").click(value.id, initClickDetalle);
-                        $("div[id=" + value.id + "] button[id=btnRecomendarViaje]").click(value.id,initClickRecomendar);
+                        $("div[id=" + value.id + "] button[id=btnRecomendarViaje]").click(value.id, initClickRecomendar);
                         $("div[id=" + value.id + "] a[id=eliminarViaje]").click(value.id, initClickEliminar);
                         $("div[id=" + value.id + "] a[id=compartirViaje]").click(value.id, initClickCompartir);
                     });
@@ -1170,7 +1161,7 @@ function updateStatusCallback(response) {
             }
         }
         );
-        
+
         /**
          * Lleno mis viajes aceptados
          */
@@ -1184,7 +1175,7 @@ function updateStatusCallback(response) {
                         $("#listViajesAceptados").append(getViajesPropiosHTML(value));
                         console.log(value.id);
                         $("div[id=" + value.id + "] a[role=linkViaje]").click(value.id, initClickDetalle);
-                        $("div[id=" + value.id + "] button[id=btnRecomendarViaje]").click(value.id,initClickRecomendar);
+                        $("div[id=" + value.id + "] button[id=btnRecomendarViaje]").click(value.id, initClickRecomendar);
                         $("div[id=" + value.id + "] a[id=eliminarViaje]").click(value.id, initClickEliminar);
                         $("div[id=" + value.id + "] a[id=compartirViaje]").click(value.id, initClickCompartir);
                     });
@@ -1234,7 +1225,7 @@ function updateStatusCallback(response) {
             }
 
         });
-        
+
 
         /**
          * LLeno los amigos que pueden ser destino de recomendaciones
