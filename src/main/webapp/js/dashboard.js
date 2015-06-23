@@ -326,7 +326,7 @@ $(function () {
             {
                 source: function (request, response) {
                     $.ajax({
-                        url: '/api/cities',
+                        url: '/api/search/cities',
                         dataType: 'json',
                         data: {
                             'name': request.term
@@ -368,7 +368,7 @@ $(function () {
             {
                 source: function (request, response) {
                     $.ajax({
-                        url: '/api/cities',
+                        url: '/api/search/cities',
                         dataType: 'json',
                         data: {
                             'name': request.term
@@ -693,7 +693,7 @@ function formResetVuelos() {
 // ** funciones ajax ************************************************************** 
 function getVuelos() {
     $.ajax({
-        url: '/api/trip-options',
+        url: '/api/search/trip-options',
         dataType: 'json',
         data: {
             'fromCity': currentTrip.fromCity.code,
