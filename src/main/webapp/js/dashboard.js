@@ -58,6 +58,7 @@ var mapaReview; //el de detalle de vuelo
 var mapaReviewRecom;
 var markerOrigen;
 var markerDestino;
+var airports; // Variable global para guardar aeropertos
 
 //array con los puntos marcados en el mapa
 var markersVuelos = new Array();
@@ -94,7 +95,7 @@ var recomActiva;
 //** main *******************************************************************
 
 $(function () {
-	
+
     //####################### FACEBOOK #######################################
 
     //GET DEL TOKEN
@@ -115,9 +116,9 @@ $(function () {
 
     $("#cerrarSesion").click(function () {
 
-    	$.ajax({
+        $.ajax({
             url: 'http://localhost:8080/api/logout/',
-            datatype:'text',
+            datatype: 'text',
             success: function (data) {
                 console.log(data);
             },
@@ -145,7 +146,7 @@ $(function () {
         //hack para que el mapa se dibuje bien
         google.maps.event.trigger(mapaReview, "resize");
     });
-    
+
     $("#modDetalleViajeRecom").on("shown.bs.modal", function (e) {
         //hack para que el mapa se dibuje bien
         google.maps.event.trigger(mapaReviewRecom, "resize");
@@ -175,15 +176,15 @@ $(function () {
         $.ajax({
             url: 'http://localhost:8080/api/recommendations/one/' + recomActiva + '?st=acp',
             type: 'PUT',
-            dataType: 'text' ,
+            dataType: 'text',
             success: function (data) {
-            	console.log(data);
-            	bootbox.alert('Se ha aceptado la recomendacion', function () {
+                console.log(data);
+                bootbox.alert('Se ha aceptado la recomendacion', function () {
                 });
             },
-            error: function (data){
-            	console.log(data);
-            	bootbox.alert('Fallo la aceptacion de recomendacion', function () {
+            error: function (data) {
+                console.log(data);
+                bootbox.alert('Fallo la aceptacion de recomendacion', function () {
                 });
             }
         });
@@ -193,14 +194,14 @@ $(function () {
         $.ajax({
             url: 'http://localhost:8080/api/recommendations/one/' + recomActiva + '?st=rej',
             type: 'PUT',
-            dataType: 'text' ,
+            dataType: 'text',
             success: function (data) {
-            	console.log(data);
+                console.log(data);
                 bootbox.alert('Se ha rechazado la recomendacion', function () {
                 });
             },
-            error: function (data){
-            	console.log(data);
+            error: function (data) {
+                console.log(data);
                 bootbox.alert('Fallo el rechazo de recomendacion', function () {
                 });
             }
@@ -212,15 +213,15 @@ $(function () {
         $("#modRecomendar").modal("show");
         $("#amigosList").html("");
         $("#boxAmigos").val('');
-        amigosSelecRecomendar=[];
+        amigosSelecRecomendar = [];
     });
-    
+
     /**
      * Agrego la funcionalidad de efectivamente recomendar y notificar por un viaje
      */
     $("#btnRecomendar").click(function (event) {
-    	console.log("TOQUE RECOMENDAR DESDE DETALLE VIAJE");
-    	
+        console.log("TOQUE RECOMENDAR DESDE DETALLE VIAJE");
+
         event.preventDefault();
         $("#modRecomendar").hide();
 
@@ -240,12 +241,12 @@ $(function () {
                 contentType: 'application/json',
                 dataType: 'text',
                 success: function (data) {
-                	console.log("el app token es");
-                    appToken="1586547271608233|"+data;
+                    console.log("el app token es");
+                    appToken = "1586547271608233|" + data;
                     console.log(appToken);
                     FB.api('/' + val + '/notifications', 'post', {
-                    	template:"Recibiste una recomendacion de un viaje",
-                    	href:'http://localhost:8080',
+                        template: "Recibiste una recomendacion de un viaje",
+                        href: 'http://localhost:8080',
                         access_token: appToken
                     }, function (data) {
                         console.log(data);
@@ -254,7 +255,7 @@ $(function () {
                     });
                 }
             });
-            
+
 //             Posteo notificacion //CORREGIR °!!!!!!!!!!!!!!!!!!!!
 //            $.ajax({
 //                type: 'POST',
@@ -269,10 +270,10 @@ $(function () {
 //            		console.log(data);
 //            	}
 //            });
-            
+
         });
-        
-        
+
+
     });
 
 
@@ -490,7 +491,7 @@ $(function () {
                             }
                         });
                 $("div[id=" + data.id + "] a[role=linkViaje]").click(data.id, initClickDetalle);
-                $("div[id=" + data.id + "] button[id=btnRecomendarViaje]").click(data.id,initClickRecomendar);
+                $("div[id=" + data.id + "] button[id=btnRecomendarViaje]").click(data.id, initClickRecomendar);
                 $("div[id=" + data.id + "] a[id=eliminarViaje]").click(data.id, initClickEliminar);
                 $("div[id=" + data.id + "] a[id=compartirViaje]").click(data.id, initClickCompartir);
             }
@@ -563,7 +564,7 @@ function getViajesDeAmigosHTML(data) {
 //function insertarRecomendacionesDeViajes(data, count) {
 function insertarRecomendacionesDeViajes(data) {
 //    return '<li><a href="#" role="linkViajeRecom" id="itemRecom'
-    return '<li><a href="#" role="linkViajeRecom" id="'+data.id+'" trip="'
+    return '<li><a href="#" role="linkViajeRecom" id="' + data.id + '" trip="'
             + data.viajeAsoc
             + '">'
             + data.nombreyap
@@ -662,6 +663,7 @@ function getVuelos() {
         },
         success: function (data) {
             $("#cargandoVuelos").hide();
+            airports = data.airports;
             var datalen = data.items.length;
             if (datalen > 0) {
                 $("#sinVuelos").hide();
@@ -687,11 +689,22 @@ function getVuelos() {
                     var airportdata = new Array();
                     if (i_type == "ida") {
                         currentTrip.outbound = opcionesViaje[i_vuelo].outbound_choices[i_alternativa];
-                        getInfoAirportsAndMap(currentTrip.outbound);
-                    }
-                    else {
+//                        getInfoAirportsAndMap(currentTrip.outbound);
+                        for (var x in airports) {
+                            if (airports[x].code == currentTrip.outbound.segments[0].from) {
+                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude)
+                                drawFlightRoute(airports[x].latitude, airports[x].longitude);
+                            }
+                        }
+                    } else {
                         currentTrip.inbound = opcionesViaje[i_vuelo].inbound_choices[i_alternativa];
-                        getInfoAirportsAndMap(currentTrip.inbound);
+//                        getInfoAirportsAndMap(currentTrip.inbound);
+                        for (var x in airports) {
+                            if (airports[x].code == currentTrip.inbound.segments[0].from) {
+                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude)
+                                drawFlightRoute(airports[x].latitude, airports[x].longitude);
+                            }
+                        }
                     }
                     currentTrip.price = opcionesViaje[i_vuelo].price_detail;
                     if (currentTrip.isReady()) {
@@ -724,21 +737,21 @@ function getAirportData(code, airportlist) {
     return null;
 }
 
-function getInfoAirportsAndMap(flight) {
-    var prep = '';
-    prep = "&code=" + flight.airportCodesAsSet.join("&code=")
-    $.ajax({
-        url: 'http://localhost:8080/api/airports?' + prep,
-        dataType: 'json',
-        success: function (data) {
-            result = data;
-            drawFlightRoute(data);
-        },
-        error: function () {
-            console.log("ERROR no se puede dibujar ruta");
-        }
-    });
-}
+//function getInfoAirportsAndMap(flight) {
+//    var prep = '';
+//    prep = "&code=" + flight.airportCodesAsSet.join("&code=")
+//    $.ajax({
+//        url: 'http://localhost:8080/api/airports?' + prep,
+//        dataType: 'json',
+//        success: function (data) {
+//            result = data;
+//            drawFlightRoute(data);
+//        },
+//        error: function () {
+//            console.log("ERROR no se puede dibujar ruta");
+//        }
+//    });
+//}
 //** funciones ajax **************************************************************
 
 
@@ -791,15 +804,15 @@ function initClickDetalle(id) {
 
 }
 
-function initClickDetalleRecom(datos){
-	
-	event.preventDefault();
-	var idViaje = datos.data.viaje;
-	recomActiva = datos.data.idRec;
-	console.log('click detalle: idViaje: ' + idViaje + ' - recom: ' + recomActiva);
-	
-	
-	// reviso si la lista de recomendaciones está abierta y la cierro si hace falta
+function initClickDetalleRecom(datos) {
+
+    event.preventDefault();
+    var idViaje = datos.data.viaje;
+    recomActiva = datos.data.idRec;
+    console.log('click detalle: idViaje: ' + idViaje + ' - recom: ' + recomActiva);
+
+
+    // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
     if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
         $("#modListaRecomendaciones").modal("hide");
     }
@@ -810,7 +823,7 @@ function initClickDetalleRecom(datos){
         url: "http://localhost:8080/api/trips/one/" + idViaje,
         dataType: 'json',
         success: function (data) {
-        	console.log(data);
+            console.log(data);
             precio = data.price;
             desde = data.fromCity;
             hasta = data.toCity;
@@ -838,20 +851,20 @@ function initClickDetalleRecom(datos){
             $("#modDetalleViajeRecom").modal('show');
         }
     });
-	
+
 }
 
-function initClickRecomendar(idViajeParaRecomendar){
-	// reviso si la lista de recomendaciones está abierta y la cierro si hace falta
+function initClickRecomendar(idViajeParaRecomendar) {
+    // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
     if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
         $("#modListaRecomendaciones").modal("hide");
     }
     event.preventDefault();
-    idViajeARecomendar=idViajeParaRecomendar.data;
+    idViajeARecomendar = idViajeParaRecomendar.data;
     $("#modRecomendar").modal("show");
     $("#amigosList").html("");
     $("#boxAmigos").val('');
-    amigosSelecRecomendar=[];
+    amigosSelecRecomendar = [];
     console.log("recomende por boton");
 }
 
@@ -954,37 +967,37 @@ function initClickCompartir(idViajeACompartir) {
 //helpers autocomplete
 //******************************************************************
 function autocomplete_processCities(data, response) {
- if (data.length == 0) {
-     data.push({
-         'id': '',
-         'label': 'No se encotraron ciudades con este nombre',
-         'value': ''
-     });
-     response(data);
- } else {
-     response($.map(data, function (item) {
-         return {
-             id: item.code,
+    if (data.length == 0) {
+        data.push({
+            'id': '',
+            'label': 'No se encotraron ciudades con este nombre',
+            'value': ''
+        });
+        response(data);
+    } else {
+        response($.map(data, function (item) {
+            return {
+                id: item.code,
 //             label: item.description,
 //             value: item.description,
-             label: item.name,
-             value: item.name,
+                label: item.name,
+                value: item.name,
 //             geolocation: item.geolocation
-             latitude: item.latitude,
-             longitude: item.longitude
-         }
-     }));
- }
+                latitude: item.latitude,
+                longitude: item.longitude
+            }
+        }));
+    }
 }
 
 var autocomplete_renderItemCiudades = function (ul, item) {
- // Add the .ui-state-disabled class and don't wrap in <a> if value is empty
- if (item.id == '') {
-     return $('<li class="ui-state-disabled">' + item.label + '</li>')
-             .appendTo(ul);
- } else {
-     return $("<li>").append("<a>" + item.label + "</a>").appendTo(ul);
- }
+    // Add the .ui-state-disabled class and don't wrap in <a> if value is empty
+    if (item.id == '') {
+        return $('<li class="ui-state-disabled">' + item.label + '</li>')
+                .appendTo(ul);
+    } else {
+        return $("<li>").append("<a>" + item.label + "</a>").appendTo(ul);
+    }
 };
 //*************************************************************************************
 
@@ -1020,14 +1033,39 @@ function setMapBounds(map) {
     map.fitBounds(latlngbounds);
 }
 
-function drawFlightRoute(airportdata) {
+//function drawFlightRoute(airportdata) {
+//    markersVuelos = [];
+//    var latlngbounds = new google.maps.LatLngBounds();
+//    for (var i = 0; i < airportdata.length; i++) {
+//        var marker = setMapMarker(currentMap, airportdata[i].geolocation, airportdata[i].description);
+//        markersVuelos.push(marker);
+//        latlngbounds.extend(marker.getPosition());
+//    }
+//
+//    currentMap.fitBounds(latlngbounds);
+//
+//    var path = [];
+//    for (var i = 0; i < markersVuelos.length; i++) {
+//        path.push(markersVuelos[i].getPosition());
+//    }
+//    var color = getRandomColor();
+//    flightPath = new google.maps.Polyline({
+//        path: path,
+//        strokeColor: color,
+//        strokeOpacity: 0.8,
+//        strokeWeight: 2,
+//        map: currentMap
+//    });
+//}
+
+function drawFlightRoute(latitude, longitude) {
     markersVuelos = [];
     var latlngbounds = new google.maps.LatLngBounds();
-    for (var i = 0; i < airportdata.length; i++) {
-        var marker = setMapMarker(currentMap, airportdata[i].geolocation, airportdata[i].description);
+//    for (var i = 0; i < airportdata.length; i++) {
+        var marker = setMapMarker(currentMap, latitude, longitude);
         markersVuelos.push(marker);
         latlngbounds.extend(marker.getPosition());
-    }
+//    }
 
     currentMap.fitBounds(latlngbounds);
 
@@ -1123,7 +1161,7 @@ function updateStatusCallback(response) {
                     $.each(data, function (index, value) {
                         $("#listViajes").append(getViajesPropiosHTML(value));
                         $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip, initClickDetalle);
-                        $("div[id=" + value.idTrip + "] button[id=btnRecomendarViaje]").click(value.idTrip,initClickRecomendar);
+                        $("div[id=" + value.idTrip + "] button[id=btnRecomendarViaje]").click(value.idTrip, initClickRecomendar);
                         $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
                         $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
                     });
@@ -1131,7 +1169,7 @@ function updateStatusCallback(response) {
             }
         }
         );
-        
+
         /**
          * LLeno los viajes de los amigos
          */
@@ -1143,7 +1181,7 @@ function updateStatusCallback(response) {
                     $.each(data, function (index, value) {
                         $("#listViajesAmigos").append(getViajesDeAmigosHTML(value));
                         $("div[id=" + value.idTrip + "] a[role=linkViaje]").click(value.idTrip, initClickDetalle);
-                        $("div[id=" + value.idTrip + "] button[id=btnRecomendarViaje]").click(value.idTrip,initClickRecomendar);
+                        $("div[id=" + value.idTrip + "] button[id=btnRecomendarViaje]").click(value.idTrip, initClickRecomendar);
                         $("div[id=" + value.idTrip + "] a[id=eliminarViaje]").click(value.idTrip, initClickEliminar);
                         $("div[id=" + value.idTrip + "] a[id=compartirViaje]").click(value.idTrip, initClickCompartir);
                     });
@@ -1155,21 +1193,22 @@ function updateStatusCallback(response) {
          * Lleno con las recomendaciones que me hicieron
          */
         $.ajax({
-        	url: 'http://localhost:8080/api/recommendations/' + id,
-        	dataType: 'json',
-        	success: function (data) {
+            url: 'http://localhost:8080/api/recommendations/' + id,
+            dataType: 'json',
+            success: function (data) {
 //      		var i = 1;
-        		if (data.length != 0) {
-        			$.each(data, function (index, value) {
+                if (data.length != 0) {
+                    $.each(data, function (index, value) {
 //      				$("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value, i));
 //      				i++;
-        				$("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value));
-        				//<a href="#" role="linkViajeRecom" id="itemRecom" trip="4">
-        				$("a[role=linkViajeRecom][id="+value.id+"][trip=" + value.viajeAsoc + "]").click({"viaje": value.viajeAsoc, "idRec":value.id}, initClickDetalleRecom);
-        			});
-        			$("#listRecomendaciones").append("<li class=\"divider\"></li>");
-        			$("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
-        		}}
+                        $("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value));
+                        //<a href="#" role="linkViajeRecom" id="itemRecom" trip="4">
+                        $("a[role=linkViajeRecom][id=" + value.id + "][trip=" + value.viajeAsoc + "]").click({"viaje": value.viajeAsoc, "idRec": value.id}, initClickDetalleRecom);
+                    });
+                    $("#listRecomendaciones").append("<li class=\"divider\"></li>");
+                    $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
+                }
+            }
 
         });
 
@@ -1191,7 +1230,7 @@ function updateStatusCallback(response) {
                 });
             }
         });
-        
+
 
 
         //#############################################################
