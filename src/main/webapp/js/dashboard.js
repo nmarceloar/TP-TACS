@@ -835,32 +835,32 @@ function initClickDetalle(id) {
     var hasta;
 
     $.ajax({
-        url: "/api/trips/one/" + id.data,
+        url: "/api/me/created-trips/" + id.data,
         dataType: 'json',
         success: function (data) {
-            console.log('El viaje a recomendar es: ' + data.idTrip);
-            idViajeARecomendar = data.idTrip;
+            console.log('El viaje a recomendar es: ' + data.id);
+            idViajeARecomendar = data.id;
             console.log("Respuesta trip");
             //console.log(data);
-            precio = data.price;
-            desde = data.fromCity;
-            hasta = data.toCity;
+            precio = data.priceDetail.total+data.priceDetail.currency;
+            desde = data.fromCity.name;
+            hasta = data.toCity.name;
             var titulo = "\u00A1Tu viaje desde " + desde + " hasta " + hasta + "!";
             $("div[id=modDetalleViaje] h4").html(titulo);
             var itinerario = "";
             var enter = "<br>";
-            $.each(data.itinerary, function (index, value) {
+            $.each(data.outboundItinerary, function (index, value) {
                 console.log(value);
-                var fechaSalida = value.departure_datetime;
-                var fechaLlegada = value.arrival_datetime;
+                var fechaSalida = value.departure;
+                var fechaLlegada = value.arrival;
                 if (fechaSalida.toString("dd/MM/yyyy") == fechaLlegada.toString("dd/MM/yyyy")) {
-                    itinerario = itinerario + "Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.from + " a las " + fechaSalida.toString("HH:mm") + " hs " +
-                            "y lleg\u00e1s a " + value.to + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda";
+                    itinerario = itinerario + "Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                            "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda";
                 }
                 else
                 {
-                    itinerario = itinerario + "Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.from + " a las " + fechaSalida.toString("HH:mm") + " hs " +
-                            "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.to + " a las " + fechaLlegada.toString("HH:mm");
+                    itinerario = itinerario + "Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                            "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm");
                 }
                 itinerario = itinerario + enter;
             });
