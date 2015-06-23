@@ -9,9 +9,9 @@ import javax.ws.rs.core.Context;
 
 import org.glassfish.jersey.process.internal.RequestScoped;
 
+import services.Facebook;
 import services.OfyUser;
 import services.OfyUserService;
-import api.rest.Facebook;
 import api.rest.FriendsList;
 import api.rest.SessionUtils;
 
@@ -21,6 +21,8 @@ public class MeResource {
 
 	@Context
 	private HttpServletRequest request;
+
+	private OfyUserService usersService = OfyUserService.getInstance();
 
 	@Path("/friends")
 	@GET
@@ -82,6 +84,14 @@ public class MeResource {
 
 	}
 
+	@GET
+	@Produces("application/json")
+	public OfyUser me() {
+
+		return usersService.findById(this.getCurrentUserId());
+
+	}
+
 	private String getCurrentFacebookToken() {
 
 		return SessionUtils.extractToken(this.getCurrentSession());
@@ -103,15 +113,6 @@ public class MeResource {
 	private Facebook getFacebookService() {
 
 		return new Facebook(this.getCurrentFacebookToken());
-
-	}
-
-	@GET
-	@Produces("application/json")
-	public OfyUser me() {
-
-		return OfyUserService.getInstance()
-			.findById(this.getCurrentUserId());
 
 	}
 

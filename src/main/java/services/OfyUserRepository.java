@@ -27,9 +27,9 @@ public class OfyUserRepository {
 	public OfyUser add(final OfyUser user) {
 
 		OfyService.ofy()
-		.save()
-		.entity(user)
-		.now();
+			.save()
+			.entity(user)
+			.now();
 
 		return user;
 
@@ -38,20 +38,20 @@ public class OfyUserRepository {
 	public boolean exists(long id) {
 
 		return OfyService.ofy()
-				.load()
-				.type(OfyUser.class)
-				.id(id)
-				.now() != null;
+			.load()
+			.type(OfyUser.class)
+			.id(id)
+			.now() != null;
 
 	}
 
 	public List<OfyUser> findAll() {
 
 		return OfyService.ofy()
-				.load()
-				.type(OfyUser.class)
-				.order("-registrationDate")
-				.list();
+			.load()
+			.type(OfyUser.class)
+			.order("-registrationDate")
+			.list();
 
 	}
 
@@ -60,10 +60,10 @@ public class OfyUserRepository {
 		try {
 
 			return OfyService.ofy()
-					.load()
-					.type(OfyUser.class)
-					.id(id)
-					.safe();
+				.load()
+				.type(OfyUser.class)
+				.id(id)
+				.safe();
 		}
 
 		catch (NotFoundException nfe) {
@@ -81,13 +81,13 @@ public class OfyUserRepository {
 	public void removeAll() {
 
 		OfyService.ofy()
-		.delete()
-		.keys(OfyService.ofy()
+			.delete()
+			.keys(OfyService.ofy()
 				.load()
 				.type(OfyUser.class)
 				.keys()
 				.list())
-				.now();
+			.now();
 
 	}
 

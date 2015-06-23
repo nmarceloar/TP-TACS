@@ -3,10 +3,12 @@ package api.rest.resources;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 
@@ -29,24 +31,21 @@ public class CreatedTripsResource {
 
 	@POST
 	@Consumes("application/json")
-	@Produces("application/Json")
+	@Produces("application/json")
 	public OfyTrip createTripForUser(TripDetails tripDetails) {
 
-		if (request == null) {
+		return this.tripsService.createTrip(
+				SessionUtils.extractUserId(SessionUtils.existingFrom(request)),
+				tripDetails);
 
-			throw new RuntimeException("request = Null");
+	}
 
-		}
+	@Path("/{trip-id}")
+	@GET
+	@Produces("application/json")
+	public OfyTrip findTripById(@NotNull @PathParam("trip-id") final String id) {
 
-		Long id = SessionUtils.extractUserId(this.request.getSession(false));
-
-		if (id == null || id.equals(Long.valueOf(0L))) {
-
-			throw new RuntimeException("id = Null OR cero");
-
-		}
-
-		return this.tripsService.createTrip(id, tripDetails);
+		return this.tripsService.findById(id);
 
 	}
 
@@ -54,22 +53,7 @@ public class CreatedTripsResource {
 	@Produces("application/json")
 	public List<OfyTrip> findByOwner() {
 
-		if (request == null) {
-
-			throw new RuntimeException("request = Null");
-
-		}
-
-		Long id = SessionUtils.extractUserId(this.request.getSession(false));
-
-		if (id == null || id.equals(Long.valueOf(0L))) {
-
-			throw new RuntimeException("id = Null OR cero");
-
-		}
-
-		return this.tripsService.findByOwner(id);
+		return this.tripsService.findByOwner(SessionUtils.extractUserId(SessionUtils.existingFrom(request)));
 
 	}
-
 }

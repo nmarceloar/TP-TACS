@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
 
@@ -20,17 +21,31 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 public class TripOptionsDescriptorServiceImpl implements
-TripOptionsDescriptorService {
+		TripOptionsDescriptorService {
+
+	private final static TripOptionsDescriptorServiceImpl INSTANCE = new TripOptionsDescriptorServiceImpl();
+
+	public static TripOptionsDescriptorServiceImpl getInstance() {
+
+		return INSTANCE;
+
+	}
 
 	private TripOptionsService tripOptionsService;
 	private AirlinesService airlinesService;
 	private AirportsService airportsService;
 
-	public TripOptionsDescriptorServiceImpl() {
+	private TripOptionsDescriptorServiceImpl() {
 
-		this.tripOptionsService = new TripOptionsServiceImpl();
-		this.airlinesService = new AirlinesServiceImpl();
-		this.airportsService = new AirportsServiceImpl();
+		super();
+
+		this.tripOptionsService = TripOptionsServiceImpl.getInstance();
+		this.airlinesService = AirlinesServiceImpl.getInstance();
+		this.airportsService = AirportsServiceImpl.getInstance();
+
+		Logger.getLogger(this.getClass()
+			.getCanonicalName())
+			.info("TripOptionsDescriptorService OK.");
 
 	}
 
@@ -102,7 +117,7 @@ TripOptionsDescriptorService {
 							} catch (final InterruptedException ex) {
 
 								Thread.currentThread()
-								.interrupt();
+									.interrupt();
 
 								throw new RuntimeException(ex.getMessage());
 
@@ -123,7 +138,7 @@ TripOptionsDescriptorService {
 		} catch (InterruptedException ex) {
 
 			Thread.currentThread()
-			.interrupt();
+				.interrupt();
 
 			throw new RuntimeException(ex.getMessage());
 
@@ -173,7 +188,7 @@ TripOptionsDescriptorService {
 		} catch (InterruptedException ex) {
 
 			Thread.currentThread()
-			.interrupt();
+				.interrupt();
 
 			throw new RuntimeException(ex.getMessage());
 

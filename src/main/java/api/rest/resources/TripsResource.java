@@ -31,7 +31,7 @@ import apis.TripsAPI;
  *
  * @author Flavio L. Pietrolati
  */
-@Path("/trips")
+// @Path("/trips")
 @Produces(MediaType.APPLICATION_JSON)
 public class TripsResource {
 
@@ -102,8 +102,8 @@ public class TripsResource {
 				+ "\" , \"result\":\"" + result + "\"}");
 
 		return Response.status(201)
-				.entity(obj.toString())
-				.build();
+			.entity(obj.toString())
+			.build();
 	}
 
 }

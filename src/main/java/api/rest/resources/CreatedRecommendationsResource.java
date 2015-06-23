@@ -3,6 +3,7 @@ package api.rest.resources;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -33,22 +34,8 @@ public class CreatedRecommendationsResource {
 
 		// ojo, aca ya estariamos suponiendo que son amigos !
 
-		if (request == null) {
-
-			throw new RuntimeException("request = Null");
-
-		}
-
-		Long id = SessionUtils.extractUserId(this.request.getSession(false));
-
-		if (id == null || id.equals(Long.valueOf(0L))) {
-
-			throw new RuntimeException("id = Null OR cero");
-
-		}
-
-		return this.recommendationService.createRecommendation(id, targetId,
-				tripId);
+		return this.recommendationService.createRecommendation(
+				this.getCurrentUserId(), targetId, tripId);
 
 	}
 
@@ -56,22 +43,19 @@ public class CreatedRecommendationsResource {
 	@Produces("application/json")
 	public List<OfyRecommendation> findByOwner() {
 
-		if (request == null) {
-
-			throw new RuntimeException("request = Null");
-
-		}
-
-		Long id = SessionUtils.extractUserId(this.request.getSession(false));
-
-		if (id == null || id.equals(Long.valueOf(0L))) {
-
-			throw new RuntimeException("id = Null OR cero");
-
-		}
-
-		return this.recommendationService.findByOwner(id);
+		return this.recommendationService.findByOwner(this.getCurrentUserId());
 
 	}
 
+	private HttpSession getCurrentSession() {
+
+		return this.request.getSession(false);
+
+	}
+
+	private Long getCurrentUserId() {
+
+		return SessionUtils.extractUserId(this.getCurrentSession());
+
+	}
 }

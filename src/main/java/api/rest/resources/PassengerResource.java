@@ -29,7 +29,7 @@ import apis.PassengerAPI;
  *
  * @author Flavio L. Pietrolati
  */
-@Path("/passengers")
+//@Path("/passengers")
 @Produces(MediaType.APPLICATION_JSON)
 public class PassengerResource {
 

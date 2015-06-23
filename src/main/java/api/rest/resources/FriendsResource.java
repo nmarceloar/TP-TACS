@@ -26,7 +26,7 @@ import apis.PassengerAPI;
  *
  * @author flavio
  */
-@Path("/friends")
+//@Path("/friends")
 @Produces(MediaType.APPLICATION_JSON)
 public class FriendsResource {
 

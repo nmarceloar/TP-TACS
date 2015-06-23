@@ -9,11 +9,10 @@ public class JerseyApp extends ResourceConfig {
 
 		super();
 
-		// packages
 		this.packages("api");
 
 		property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
-		// property(ServerProperties.RESPONSE_SET_STATUS_OVER_SEND_ERROR, true);
+		property(ServerProperties.RESPONSE_SET_STATUS_OVER_SEND_ERROR, true);
 
 	}
 }

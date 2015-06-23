@@ -40,15 +40,15 @@ public class ReceivedRecommendationsResource {
 		// esto es cualquiera (anda, pero hay que pasar a RFC6902)
 
 		return patchSpec.getOp()
-				.equals("replace") && patchSpec.getPath()
-				.equals("/status");
+			.equals("replace") && patchSpec.getPath()
+			.equals("/status");
 	}
 
 	@GET
-	@Path("/{recid}")
+	@Path("/{recommendation-id}")
 	@Produces("application/json")
 	public OfyRecommendation findRecommendationById(
-			@NotNull @PathParam("recid") final String recommendationId) {
+			@NotNull @PathParam("recommendation-id") final String recommendationId) {
 
 		return this.recommendationService.findById(recommendationId);
 

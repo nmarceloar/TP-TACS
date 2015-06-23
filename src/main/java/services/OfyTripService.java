@@ -16,4 +16,6 @@ public interface OfyTripService {
 
 	public void removeAll();
 
+	public OfyTrip findById(String id);
+
 }

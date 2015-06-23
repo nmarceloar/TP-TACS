@@ -30,7 +30,7 @@ import apis.RecommendationAPI;
  *
  * @author Flavio L. Pietrolati
  */
-@Path("/recommendations")
+//@Path("/recommendations")
 @Produces(MediaType.APPLICATION_JSON)
 public class RecommendationResource {
 

@@ -3,7 +3,6 @@ package api.rest;
 public class Airline {
 
 	private String code;
-
 	private String name;
 
 	public Airline(String code, String callsign, String name, String country) {
@@ -24,7 +23,9 @@ public class Airline {
 			nameBuilder.append(" - " + "(" + callsign + ")");
 		}
 
-		nameBuilder.append(" - " + name);
+		if (!name.isEmpty()) {
+			nameBuilder.append(" - " + name);
+		}
 
 		if (!country.isEmpty()) {
 			nameBuilder.append(" - " + country);
@@ -38,25 +39,40 @@ public class Airline {
 		return this.code;
 	}
 
-	public void setCode(String code) {
-
-		this.code = code;
-	}
-
 	public String getName() {
 
 		return this.name;
 	}
 
-	public void setName(String name) {
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		return result;
+	}
 
-		this.name = name;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Airline other = (Airline)obj;
+		if (code == null) {
+
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		return true;
 	}
 
 	@Override
 	public String toString() {
-
-		return name;
+		return "Airline [getName()=" + getName() + "]";
 	}
 
 }

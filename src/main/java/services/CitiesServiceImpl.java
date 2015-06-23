@@ -2,6 +2,7 @@ package services;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Logger;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.GenericType;
@@ -17,13 +18,25 @@ import com.google.common.collect.Lists;
 
 public class CitiesServiceImpl implements CitiesService {
 
-	private static final String AUTOCOMPLETE = "https://api.despegar.com/v3/autocomplete";
+	private static final CitiesServiceImpl INSTANCE = new CitiesServiceImpl();
 
+	public static CitiesServiceImpl getInstance() {
+
+		return INSTANCE;
+
+	}
+
+	private static final String AUTOCOMPLETE = "https://api.despegar.com/v3/autocomplete";
 	private static final int MAX_CITIES = 10;
 
-	private Client despegarClient = DespegarClient.getInstance();
+	private Client despegarClient;
+	private LoadingCache<String, List<City>> cities;
 
-	private LoadingCache<String, List<City>> cities = CacheBuilder.newBuilder()
+	private CitiesServiceImpl() {
+
+		despegarClient = DespegarClient.getInstance();
+
+		cities = CacheBuilder.newBuilder()
 			.maximumSize(20)
 			.build(new CacheLoader<String, List<City>>() {
 
@@ -34,6 +47,12 @@ public class CitiesServiceImpl implements CitiesService {
 
 				}
 			});
+
+		Logger.getLogger(this.getClass()
+			.getCanonicalName())
+			.info("CitiesService Ok.");
+
+	}
 
 	private List<City> doFind(String name) {
 

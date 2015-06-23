@@ -5,6 +5,7 @@
 package services;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import api.rest.UserDetails;
 import api.rest.exceptions.DomainLogicException;
@@ -29,6 +30,10 @@ public class OfyUserService {
 	private OfyUserService() {
 
 		this.userRepo = OfyUserRepository.getInstance();
+
+		Logger.getLogger(this.getClass()
+			.getCanonicalName())
+			.info("OfyUserService Ok.");
 
 	}
 

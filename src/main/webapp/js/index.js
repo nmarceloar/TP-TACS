@@ -1,16 +1,6 @@
 $(function() {
 	// cargo los distintos pedazos de html
-	// var cities = [ 'Londres', 'Salta', 'New York', 'Río de Janeiro', 'Beirut'
-	// ];
-
-	$('#ok').click(function(event) {
-		event.preventDefault();
-		$(location).attr('href', '/html/dashboard.html');
-
-	});
-
-	$("#ok").hide();
-
+	var cities = [ 'Londres', 'Salta', 'New York', 'Río de Janeiro', 'Beirut' ];
 	$("#destino").autocomplete({
 		source : cities
 	});
@@ -32,24 +22,9 @@ $(function() {
 		event.preventDefault();
 		console.log('cancel log in fb');
 	});
-
 	// ******************************************************
 });
 
-function appendButton(text) {
-
-	var button = $("<button id=\"ok\" type=\"button\" class=\"btn btn-success\"></button>");
-
-	button.text(text);
-
-	button.click(function(event) {
-		event.preventDefault();
-		$(location).attr('href', '/html/dashboard.html');
-	});
-
-	$("#beforeButton").append(button);
-
-}
 // **************************************************************FACEBOOK
 // This is called with the results from from FB.getLoginStatus().
 function statusChangeCallback(response) {
@@ -78,20 +53,14 @@ function statusChangeCallback(response) {
 		$.ajax({
 			type : 'POST',
 			url : '/api/login',
-			async : true,
 			data : "token=" + response.authResponse.accessToken,
-
+			// dataType : 'text',
 			success : function(data, textStatus, jQxhr) {
-
 				console.log(textStatus);
 				console.log(data);
 				console.log(jQxhr);
-
-				appendButton(data);
-				
-
-				// $(location).attr('href', '/html/dashboard.html');
-
+				var url = "/html/dashboard.html";
+				$(location).attr('href', url);
 			},
 			error : function(jqXhr, textStatus, errorThrown) {
 				console.log(textStatus);

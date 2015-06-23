@@ -1,9 +1,8 @@
 package services;
 
-import integracion.despegar.IATACode;
-
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Logger;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.GenericType;
@@ -18,9 +17,22 @@ public class AirportsServiceImpl implements AirportsService {
 
 	private static final String AUTOCOMPLETE = "https://api.despegar.com/v3/autocomplete";
 
-	private Client despegarClient = DespegarClient.getInstance();
+	private static final AirportsServiceImpl INSTANCE = new AirportsServiceImpl();
 
-	private LoadingCache<String, Airport> cache = CacheBuilder.newBuilder()
+	public static AirportsServiceImpl getInstance() {
+
+		return INSTANCE;
+
+	}
+
+	private Client despegarClient;
+	private LoadingCache<String, Airport> cache;
+
+	private AirportsServiceImpl() {
+
+		despegarClient = DespegarClient.getInstance();
+
+		cache = CacheBuilder.newBuilder()
 			.maximumSize(50)
 			.build(new CacheLoader<String, Airport>() {
 
@@ -31,6 +43,12 @@ public class AirportsServiceImpl implements AirportsService {
 
 				}
 			});
+
+		Logger.getLogger(this.getClass()
+			.getCanonicalName())
+			.info("AirportsServiceImplOk.!");
+
+	}
 
 	@Override
 	public Airport findByCode(final String iataCode) {
@@ -50,15 +68,13 @@ public class AirportsServiceImpl implements AirportsService {
 
 	private Airport findws(final String iataCode) {
 
-		IATACode.checkValid(iataCode);
-
 		Response response = this.despegarClient.target(
 				AirportsServiceImpl.AUTOCOMPLETE)
-				.queryParam("query", iataCode)
-				.queryParam("locale", "es_AR")
-				.queryParam("airport_result", "10")
-				.request(MediaType.APPLICATION_JSON)
-				.get();
+			.queryParam("query", iataCode)
+			.queryParam("locale", "es_AR")
+			.queryParam("airport_result", "10")
+			.request(MediaType.APPLICATION_JSON)
+			.get();
 
 		if ((response.getStatus() == 200) && response.hasEntity()) {
 

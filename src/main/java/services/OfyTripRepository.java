@@ -23,9 +23,9 @@ public class OfyTripRepository {
 	public OfyTrip add(final OfyTrip trip) {
 
 		OfyService.ofy()
-		.save()
-		.entity(trip)
-		.now();
+			.save()
+			.entity(trip)
+			.now();
 
 		return trip;
 
@@ -34,20 +34,20 @@ public class OfyTripRepository {
 	public boolean exists(String id) {
 
 		return OfyService.ofy()
-				.load()
-				.type(OfyTrip.class)
-				.id(id)
-				.now() != null;
+			.load()
+			.type(OfyTrip.class)
+			.id(id)
+			.now() != null;
 
 	}
 
 	public List<OfyTrip> findAll() {
 
 		return OfyService.ofy()
-				.load()
-				.type(OfyTrip.class)
-				.order("-creationDate")
-				.list();
+			.load()
+			.type(OfyTrip.class)
+			.order("-creationDate")
+			.list();
 
 	}
 
@@ -56,10 +56,10 @@ public class OfyTripRepository {
 		try {
 
 			return OfyService.ofy()
-					.load()
-					.type(OfyTrip.class)
-					.id(id)
-					.safe();
+				.load()
+				.type(OfyTrip.class)
+				.id(id)
+				.safe();
 
 		} catch (NotFoundException nfe) {
 
@@ -76,24 +76,24 @@ public class OfyTripRepository {
 	public List<OfyTrip> findByOwner(OfyUser owner) {
 
 		return OfyService.ofy()
-				.load()
-				.type(OfyTrip.class)
-				.filter("owner", owner)
-				.order("-creationDate")
-				.list();
+			.load()
+			.type(OfyTrip.class)
+			.filter("owner", owner)
+			.order("-creationDate")
+			.list();
 
 	}
 
 	public void removeAll() {
 
 		OfyService.ofy()
-		.delete()
-		.keys(OfyService.ofy()
+			.delete()
+			.keys(OfyService.ofy()
 				.load()
 				.type(OfyTrip.class)
 				.keys()
 				.list())
-				.now();
+			.now();
 
 	}
 

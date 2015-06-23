@@ -14,18 +14,18 @@ import services.CitiesServiceImpl;
 import services.City;
 import apis.CitiesService;
 
-@Path("/cities")
+@Path("/search/cities")
 @RequestScoped
 public class CitiesResource {
 
-	private final CitiesService provider = new CitiesServiceImpl();
+	private final CitiesService citiesService = CitiesServiceImpl.getInstance();
 
 	@GET
 	@Produces("application/json")
 	public List<City> getByCityName(
 			@NotNull @QueryParam("name") final String name) {
 
-		return this.provider.findByName(name);
+		return this.citiesService.findByName(name);
 
 	}
 

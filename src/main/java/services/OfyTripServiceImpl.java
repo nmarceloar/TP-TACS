@@ -1,6 +1,7 @@
 package services;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import services.OfyRecommendation.Status;
 import api.rest.AcceptedOfyTrip;
@@ -34,6 +35,10 @@ public class OfyTripServiceImpl implements OfyTripService {
 		this.userRepo = OfyUserRepository.getInstance();
 		this.tripRepo = OfyTripRepository.getInstance();
 		this.recommendationRepo = OfyRecommendationRepository.getInstance();
+
+		Logger.getLogger(this.getClass()
+			.getCanonicalName())
+			.info("OfyTripService Ok.");
 
 	}
 
@@ -84,7 +89,7 @@ public class OfyTripServiceImpl implements OfyTripService {
 		List<AcceptedOfyTrip> trips = Lists.transform(
 				this.recommendationRepo.findByTargetAndStatus(
 						this.userRepo.findById(userId), Status.ACCEPTED),
-						new Function<OfyRecommendation, AcceptedOfyTrip>() {
+				new Function<OfyRecommendation, AcceptedOfyTrip>() {
 
 					@Override
 					public AcceptedOfyTrip apply(
@@ -103,7 +108,7 @@ public class OfyTripServiceImpl implements OfyTripService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see services.TripService#findAll()
 	 */
 	@Override
@@ -122,5 +127,12 @@ public class OfyTripServiceImpl implements OfyTripService {
 
 	public void removeAll() {
 		this.tripRepo.removeAll();
+	}
+
+	@Override
+	public OfyTrip findById(String id) {
+
+		return this.tripRepo.findById(id);
+
 	}
 }

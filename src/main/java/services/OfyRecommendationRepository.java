@@ -23,9 +23,9 @@ public class OfyRecommendationRepository {
 	public OfyRecommendation add(final OfyRecommendation recommendation) {
 
 		OfyService.ofy()
-		.save()
-		.entity(recommendation)
-		.now();
+			.save()
+			.entity(recommendation)
+			.now();
 
 		return recommendation;
 
@@ -34,20 +34,20 @@ public class OfyRecommendationRepository {
 	public boolean exists(final String id) {
 
 		return OfyService.ofy()
-				.load()
-				.type(OfyRecommendation.class)
-				.id(id)
-				.now() != null;
+			.load()
+			.type(OfyRecommendation.class)
+			.id(id)
+			.now() != null;
 
 	}
 
 	public List<OfyRecommendation> findAll() {
 
 		return OfyService.ofy()
-				.load()
-				.type(OfyRecommendation.class)
-				.order("-creationDate")
-				.list();
+			.load()
+			.type(OfyRecommendation.class)
+			.order("-creationDate")
+			.list();
 
 	}
 
@@ -56,10 +56,10 @@ public class OfyRecommendationRepository {
 		try {
 
 			return OfyService.ofy()
-					.load()
-					.type(OfyRecommendation.class)
-					.id(id)
-					.safe();
+				.load()
+				.type(OfyRecommendation.class)
+				.id(id)
+				.safe();
 
 		} catch (NotFoundException nfe) {
 			throw new DomainLogicException(
@@ -76,11 +76,11 @@ public class OfyRecommendationRepository {
 	public List<OfyRecommendation> findByOwner(final OfyUser owner) {
 
 		return OfyService.ofy()
-				.load()
-				.type(OfyRecommendation.class)
-				.filter("owner", owner)
-				.order("-creationDate")
-				.list();
+			.load()
+			.type(OfyRecommendation.class)
+			.filter("owner", owner)
+			.order("-creationDate")
+			.list();
 
 	}
 
@@ -88,12 +88,12 @@ public class OfyRecommendationRepository {
 			final OfyRecommendation.Status status) {
 
 		return OfyService.ofy()
-				.load()
-				.type(OfyRecommendation.class)
-				.filter("owner", owner)
-				.filter("status", status)
-				.order("-creationDate")
-				.list();
+			.load()
+			.type(OfyRecommendation.class)
+			.filter("owner", owner)
+			.filter("status", status)
+			.order("-creationDate")
+			.list();
 
 	}
 
@@ -101,25 +101,25 @@ public class OfyRecommendationRepository {
 			final OfyRecommendation.Status status) {
 
 		return OfyService.ofy()
-				.load()
-				.type(OfyRecommendation.class)
-				.filter("target", target)
-				.filter("status", status)
-				.order("-patchDate")
-				.list();
+			.load()
+			.type(OfyRecommendation.class)
+			.filter("target", target)
+			.filter("status", status)
+			.order("-patchDate")
+			.list();
 
 	}
 
 	public void removeAll() {
 
 		OfyService.ofy()
-		.delete()
-		.keys(OfyService.ofy()
+			.delete()
+			.keys(OfyService.ofy()
 				.load()
 				.type(OfyRecommendation.class)
 				.keys()
 				.list())
-				.now();
+			.now();
 
 	}
 

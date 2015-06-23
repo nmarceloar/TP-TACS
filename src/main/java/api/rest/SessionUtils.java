@@ -13,19 +13,19 @@ public class SessionUtils {
 
 	public static String extractToken(HttpSession session) {
 
-		return (String) session.getAttribute(TOKEN);
+		return (String)session.getAttribute(TOKEN);
 
 	}
 
 	public static DateTime extractExpirationDate(HttpSession session) {
 
-		return (DateTime) session.getAttribute(EXPIRATION_DATE);
+		return (DateTime)session.getAttribute(EXPIRATION_DATE);
 
 	}
 
 	public static Long extractUserId(HttpSession session) {
 
-		return (Long) session.getAttribute(USER_ID);
+		return (Long)session.getAttribute(USER_ID);
 
 	}
 

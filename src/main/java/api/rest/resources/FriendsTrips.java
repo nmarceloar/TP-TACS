@@ -23,7 +23,7 @@ public class FriendsTrips {
 	@GET
 	@Produces("application/json")
 	public List<OfyTrip> findTripsByOwner(
-			@NotNull @QueryParam("friend-id") final Long friendId) {
+			@NotNull(message = "Debe especificar el id del amigo del cual desea ver los viajes") @QueryParam("friend-id") final Long friendId) {
 
 		// ojo, aca habria que verificar si realmente son amigos
 		// estamos asumiendo que si porque lo mandamos de nuestro front

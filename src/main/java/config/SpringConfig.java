@@ -9,8 +9,9 @@
 //import org.springframework.context.annotation.ComponentScan;
 //import org.springframework.context.annotation.Configuration;
 //
-////@Configuration
-////@ComponentScan(basePackages = { "services", "repository" })
-////public class SpringConfig {
-////
-// // }
+//@Configuration
+//@ComponentScan(basePackages = { "api.rest", "api.rest.resources", "services",
+//		"repository" })
+//public class SpringConfig {
+//
+// }

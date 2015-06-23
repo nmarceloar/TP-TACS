@@ -1,9 +1,8 @@
 package services;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.ClientRequestContext;
@@ -14,8 +13,6 @@ import org.glassfish.jersey.client.ClientProperties;
 import com.fasterxml.jackson.datatype.joda.JodaMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
-@Named
-@Singleton
 public class DespegarClient {
 
 	private static final Client INSTANCE = ClientBuilder.newClient()
@@ -36,6 +33,14 @@ public class DespegarClient {
 	public static Client getInstance() {
 
 		return INSTANCE;
+
+	}
+
+	private DespegarClient() {
+
+		Logger.getLogger(this.getClass()
+			.getCanonicalName())
+			.info("DespegarClient Ok.");
 
 	}
 

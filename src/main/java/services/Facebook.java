@@ -1,10 +1,12 @@
-package api.rest;
+package services;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
-import services.FacebookClient;
+import api.rest.FriendsList;
+import api.rest.TokenInfo;
+import api.rest.UserDetails;
 
 public class Facebook {
 
@@ -13,7 +15,6 @@ public class Facebook {
 	private final static String GRAPH_API = "https://graph.facebook.com/v2.3";
 
 	private final static String APP_ID = "1431380883824864";
-
 	private final static String APP_SECRET = "c54597a2f3ced606119850a640d01d93";
 
 	private final static String APPTOKEN = Facebook.APP_ID + "|"

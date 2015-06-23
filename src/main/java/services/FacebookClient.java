@@ -1,7 +1,7 @@
 package services;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import java.util.logging.Logger;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
@@ -10,8 +10,6 @@ import org.glassfish.jersey.client.ClientProperties;
 import com.fasterxml.jackson.datatype.joda.JodaMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
-@Named
-@Singleton
 public class FacebookClient {
 
 	private static final Client INSTANCE = ClientBuilder.newClient()
@@ -23,6 +21,13 @@ public class FacebookClient {
 
 		return FacebookClient.INSTANCE;
 
+	}
+
+	private FacebookClient() {
+
+		Logger.getLogger(this.getClass()
+			.getCanonicalName())
+			.info("Facebook Ok.");
 	}
 
 }

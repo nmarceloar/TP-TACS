@@ -4,42 +4,65 @@
 
 package services;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.logging.Logger;
 
 import api.rest.Airline;
 
-import com.opencsv.CSVReader;
-
 public class AirlinesServiceImpl implements AirlinesService {
+
+	private static final AirlinesServiceImpl INSTANCE = new AirlinesServiceImpl();
+
+	public static AirlinesServiceImpl getInstance() {
+
+		return INSTANCE;
+
+	}
 
 	private final ConcurrentMap<String, Airline> airlines;
 
-	public AirlinesServiceImpl() {
+	private AirlinesServiceImpl() {
 
-		this.airlines = new ConcurrentHashMap<String, Airline>(900);
+		this.airlines = new ConcurrentHashMap<String, Airline>();
 		this.fillMap();
+
+		Logger.getLogger(this.getClass()
+			.getCanonicalName())
+			.info("AirlinesService Ok.");
 
 	}
 
 	private void fillMap() {
 
-		CSVReader reader = new CSVReader(new InputStreamReader(this.getClass()
-				.getClassLoader()
-				.getResourceAsStream("airlines.csv")));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				this.getClass()
+					.getClassLoader()
+					.getResourceAsStream("airlines.csv")));
 
-		String[] line;
+		String line;
 
 		try {
 
-			while ((line = reader.readNext()) != null) {
+			while ((line = reader.readLine()) != null) {
 
-				if (line[3].matches("[A-Z]{2}")) {
+				String[] splitted = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 
-					this.airlines.put(line[3], new Airline(line[3], line[5],
-							line[1], line[6]));
+				String airportCode = splitted[3].replace("\"", "");
+
+				if (!airportCode.isEmpty() && airportCode.matches("[A-Z]{2}")) {
+
+					String callsign = splitted[5].replace("\"", "");
+					String name = splitted[1].replace("\"", "");
+					String country = splitted[6].replace("\"", "");
+
+					this.airlines.put(airportCode, new Airline(airportCode,
+							callsign, name, country));
 
 				}
 
@@ -69,6 +92,13 @@ public class AirlinesServiceImpl implements AirlinesService {
 	public Airline findByCode(final String twoLetterIataCode) {
 
 		return this.airlines.get(twoLetterIataCode);
+
+	}
+
+	@Override
+	public List<Airline> findAll() {
+
+		return new ArrayList<Airline>(airlines.values());
 
 	}
 

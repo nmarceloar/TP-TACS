@@ -1,6 +1,7 @@
 package services;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import api.rest.exceptions.DomainLogicException;
 
@@ -30,6 +31,10 @@ public class OfyRecommendationsService {
 		this.userRepo = OfyUserRepository.getInstance();
 		this.tripRepo = OfyTripRepository.getInstance();
 		this.ofyRecommendationRepository = OfyRecommendationRepository.getInstance();
+		
+		Logger.getLogger(this.getClass()
+				.getCanonicalName())
+				.info("OfyRecommendationsService Ok.");
 
 	}
 

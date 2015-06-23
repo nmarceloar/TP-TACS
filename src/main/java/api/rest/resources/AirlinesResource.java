@@ -1,29 +1,38 @@
 package api.rest.resources;
 
-import javax.inject.Inject;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.process.internal.RequestScoped;
 
 import services.AirlinesService;
-import api.rest.Airline;
+import services.AirlinesServiceImpl;
 
-@Path("/airlines")
+//@Path("/airlines")
 @RequestScoped
 public class AirlinesResource {
 
-	@Inject
-	private AirlinesService airlinesService;
+	private AirlinesService airlinesService = AirlinesServiceImpl.getInstance();
 
 	@GET
-	@Produces("application/json")
-	public Airline findAirlineByCode(@NotNull @QueryParam("code") String code) {
+	public Response findAirlineByCode(@QueryParam("code") final String code) {
 
-		return this.airlinesService.findByCode(code);
+		if (code == null) {
+
+			return Response.ok()
+				.type(MediaType.APPLICATION_JSON)
+				.entity(this.airlinesService.findAll())
+				.build();
+
+		}
+
+		return Response.ok()
+			.type(MediaType.APPLICATION_JSON)
+			.entity(this.airlinesService.findByCode(code))
+			.build();
 
 	}
 
