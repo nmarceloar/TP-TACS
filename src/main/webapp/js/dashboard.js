@@ -838,18 +838,19 @@ function initClickDetalle(id) {
         url: "/api/me/created-trips/" + id.data,
         dataType: 'json',
         success: function (data) {
+        	var resptrip = data.tripDetails;
             console.log('El viaje a recomendar es: ' + data.id);
-            idViajeARecomendar = data.id;
+            idViajeARecomendar = resptrip.id;
             console.log("Respuesta trip");
             //console.log(data);
-            precio = data.priceDetail.total+data.priceDetail.currency;
-            desde = data.fromCity.name;
-            hasta = data.toCity.name;
+            precio = resptrip.priceDetail.total+resptrip.priceDetail.currency;
+            desde = resptrip.fromCity.name;
+            hasta = resptrip.toCity.name;
             var titulo = "\u00A1Tu viaje desde " + desde + " hasta " + hasta + "!";
             $("div[id=modDetalleViaje] h4").html(titulo);
             var itinerario = "";
             var enter = "<br>";
-            $.each(data.outboundItinerary, function (index, value) {
+            $.each(resptrip.outboundItinerary, function (index, value) {
                 console.log(value);
                 var fechaSalida = value.departure;
                 var fechaLlegada = value.arrival;
