@@ -1275,7 +1275,7 @@ function updateStatusCallback(response) {
          * Lleno con las recomendaciones que me hicieron
          */
         $.ajax({
-            url: '/api/recommendations/' + id,
+            url: '/api/me/received-recommendations/',
             dataType: 'json',
             success: function (data) {
 //      		var i = 1;
