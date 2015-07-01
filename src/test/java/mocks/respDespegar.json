@@ -1,0 +1,192 @@
+[
+  {
+    "id": "CITY-520",
+    "item": {
+      "id": "520",
+      "type": "CITY"
+    },
+    "code": "BAI",
+    "description": "Buenos Aires, Puntarenas, Costa Rica",
+    "geolocation": {
+      "latitude": 10.3682,
+      "longitude": -84.3003
+    },
+    "facet": "CITY",
+    "fuzzy_search_result": false,
+    "parent": {
+      "id": "174358",
+      "type": "ADMINISTRATIVE_DIVISION"
+    }
+  },
+  {
+    "id": "CITY-104816",
+    "item": {
+      "id": "104816",
+      "type": "CITY"
+    },
+    "code": "FSIBR",
+    "description": "Buenos Aires, Michoacán de Ocampo, México",
+    "geolocation": {
+      "latitude": 19.0746,
+      "longitude": -102.18042
+    },
+    "facet": "CITY",
+    "fuzzy_search_result": false,
+    "parent": {
+      "id": "10442",
+      "type": "ADMINISTRATIVE_DIVISION"
+    }
+  },
+  {
+    "id": "CITY-83898",
+    "item": {
+      "id": "83898",
+      "type": "CITY"
+    },
+    "code": "RACAE",
+    "description": "Buenos Aires, Sonsonate, El Salvador",
+    "geolocation": {
+      "latitude": 13.87472,
+      "longitude": -89.7525
+    },
+    "facet": "CITY",
+    "fuzzy_search_result": false,
+    "parent": {
+      "id": "176782",
+      "type": "ADMINISTRATIVE_DIVISION"
+    }
+  },
+  {
+    "id": "CITY-86727",
+    "item": {
+      "id": "86727",
+      "type": "CITY"
+    },
+    "code": "GTLRN",
+    "description": "Buenos Aires, El Oro, Ecuador",
+    "geolocation": {
+      "latitude": -3.4,
+      "longitude": -80.2
+    },
+    "facet": "CITY",
+    "fuzzy_search_result": false,
+    "parent": {
+      "id": "174545",
+      "type": "ADMINISTRATIVE_DIVISION"
+    }
+  },
+  {
+    "id": "CITY-93760",
+    "item": {
+      "id": "93760",
+      "type": "CITY"
+    },
+    "code": "OPPLR",
+    "description": "Buenos Aires, Piura, Perú",
+    "geolocation": {
+      "latitude": -5.26083,
+      "longitude": -79.96417
+    },
+    "facet": "CITY",
+    "fuzzy_search_result": false,
+    "parent": {
+      "id": "30221",
+      "type": "ADMINISTRATIVE_DIVISION"
+    }
+  },
+  {
+    "id": "CITY-187371",
+    "item": {
+      "id": "187371",
+      "type": "CITY"
+    },
+    "code": "IYWBR",
+    "description": "Buenos Aires Chico, Chubut, Argentina",
+    "geolocation": {
+      "latitude": -42.06802,
+      "longitude": -71.21729
+    },
+    "facet": "CITY",
+    "fuzzy_search_result": false,
+    "parent": {
+      "id": "12344",
+      "type": "ADMINISTRATIVE_DIVISION"
+    }
+  },
+  {
+    "id": "CITY-187883",
+    "item": {
+      "id": "187883",
+      "type": "CITY"
+    },
+    "code": "GJSQZ",
+    "description": "Buenos Aires, Lara, Venezuela",
+    "geolocation": {
+      "latitude": 10.278889,
+      "longitude": -69.68
+    },
+    "facet": "CITY",
+    "fuzzy_search_result": false,
+    "parent": {
+      "id": "30129",
+      "type": "ADMINISTRATIVE_DIVISION"
+    }
+  },
+  {
+    "id": "CITY-187927",
+    "item": {
+      "id": "187927",
+      "type": "CITY"
+    },
+    "code": "VGURR",
+    "description": "Buenos Aires, Sucre, Colombia",
+    "geolocation": {
+      "latitude": 9.5,
+      "longitude": -75.1
+    },
+    "facet": "CITY",
+    "fuzzy_search_result": false,
+    "parent": {
+      "id": "31658",
+      "type": "ADMINISTRATIVE_DIVISION"
+    }
+  },
+  {
+    "id": "CITY-190546",
+    "item": {
+      "id": "190546",
+      "type": "CITY"
+    },
+    "code": "UUEIL",
+    "description": "Buenos Aires, Pernambuco, Brasil",
+    "geolocation": {
+      "latitude": -7.738746,
+      "longitude": -35.307423
+    },
+    "facet": "CITY",
+    "fuzzy_search_result": false,
+    "parent": {
+      "id": "13242",
+      "type": "ADMINISTRATIVE_DIVISION"
+    }
+  },
+  {
+    "id": "CITY-982",
+    "item": {
+      "id": "982",
+      "type": "CITY"
+    },
+    "code": "BUE",
+    "description": "Buenos Aires, Ciudad de Buenos Aires, Argentina",
+    "geolocation": {
+      "latitude": -34.60546,
+      "longitude": -58.381991
+    },
+    "facet": "CITY",
+    "fuzzy_search_result": false,
+    "parent": {
+      "id": "31655",
+      "type": "ADMINISTRATIVE_DIVISION"
+    }
+  }
+]

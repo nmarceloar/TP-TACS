@@ -35,4 +35,5 @@ public interface RecommendationAPI {
 
 	public void assignStateRecommendation(int idRec, String state);
 
+        public List<Recommendation> getRecommendations();
 }

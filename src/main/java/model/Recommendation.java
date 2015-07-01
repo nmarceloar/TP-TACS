@@ -15,116 +15,126 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Recommendation implements Serializable {
 
-	private static int generadorId = 1;
+    private static int generadorId = 1;
 
-	@JsonProperty("id")
-	private int idRecomendacion;
+    @JsonProperty("id")
+    private int idRecomendacion;
 
-	@JsonProperty("Usuario")
-	private String idUsuarioRecom;
+    @JsonProperty("Usuario")
+    private String idUsuarioRecom;
 
-	@JsonProperty("DesdeUsuario")
-	private String idUserFromRecom;
+    @JsonProperty("DesdeUsuario")
+    private String idUserFromRecom;
 
-	@JsonProperty("nombreyap")
-	private String nombreYAp;
+    @JsonProperty("nombreyap")
+    private String nombreYAp;
 
-	@JsonProperty("origen")
-	private String ciudadOrig;
+    @JsonProperty("origen")
+    private String ciudadOrig;
 
-	@JsonProperty("destino")
-	private String ciudadDest;
+    @JsonProperty("destino")
+    private String ciudadDest;
 
-	@JsonProperty("viajeAsoc")
-	private int tripRec;
+    @JsonProperty("viajeAsoc")
+    private int tripRec;
 
-	@JsonProperty("estado")
-	private int estado;
+    @JsonProperty("estado")
+    private int estado;
 
-	public int getTripRec() {
-		return tripRec;
-	}
+    public int getTripRec() {
+        return tripRec;
+    }
 
-	public void setTripRec(int tripRec) {
-		this.tripRec = tripRec;
-	}
+    public void setTripRec(int tripRec) {
+        this.tripRec = tripRec;
+    }
 
-	public int getEstado() {
-		return estado;
-	}
+    public int getEstado() {
+        return estado;
+    }
 
-	public void setEstado(int estado) {
-		this.estado = estado;
-	}
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
 
-	public Recommendation() {
-		idRecomendacion = generadorId++;
-		nombreYAp = "";
-		estado = 0;
-	}
+    public Recommendation() {
+        idRecomendacion = generadorId++;
+        nombreYAp = "";
+        estado = 0;
+    }
 
-	public Recommendation(String idUser, String idFromUser, String nomYap,
-			String origen, String destino, int viaje) {
-		idRecomendacion = generadorId++;
-		idUsuarioRecom = idUser;
-		idUserFromRecom = idFromUser;
-		ciudadOrig = origen;
-		ciudadDest = destino;
-		nombreYAp = nomYap;
-		tripRec = viaje;
-		estado = 0;
-	}
+    public Recommendation(String idUser, String idFromUser, String nomYap,
+            String origen, String destino, int viaje) {
+        idRecomendacion = generadorId++;
+        idUsuarioRecom = idUser;
+        idUserFromRecom = idFromUser;
+        ciudadOrig = origen;
+        ciudadDest = destino;
+        nombreYAp = nomYap;
+        tripRec = viaje;
+        estado = 0;
+    }
 
-	public int getIdRecomendacion() {
-		return idRecomendacion;
-	}
+    public Recommendation(int idRecomendacion, String idUsuarioRecom, String idUserFromRecom, String nombreYAp, String ciudadOrig, String ciudadDest, int tripRec) {
+        this.idRecomendacion = idRecomendacion;
+        this.idUsuarioRecom = idUsuarioRecom;
+        this.idUserFromRecom = idUserFromRecom;
+        this.nombreYAp = nombreYAp;
+        this.ciudadOrig = ciudadOrig;
+        this.ciudadDest = ciudadDest;
+        this.tripRec = tripRec;
+    }
 
-	public String getCiudadOrig() {
-		return ciudadOrig;
-	}
+    public int getIdRecomendacion() {
+        return idRecomendacion;
+    }
 
-	public void setCiudadOrig(String ciudadOrig) {
-		this.ciudadOrig = ciudadOrig;
-	}
+    public String getCiudadOrig() {
+        return ciudadOrig;
+    }
 
-	public String getCiudadDest() {
-		return ciudadDest;
-	}
+    public void setCiudadOrig(String ciudadOrig) {
+        this.ciudadOrig = ciudadOrig;
+    }
 
-	public void setCiudadDest(String ciudadDest) {
-		this.ciudadDest = ciudadDest;
-	}
+    public String getCiudadDest() {
+        return ciudadDest;
+    }
 
-	public String getIdUsuarioRecom() {
-		return idUsuarioRecom;
-	}
+    public void setCiudadDest(String ciudadDest) {
+        this.ciudadDest = ciudadDest;
+    }
 
-	public void setIdUsuarioRecom(String idUsuarioRecom) {
-		this.idUsuarioRecom = idUsuarioRecom;
-	}
+    public String getIdUsuarioRecom() {
+        return idUsuarioRecom;
+    }
 
-	public String getNombreYAp() {
-		return nombreYAp;
-	}
+    public void setIdUsuarioRecom(String idUsuarioRecom) {
+        this.idUsuarioRecom = idUsuarioRecom;
+    }
 
-	public void setNombreYAp(String nombreYAp) {
-		this.nombreYAp = nombreYAp;
-	}
+    public String getNombreYAp() {
+        return nombreYAp;
+    }
 
-	public void aceptarRecomendacion() {
-		estado = 1;
-	}
+    public void setNombreYAp(String nombreYAp) {
+        this.nombreYAp = nombreYAp;
+    }
 
-	public void rechazarRecomendacion() {
-		estado = -1;
-	}
+    public void aceptarRecomendacion() {
+        estado = 1;
+    }
 
-	public String getIdUserFromRecom() {
-		return idUserFromRecom;
-	}
+    public void rechazarRecomendacion() {
+        estado = -1;
+    }
 
-	public void setIdUserFromRecom(String idUserFromRecom) {
-		this.idUserFromRecom = idUserFromRecom;
-	}
+    public String getIdUserFromRecom() {
+        return idUserFromRecom;
+    }
+
+    public void setIdUserFromRecom(String idUserFromRecom) {
+        this.idUserFromRecom = idUserFromRecom;
+    }
 
 }
