@@ -25,6 +25,14 @@ $(function() {
 	// ******************************************************
 });
 
+
+$body = $("body");
+
+$(document).on({
+    ajaxStart: function() { $body.addClass("loading");    },
+     ajaxStop: function() { $body.removeClass("loading"); }    
+});
+
 // **************************************************************FACEBOOK
 // This is called with the results from from FB.getLoginStatus().
 function statusChangeCallback(response) {
