@@ -131,10 +131,7 @@ function checkLoginState() {
 window.fbAsyncInit = function() {
 
 	FB.init({
-<<<<<<< HEAD
 //		appId : '1431380883824864',
-=======
->>>>>>> branch 'gae_cambios' of https://github.com/flpitu88/TP-TACS.git
 		appId : '1586547271608233',
 		cookie : true, // enable cookies to allow the server to access
 		// the session
