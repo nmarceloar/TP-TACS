@@ -14,8 +14,10 @@ public class Facebook {
 
 	private final static String GRAPH_API = "https://graph.facebook.com/v2.3";
 
-	private final static String APP_ID = "1431380883824864";
-	private final static String APP_SECRET = "c54597a2f3ced606119850a640d01d93";
+//	private final static String APP_ID = "1431380883824864";
+//	private final static String APP_SECRET = "c54597a2f3ced606119850a640d01d93";
+	private final static String APP_ID = "1586547271608233";
+	private final static String APP_SECRET = "359a6eae58ad036b4df0c599d0cdd11a";
 
 	private final static String APPTOKEN = Facebook.APP_ID + "|"
 			+ Facebook.APP_SECRET;

@@ -62,8 +62,9 @@ function statusChangeCallback(response) {
 			type : 'POST',
 			url : '/api/login',
 			data : "token=" + response.authResponse.accessToken,
-			// dataType : 'text',
+//			dataType : 'text',
 			success : function(data, textStatus, jQxhr) {
+				console.log("Todo Ok");
 				console.log(textStatus);
 				console.log(data);
 				console.log(jQxhr);
@@ -119,7 +120,8 @@ function checkLoginState() {
 // ACA SE PONEN LOS DATOS DE LA APP
 window.fbAsyncInit = function() {
 	FB.init({
-		appId : '1431380883824864',
+//		appId : '1431380883824864',
+		appId : '1586547271608233',
 		cookie : true, // enable cookies to allow the server to access
 		// the session
 		xfbml : true, // parse social plugins on this page

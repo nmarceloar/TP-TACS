@@ -16,9 +16,9 @@ var City = function () {
     this.longitude = null;
     this.code = null;
     this.setCityInfo = function (item) {
-        this.description = item.label;
+        this.description = item.name;
 //        this.description = item.name;
-        this.code = item.id;
+        this.code = item.code;
 //        this.code = item.code;
 //        this.geolocation = item.geolocation;
         this.latitude = item.latitude;
@@ -72,6 +72,9 @@ var airlines; // Variable global para guardar aerolineas
 
 //array con los puntos marcados en el mapa
 var markersVuelos = new Array();
+
+//array con los puntos marcados en el mapa
+var lineasVuelos = new Array();
 
 //engloba todo lo del viaje que se está gestando
 var currentTrip = null;
@@ -127,11 +130,14 @@ $(function () {
     $("#cerrarSesion").click(function () {
 
         $.ajax({
-            url: '/api/logout/',
+            url: '/api/logout',
             datatype: 'text',
             success: function (data) {
                 console.log(data);
             },
+            error: function(data){
+            	console.log(data);
+            }
         });
         FB.logout(function (response) {
             // Person is now logged out
@@ -152,14 +158,17 @@ $(function () {
     formResetViaje();
     formResetVuelos();
 
+
     $("#modDetalleViaje").on("shown.bs.modal", function (e) {
         //hack para que el mapa se dibuje bien
         google.maps.event.trigger(mapaReview, "resize");
+        currentMap = mapaReview;
     });
 
     $("#modDetalleViajeRecom").on("shown.bs.modal", function (e) {
         //hack para que el mapa se dibuje bien
         google.maps.event.trigger(mapaReviewRecom, "resize");
+        currentMap = mapaReviewRecom;
     });
 
     // notificaciones de recomendación *******************************
@@ -311,8 +320,8 @@ $(function () {
         //hack para que el mapa se dibuje bien
         google.maps.event.trigger(mapaNuevoViaje, "resize");
         currentMap = mapaNuevoViaje;
-        //posiciono el cursor en la ciudad de origen
         $("#ciudadOrigen").focus();
+        //posiciono el cursor en la ciudad de origen
     });
 
 //    Aceptar / Rechazar recomendacion
@@ -511,6 +520,22 @@ $(function () {
                 $("div[id=" + data.id + "] button[id=btnRecomendarViaje]").click(data.id, initClickRecomendar);
                 $("div[id=" + data.id + "] a[id=eliminarViaje]").click(data.id, initClickEliminar);
                 $("div[id=" + data.id + "] a[id=compartirViaje]").click(data.id, initClickCompartir);
+                
+//              Limpio los marcadores que quedaron
+                if (markersVuelos.length > 0) {
+                	console.log("TIENE MARKERS, LIMPIO");
+                    for (i in markersVuelos) {
+                    	markersVuelos[i].setMap(null);
+                    }
+                    markersVuelos.length = 0;
+                }
+                if (lineasVuelos.length > 0) {
+                	console.log("TIENE Lineas, LIMPIO");
+                    for (i in lineasVuelos) {
+                    	lineasVuelos[i].setMap(null);
+                    }
+                    lineasVuelos.length = 0;
+                }
             }
         });
 
@@ -650,8 +675,9 @@ function armarJsonCiudad(ciudad){
 }
 function armarItinerario(iti){
 	var itinerario = new Array();
-	var viaje = new Viaje();
+	var viaje;
 	for (var i = 0; i < iti.segments.length; i++){
+		viaje = new Viaje();
 		viaje.fromAirport = getAirportData(iti.segments[i].from,airports);
 		viaje.toAirport = getAirportData(iti.segments[i].to,airports);
 		viaje.duration = iti.segments[i].duration;
@@ -660,6 +686,7 @@ function armarItinerario(iti){
 		viaje.arrival = iti.segments[i].arrival_datetime;
 		viaje.airline = getAirlineData(iti.segments[i].airline,airlines);
 		itinerario.push(viaje);
+		
 	};
 	return (itinerario);
 }
@@ -674,7 +701,11 @@ function formResetViaje() {
     $("#dstMapContainer").hide();
     $("#fechaDesdeContainer").hide();
     $("#fechaHastaContainer").hide();
+    if(markerOrigen!=null){
+    markerOrigen.setMap(null);}
     markerOrigen = null;
+    if(markerDestino!=null){
+    	markerDestino.setMap(null);}
     markerDestino = null;
 }
 
@@ -715,6 +746,23 @@ function getVuelos() {
                 opcionesViaje = data.items;
                 var i = 0;
                 var line;
+                
+//            	Esto es par limpiar los marcadores que vengan en el mapa de un modal abierto anteriormennte
+                if (markersVuelos.length > 0) {
+                	console.log("TIENE MARKERS, LIMPIO");
+                    for (i in markersVuelos) {
+                    	markersVuelos[i].setMap(null);
+                    }
+                    markersVuelos.length = 0;
+                }
+                if (lineasVuelos.length > 0) {
+                	console.log("TIENE Lineas, LIMPIO");
+                    for (i in lineasVuelos) {
+                    	lineasVuelos[i].setMap(null);
+                    }
+                    lineasVuelos.length = 0;
+                }
+                
                 for (i = 0; i < datalen; i++) {
                     $("#listaVuelos").append(templateVuelo(i, data.items[i]));
                 }
@@ -730,21 +778,21 @@ function getVuelos() {
                     var i_alternativa = $(this).attr('alternativa');
                     var i_type = $(this).parents("div[role=opciones-vuelo]").attr("type");
                     var airportdata = new Array();
-                    
+
                     if (i_type == "ida") {
                         currentTrip.outbound = opcionesViaje[i_vuelo].outbound_choices[i_alternativa];
                         var tam = currentTrip.outbound.segments.length - 1; //Maxima posicion de segmento
 
                         for (var x in airports) {
                             if (airports[x].code == currentTrip.outbound.segments[0].from) {
-                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude + ' - ' + airports[x].descripcion);
-                                airportdata.push({"latitude": airports[x].latitude, "longitude": airports[x].longitude, "descripcion": airports[x].descripcion});
+                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude + ' - ' + airports[x].name);
+                                airportdata.push({"latitude": airports[x].latitude, "longitude": airports[x].longitude, "descripcion": airports[x].name});
                             }
                         }
                         for (var x in airports) {
                             if (airports[x].code == currentTrip.outbound.segments[tam].to) {
-                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude + ' - ' + airports[x].descripcion);
-                                airportdata.push({"latitude": airports[x].latitude, "longitude": airports[x].longitude, "descripcion": airports[x].descripcion});
+                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude + ' - ' + airports[x].name);
+                                airportdata.push({"latitude": airports[x].latitude, "longitude": airports[x].longitude, "descripcion": airports[x].name});
                             }
                         }
                     } else {
@@ -753,14 +801,14 @@ function getVuelos() {
 
                         for (var x in airports) {
                             if (airports[x].code == currentTrip.inbound.segments[0].from) {
-                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude + ' - ' + airports[x].descripcion);
-                                airportdata.push({"latitude": airports[x].latitude, "longitude": airports[x].longitude, "descripcion": airports[x].descripcion});
+                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude + ' - ' + airports[x].name);
+                                airportdata.push({"latitude": airports[x].latitude, "longitude": airports[x].longitude, "descripcion": airports[x].name});
                             }
                         }
                         for (var x in airports) {
                             if (airports[x].code == currentTrip.inbound.segments[tam].to) {
-                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude + ' - ' + airports[x].descripcion);
-                                airportdata.push({"latitude": airports[x].latitude, "longitude": airports[x].longitude, "descripcion": airports[x].descripcion});
+                                console.log('Encontre el aeropuerto: ' + airports[x].code + ' en L: ' + airports[x].latitude + ' Lon: ' + airports[x].longitude + ' - ' + airports[x].name);
+                                airportdata.push({"latitude": airports[x].latitude, "longitude": airports[x].longitude, "descripcion": airports[x].name});
                             }
                         }
                     }
@@ -782,6 +830,8 @@ function getVuelos() {
             $("#cargandoVuelos").hide();
             $("#lstVuelos").show();
             $("#sinVuelos").show();
+            bootbox.alert("Ha surgido un problema! no hemos podido crear tu viaje", function () {
+            });
         }
     });
 }
@@ -789,19 +839,23 @@ function getVuelos() {
 //busco el aeropuerto que quiero por código
 function getAirportData(code, airportlist) {
     for (var i = 0; i < airportlist.length; i++) {
-        if (code == airportlist[i].code) {
-            return airportlist[i];
-        }
+    	if (airportlist[i]!=null){
+    		if (code == airportlist[i].code) {
+    			return airportlist[i];
+    		}
+    	}
     }
     return null;
 }
 //busco la aerolinea que quiero por codigo
 function getAirlineData(code, airlinelist) {
-    for (var i = 0; i < airlinelist.length; i++) {
-        if (code == airlinelist[i].code) {
-            return airlinelist[i];
-        }
-    }
+	for (var i = 0; i < airlinelist.length; i++) {
+		if (airlinelist[i]!=null){
+			if (code == airlinelist[i].code) {
+				return airlinelist[i];
+			}
+		}
+	}
     return null;
 }
 
@@ -826,10 +880,12 @@ function getInfoAirportsAndMap(flight) {
 function initClickDetalle(id) {
 
 // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
+	$("#modDetalleViaje").modal('show');
+	
     if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
         $("#modListaRecomendaciones").modal("hide");
     }
-
+    
     var precio;
     var desde;
     var hasta;
@@ -839,35 +895,95 @@ function initClickDetalle(id) {
         dataType: 'json',
         success: function (data) {
         	var resptrip = data.tripDetails;
-            console.log('El viaje a recomendar es: ' + data.id);
-            idViajeARecomendar = resptrip.id;
             console.log("Respuesta trip");
-            //console.log(data);
-            precio = resptrip.priceDetail.total+resptrip.priceDetail.currency;
+            console.log(resptrip);
+            precio = resptrip.priceDetail.total+" "+resptrip.priceDetail.currency;
             desde = resptrip.fromCity.name;
             hasta = resptrip.toCity.name;
             var titulo = "\u00A1Tu viaje desde " + desde + " hasta " + hasta + "!";
             $("div[id=modDetalleViaje] h4").html(titulo);
-            var itinerario = "";
             var enter = "<br>";
+            var itinerario = "<strong>Itinerario de Ida: </strong>"+enter;
+            var fechaSalida;
+            var fechaLlegada;
             $.each(resptrip.outboundItinerary, function (index, value) {
-                console.log(value);
-                var fechaSalida = value.departure;
-                var fechaLlegada = value.arrival;
+            	fechaSalida = new Date(value.departure);
+                fechaLlegada = new Date(value.arrival);
                 if (fechaSalida.toString("dd/MM/yyyy") == fechaLlegada.toString("dd/MM/yyyy")) {
-                    itinerario = itinerario + "Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
-                            "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda";
+                    itinerario = itinerario + "<strong>-</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                            "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda.";
                 }
                 else
                 {
-                    itinerario = itinerario + "Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
-                            "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm");
+                    itinerario = itinerario + "-Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                            "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") +".";
                 }
                 itinerario = itinerario + enter;
             });
+            itinerario = itinerario + "<strong>Itinerario de Vuelta: </strong>"+enter;
+            $.each(resptrip.inboundItinerary, function (index, value) {
+            	fechaSalida = new Date(value.departure);
+                fechaLlegada = new Date(value.arrival);
+                if (fechaSalida.toString("dd/MM/yyyy") == fechaLlegada.toString("dd/MM/yyyy")) {
+                    itinerario = itinerario + "<strong>-</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                            "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda.";
+                }
+                else
+                {
+                    itinerario = itinerario + "-Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                            "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") +".";
+                }
+                itinerario = itinerario + enter;
+            });
+            itinerario = itinerario + enter;
+            itinerario = itinerario + enter;
+            itinerario = itinerario + "<strong> Precio Total: "+precio+"</strong>";
             $("div[id=modDetalleViaje] div[class=col-md-6]").html(itinerario);
             //TODO llenar el mapa de detalle del viaje
-            $("#modDetalleViaje").modal('show');
+            
+            
+            currentMap = mapaReview;
+            var aux = new Array();
+            
+            for (var i = 0; i < resptrip.outboundItinerary.length; i++) {
+            	aux.push({"latitude": resptrip.outboundItinerary[i].fromAirport.latitude, "longitude": resptrip.outboundItinerary[i].fromAirport.longitude, "descripcion": resptrip.outboundItinerary[i].fromAirport.name});
+            	aux.push({"latitude": resptrip.outboundItinerary[i].toAirport.latitude, "longitude": resptrip.outboundItinerary[i].toAirport.longitude, "descripcion": resptrip.outboundItinerary[i].toAirport.name});
+            }            
+            
+//        	Esto es par limpiar los marcadores que vengan en el mapa de un modal abierto anteriormennte
+            if (markersVuelos.length > 0) {
+            	console.log("TIENE MARKERS, LIMPIO");
+                for (i in markersVuelos) {
+                	markersVuelos[i].setMap(null);
+                }
+                markersVuelos.length = 0;
+            }
+            if (lineasVuelos.length > 0) {
+            	console.log("TIENE Lineas, LIMPIO");
+                for (i in lineasVuelos) {
+                	lineasVuelos[i].setMap(null);
+                }
+                lineasVuelos.length = 0;
+            }
+            
+//              google.maps.event.addListener(mapaReview, 'bounds_changed', function() {
+//            	  console.log(mapaReview.getMapTypeId());
+//            	  console.log(mapaReview.getZoom());
+//            	  console.log(mapaReview.getBounds());
+//            	});
+              
+            drawFlightRoute(aux);
+            
+            aux = new Array();
+            
+            for (var i = 0; i < resptrip.inboundItinerary.length; i++) {
+            	aux.push({"latitude": resptrip.inboundItinerary[i].fromAirport.latitude, "longitude": resptrip.inboundItinerary[i].fromAirport.longitude, "descripcion": resptrip.inboundItinerary[i].fromAirport.name});
+            	aux.push({"latitude": resptrip.inboundItinerary[i].toAirport.latitude, "longitude": resptrip.inboundItinerary[i].toAirport.longitude, "descripcion": resptrip.inboundItinerary[i].toAirport.name});
+            }            
+            
+            drawFlightRoute(aux);
+            
+            
         }
     });
 
@@ -892,6 +1008,8 @@ function initClickDetalleRecom(datos) {
         url: "/api/trips/one/" + idViaje,
         dataType: 'json',
         success: function (data) {
+//          console.log('El viaje a recomendar es: ' + data.id);
+//          idViajeARecomendar = resptrip.id;
             console.log(data);
             precio = data.price;
             desde = data.fromCity;
@@ -917,7 +1035,7 @@ function initClickDetalleRecom(datos) {
             });
             $("div[id=modDetalleViajeRecom] div[class=col-md-6]").html(itinerario);
             //TODO llenar el mapa de detalle del viaje
-            $("#modDetalleViajeRecom").modal('show');
+
         }
     });
 
@@ -1038,18 +1156,18 @@ function initClickCompartir(idViajeACompartir) {
 function autocomplete_processCities(data, response) {
     if (data.length == 0) {
         data.push({
-            'id': '',
-            'label': 'No se encotraron ciudades con este nombre',
+            'code': '',
+            'name': 'No se encotraron ciudades con este nombre',
             'value': ''
         });
         response(data);
     } else {
         response($.map(data, function (item) {
             return {
-                id: item.code,
+                code: item.code,
 //             label: item.description,
 //             value: item.description,
-                label: item.name,
+                name: item.name,
                 value: item.name,
 //             geolocation: item.geolocation
                 latitude: item.latitude,
@@ -1062,10 +1180,10 @@ function autocomplete_processCities(data, response) {
 var autocomplete_renderItemCiudades = function (ul, item) {
     // Add the .ui-state-disabled class and don't wrap in <a> if value is empty
     if (item.id == '') {
-        return $('<li class="ui-state-disabled">' + item.label + '</li>')
+        return $('<li class="ui-state-disabled">' + item.name + '</li>')
                 .appendTo(ul);
     } else {
-        return $("<li>").append("<a>" + item.label + "</a>").appendTo(ul);
+        return $("<li>").append("<a>" + item.name + "</a>").appendTo(ul);
     }
 };
 //*************************************************************************************
@@ -1103,28 +1221,42 @@ function setMapBounds(map) {
 }
 
 function drawFlightRoute(airportdata) {
-    markersVuelos = [];
+	
+//    markersVuelos = [];
+    
     var latlngbounds = new google.maps.LatLngBounds();
+    
     for (var i = 0; i < airportdata.length; i++) {
         var marker = setMapMarker(currentMap, airportdata[i].latitude, airportdata[i].longitude, airportdata[i].description);
         markersVuelos.push(marker);
         latlngbounds.extend(marker.getPosition());
     }
-
+    
     currentMap.fitBounds(latlngbounds);
-
+    
+//  Esto es para asegurarme de que se centre el mapa, ya que en el modal de detalle tenia problemas
+//  Porque se me cambiaban las bounds despues de setearlas correctamente. 
+//  Escuchando solo 1 vez, me aseguro de que queden las que setie.
+    google.maps.event.addListenerOnce(currentMap, 'tilesloaded', function(){
+	  currentMap.setCenter(latlngbounds.getCenter());
+	  currentMap.fitBounds(latlngbounds);
+	  });
+    
     var path = [];
     for (var i = 0; i < markersVuelos.length; i++) {
         path.push(markersVuelos[i].getPosition());
     }
     var color = getRandomColor();
-    flightPath = new google.maps.Polyline({
+    
+    var flightPath = new google.maps.Polyline({
         path: path,
         strokeColor: color,
         strokeOpacity: 0.8,
         strokeWeight: 2,
         map: currentMap
     });
+    lineasVuelos.push(flightPath);
+    
 }
 
 function getRandomColor() {
@@ -1280,6 +1412,7 @@ function updateStatusCallback(response) {
             success: function (data) {
 //      		var i = 1;
                 if (data.length != 0) {
+                	$("#CeroRecom").remove();
                     $.each(data, function (index, value) {
 //      				$("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value, i));
 //      				i++;
