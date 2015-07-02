@@ -573,15 +573,17 @@ function getViajesAceptadosHTML(data) {
 
 function getViajesPropiosHTML(data) {
     contViajes++;
+    var des = data.tripDetails.fromCity.name.split(",");
+    var has = data.tripDetails.toCity.name.split(",");
     return '<div class="list-group-item" id="'
             + data.id
             + '">'
             + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje '
             + contViajes
             + '. Desde '
-            + data.tripDetails.fromCity.name
+            + des[0]+','+des[2] 
             + ' a '
-            + data.tripDetails.toCity.name
+            + has[0]+','+has[2] 
             + ' saliendo el d&iacute;a '
             + data.tripDetails.outboundDate
             + ' y volviendo el d&iacute;a '
@@ -593,11 +595,13 @@ function getViajesPropiosHTML(data) {
 
 
 function getViajesDeAmigosHTML(data) {
+	var des = data.tripDetails.fromCity.name.split(",");
+    var has = data.tripDetails.toCity.name.split(",");
     return '<div class="list-group-item" id="itemAmigo">'
             + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje Desde '
-            + data.tripDetails.fromCity.name
+            + des[0]+','+des[2] 
             + ' a '
-            + data.tripDetails.toCity.name
+            + has[0]+','+has[2] 
             + ' saliendo el d&iacute;a '
             + data.tripDetails.outboundDate
             + ' y volviendo el d&iacute;a '
@@ -900,7 +904,9 @@ function initClickDetalle(id) {
             precio = resptrip.priceDetail.total+" "+resptrip.priceDetail.currency;
             desde = resptrip.fromCity.name;
             hasta = resptrip.toCity.name;
-            var titulo = "\u00A1Tu viaje desde " + desde + " hasta " + hasta + "!";
+            var des = desde.split(",");
+            var has = hasta.split(",");
+            var titulo = "\u00A1Tu viaje desde " + des[0]+","+des[2] + " hasta " + has[0]+","+has[2] + "!";
             $("div[id=modDetalleViaje] h4").html(titulo);
             var enter = "<br>";
             var itinerario = "<strong>Itinerario de Ida: </strong>"+enter;
