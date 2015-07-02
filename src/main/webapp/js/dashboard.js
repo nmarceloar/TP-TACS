@@ -127,7 +127,7 @@ $(function () {
     $("#cerrarSesion").click(function () {
 
         $.ajax({
-            url: '/api/logout/',
+            url: '/api/logout',
             datatype: 'text',
             success: function (data) {
                 console.log(data);

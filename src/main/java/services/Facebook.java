@@ -14,8 +14,8 @@ public class Facebook {
 
 	private final static String GRAPH_API = "https://graph.facebook.com/v2.3";
 
-	private final static String APP_ID = "1431380883824864";
-	private final static String APP_SECRET = "c54597a2f3ced606119850a640d01d93";
+	private final static String APP_ID = "1586547271608233";
+	private final static String APP_SECRET = "359a6eae58ad036b4df0c599d0cdd11a";
 
 	private final static String APPTOKEN = Facebook.APP_ID + "|"
 			+ Facebook.APP_SECRET;
@@ -98,6 +98,7 @@ public class Facebook {
 			.path("debug_token")
 			.queryParam("input_token", token)
 			.queryParam("access_token", Facebook.APPTOKEN);
+		
 	}
 
 	private WebTarget buildFriendsListEndpoint() {
@@ -106,6 +107,7 @@ public class Facebook {
 			.path("/me")
 			.path("/friends")
 			.queryParam("access_token", token);
+		
 	}
 
 	private static WebTarget buildMeEndpoint(String token) {
@@ -122,7 +124,10 @@ public class Facebook {
 			.path("/me")
 			.path("/notifications")
 			.queryParam("access_token", token);
+		
 	}
+	
+	
 
 	private WebTarget buildPostsListEndpoint() {
 
@@ -130,6 +135,7 @@ public class Facebook {
 			.path("/me")
 			.path("/posts")
 			.queryParam("access_token", token);
+		
 	}
 
 	private WebTarget buildLinksEndpoint() {
@@ -138,6 +144,7 @@ public class Facebook {
 			.path("/me")
 			.path("/links")
 			.queryParam("access_token", token);
+		
 	}
 
 	private WebTarget buildStatusesEndpoint() {
@@ -146,6 +153,7 @@ public class Facebook {
 			.path("/me")
 			.path("/statuses")
 			.queryParam("access_token", token);
+		
 	}
 
 	private WebTarget buildTaggedEndpoint() {
@@ -154,6 +162,7 @@ public class Facebook {
 			.path("/me")
 			.path("/tagged")
 			.queryParam("access_token", token);
+		
 	}
 
 }
