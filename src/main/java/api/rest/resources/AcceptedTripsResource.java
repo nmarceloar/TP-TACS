@@ -18,41 +18,41 @@ import utils.SessionUtils;
 @RequestScoped
 public class AcceptedTripsResource {
 
-	@Context
-	private HttpServletRequest request;
+    @Context
+    private HttpServletRequest request;
 
-	@Inject
-	private TripsService tripsService;
+    @Inject
+    private TripsService tripsService;
 
-	@GET
-	public Response findAcceptedTrips() {
+    @GET
+    public Response findAcceptedTrips() {
 
-		try {
+        try {
 
-			return Response.ok()
-				.type(MediaType.APPLICATION_JSON)
-				.entity(this.tripsService.findAcceptedByTarget(this.getCurrentUserId()))
-				.build();
+            return Response.ok()
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity(this.tripsService.findAcceptedByTarget(this.getCurrentUserId()))
+                    .build();
 
-		} catch (Exception ex) {
+        } catch (Exception ex) {
 
-			return Response.serverError()
-				.type(MediaType.APPLICATION_JSON)
-				.entity(ex.getMessage())
-				.build();
-		}
+            return Response.serverError()
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity(ex.getMessage())
+                    .build();
+        }
 
-	}
+    }
 
-	private HttpSession getCurrentSession() {
+    private HttpSession getCurrentSession() {
 
-		return this.request.getSession(false);
+        return this.request.getSession(false);
 
-	}
+    }
 
-	private Long getCurrentUserId() {
+    private Long getCurrentUserId() {
 
-		return SessionUtils.extractUserId(this.getCurrentSession());
+        return SessionUtils.extractUserId(this.getCurrentSession());
 
-	}
+    }
 }

@@ -23,110 +23,110 @@ import com.googlecode.objectify.Work;
 
 // en realidad habria que implementar un AOP para poder separar bien el
 // servicio del repositorio
-
 public class OfyTripService implements TripsService {
 
-	private UsersRepository userRepo;
-	private TripsRepository tripRepo;
-	private RecommendationsRepository recommendationRepo;
+    private UsersRepository userRepo;
+    private TripsRepository tripRepo;
+    private RecommendationsRepository recommendationRepo;
 
-	@Inject
-	public OfyTripService(UsersRepository userRepo, TripsRepository tripRepo,
-		RecommendationsRepository recommendationRepo) {
+    @Inject
+    public OfyTripService(UsersRepository userRepo, TripsRepository tripRepo,
+            RecommendationsRepository recommendationRepo) {
 
-		this.userRepo = userRepo;
-		this.tripRepo = tripRepo;
-		this.recommendationRepo = recommendationRepo;
+        this.userRepo = userRepo;
+        this.tripRepo = tripRepo;
+        this.recommendationRepo = recommendationRepo;
 
-	}
+    }
 
-	@Override
-	public Trip createTrip(final long userId, final TripDetails tripDetails) {
+    public OfyTripService() {
+    }
 
-		return OfyService.ofy()
-			.transact(new Work<Trip>() {
+    @Override
+    public Trip createTrip(final long userId, final TripDetails tripDetails) {
 
-				@Override
-				public Trip run() {
+        return OfyService.ofy()
+                .transact(new Work<Trip>() {
 
-					OfyTrip trip = new OfyTrip(userRepo.findById(userId),
-						tripDetails);
+                    @Override
+                    public Trip run() {
 
-					if (!tripRepo.exists(trip.getId())) {
+                        OfyTrip trip = new OfyTrip(userRepo.findById(userId),
+                                tripDetails);
 
-						return tripRepo.add(trip);
+                        if (!tripRepo.exists(trip.getId())) {
 
-					}
+                            return tripRepo.add(trip);
 
-					throw new DomainLogicException("Ya existe un viaje con el id asociado");
+                        }
 
-				}
+                        throw new DomainLogicException("Ya existe un viaje con el id asociado");
 
-			});
+                    }
 
-	}
+                });
 
-	@Override
-	public List<? extends AcceptedTrip> findAcceptedByTarget(final long userId) {
+    }
+
+    @Override
+    public List<? extends AcceptedTrip> findAcceptedByTarget(final long userId) {
 
 		// entre los aceptados(recomendaciones), filtra por target user
-
 		// esto despues lo podemos cambiar por una nueva entidad para no tener
-		// que delegar y crear una vista
+        // que delegar y crear una vista
+        List<AcceptedTrip> trips = Lists.transform(recommendationRepo.findByTargetAndStatus(this.userRepo.findById(userId),
+                Status.ACCEPTED),
+                new Function<Recommendation, AcceptedTrip>() {
 
-		List<AcceptedTrip> trips = Lists.transform(recommendationRepo.findByTargetAndStatus(this.userRepo.findById(userId),
-			Status.ACCEPTED),
-			new Function<Recommendation, AcceptedTrip>() {
+                    @Override
+                    public AcceptedTrip
+                    apply(Recommendation acceptedRecommendation) {
 
-				@Override
-				public AcceptedTrip
-					apply(Recommendation acceptedRecommendation) {
+                        return new AcceptedOfyTrip(acceptedRecommendation.getTrip(),
+                                acceptedRecommendation);
 
-					return new AcceptedOfyTrip(acceptedRecommendation.getTrip(),
-						acceptedRecommendation);
+                    }
+                });
 
-				}
-			});
+        return trips;
 
-		return trips;
+    }
 
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see services.TripService#findAll()
+     */
+    @Override
+    public List<? extends Trip> findAll() {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see services.TripService#findAll()
-	 */
-	@Override
-	public List<? extends Trip> findAll() {
+        return this.tripRepo.findAll();
 
-		return this.tripRepo.findAll();
+    }
 
-	}
+    @Override
+    public List<? extends Trip> findByOwner(final long ownerId) {
 
-	@Override
-	public List<? extends Trip> findByOwner(final long ownerId) {
+        return this.tripRepo.findByOwner(this.userRepo.findById(ownerId));
 
-		return this.tripRepo.findByOwner(this.userRepo.findById(ownerId));
+    }
 
-	}
+    public void removeAll() {
+        this.tripRepo.removeAll();
+    }
 
-	public void removeAll() {
-		this.tripRepo.removeAll();
-	}
+    @Override
+    public Trip findById(String id) {
 
-	@Override
-	public Trip findById(String id) {
+        return this.tripRepo.findById(id);
 
-		return this.tripRepo.findById(id);
+    }
 
-	}
+    @Override
+    public void deleteById(String tripId) {
 
-	@Override
-	public void deleteById(String tripId) {
+        this.tripRepo.deleteById(tripId);
 
-		this.tripRepo.deleteById(tripId);
-
-	}
+    }
 
 }

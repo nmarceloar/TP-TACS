@@ -15,5 +15,7 @@ public interface Trip {
 	public TripDetails getTripDetails();
 
 	public boolean wasCreatedBy(User owner);
+        
+        public void setTripDetails(TripDetails tripDetails);
 
 }
