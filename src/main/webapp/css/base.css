@@ -80,3 +80,7 @@ body.loading {
 body.loading .modalCargando {
     display: block;
 }
+
+.modal-body {
+    max-height: 800px;
+}

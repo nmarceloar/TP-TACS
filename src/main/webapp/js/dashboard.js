@@ -226,9 +226,23 @@ $(function () {
             }
         });
     });
-
+    
     $("#btnRecomendarViaje").click(function (event) {
+        console.log("TOQUE RECOMENDAR DESDE DETALLE VIAJE");
         event.preventDefault();
+        $.ajax({
+            url: '/api/me/created-trips/' + idViajeARecomendar,
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                var desde = data.tripDetails.fromCity.name;
+                var hasta = data.tripDetails.toCity.name;
+                var des = desde.split(",");
+                var has = hasta.split(",");
+                var titulo = "\u00A1Recomenda tu viaje desde " + des[0]+","+des[2] + " hasta " + has[0]+","+has[2] + " a tus amigos!";
+                $("#modRecomendar h4").html(titulo);
+            }
+        })
         $("#modRecomendar").modal("show");
         $("#amigosList").html("");
         $("#boxAmigos").val('');
@@ -239,7 +253,7 @@ $(function () {
      * Agrego la funcionalidad de efectivamente recomendar y notificar por un viaje
      */
     $("#btnRecomendar").click(function (event) {
-        console.log("TOQUE RECOMENDAR DESDE DETALLE VIAJE");
+    	console.log("Empiezo la recomendacion");
 
         event.preventDefault();
         $("#modRecomendar").hide();
@@ -252,25 +266,33 @@ $(function () {
             console.log('id viaje recomendado: ' + idViajeARecomendar);
             $.ajax({
                 type: 'POST',
-                url: '/api/recommendations/' + val,
-                data: JSON.stringify({
-                    "idUsuario": id,
-                    "idViaje": idViajeARecomendar
-                }),
-                contentType: 'application/json',
-                dataType: 'text',
+                url: '/api/me/created-recommendations',
+//                data: JSON.stringify({
+//                    "idUsuario": id,
+//                    "idViaje": idViajeARecomendar
+//                }),
+//                contentType: 'application/json',
+                data: "targetid="+val+"&tripid="+idViajeARecomendar,
+                contentType: 'application/x-www-form-urlencoded',
+                dataType: 'json',
                 success: function (data) {
-                    console.log("el app token es");
-                    appToken = "1586547271608233|" + data;
-                    console.log(appToken);
-                    FB.api('/' + val + '/notifications', 'post', {
-                        template: "Recibiste una recomendacion de un viaje",
-                        href: 'http://localhost:8080',
-                        access_token: appToken
-                    }, function (data) {
-                        console.log(data);
-                    });
+                	console.log(data);
+//                    console.log("el app token es");
+//                    appToken = "1586547271608233|" + data;
+//                    console.log(appToken);
+//                    FB.api('/' + val + '/notifications', 'post', {
+//                        template: "Recibiste una recomendacion de un viaje",
+//                        href: 'http://localhost:8080',
+//                        access_token: appToken
+//                    }, function (data) {
+//                        console.log(data);
+//                    });
                     bootbox.alert("Has recomendado el viaje satisfactoriamente", function () {
+                    });
+                },
+                error: function(data){
+                	console.log(data);
+                	bootbox.alert("Ya existe una recomendacion pendiente por este viaje para un usuario seleccionado", function () {
                     });
                 }
             });
@@ -300,18 +322,18 @@ $(function () {
 
     //TODO habría que hacer que los elementos se te vayan agregando en el input (como el de facebook)
     $("#boxAmigos").autocomplete({
-        //TODO get amigoss
-//        source: listaAmigosTrucha,
-        source: listAmigos,
-        select: function (event, ui) {
-            for (var indice in listIdAmigosARecomendar) {
-                if (listIdAmigosARecomendar[indice].name == ui.item.value) {
-                    amigosSelecRecomendar.push(listIdAmigosARecomendar[indice].id);
-                }
-            }
-            $("#amigosList").append("<li>" + ui.item.value + "</li>");
-            $("#boxAmigos").val('');
-        }
+    	//TODO get amigoss
+//  	source: listaAmigosTrucha,
+    	source: listAmigos,
+    	select: function (event, ui) {
+    		for (var indice in listIdAmigosARecomendar) {
+    			if (listIdAmigosARecomendar[indice].name == ui.item.value && amigosSelecRecomendar.indexOf(listIdAmigosARecomendar[indice].id)==-1) {
+    				amigosSelecRecomendar.push(listIdAmigosARecomendar[indice].id);
+    	    		$("#amigosList").append("<li>" + ui.item.value + "</li>");
+    			}
+    		}
+    		$("#boxAmigos").val('');
+    	}
     });
     // recomendar ****************************************
 
@@ -597,8 +619,8 @@ function getViajesPropiosHTML(data) {
 function getViajesDeAmigosHTML(data) {
 	var des = data.tripDetails.fromCity.name.split(",");
     var has = data.tripDetails.toCity.name.split(",");
-    return '<div class="list-group-item" id="itemAmigo">'
-            + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje Desde '
+    return '<div class="list-group-item" id="'+data.id+'">'
+            + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">'+data.owner.name+' creo un viaje desde '
             + des[0]+','+des[2] 
             + ' a '
             + has[0]+','+has[2] 
@@ -607,7 +629,7 @@ function getViajesDeAmigosHTML(data) {
             + ' y volviendo el d&iacute;a '
             + data.tripDetails.inboundDate
             + '</a></h3>'
-            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a></p>'
+//            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a></p>'
             + '</div>';
 }
 
@@ -880,7 +902,8 @@ function getInfoAirportsAndMap(flight) {
 }
 //** funciones ajax **************************************************************
 
-
+//Clicks de botones de Viajes
+//******************************************************************
 function initClickDetalle(id) {
 
 // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
@@ -889,6 +912,9 @@ function initClickDetalle(id) {
     if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
         $("#modListaRecomendaciones").modal("hide");
     }
+    
+    console.log('El viaje a recomendar es: ' + id.data);
+    idViajeARecomendar = id.data;
     
     var precio;
     var desde;
@@ -909,35 +935,49 @@ function initClickDetalle(id) {
             var titulo = "\u00A1Tu viaje desde " + des[0]+","+des[2] + " hasta " + has[0]+","+has[2] + "!";
             $("div[id=modDetalleViaje] h4").html(titulo);
             var enter = "<br>";
-            var itinerario = "<strong>Itinerario de Ida: </strong>"+enter;
+            var itinerario = '<u><strong><font size="3">Itinerario de Ida: </font></strong></u>'+enter;
             var fechaSalida;
             var fechaLlegada;
             $.each(resptrip.outboundItinerary, function (index, value) {
             	fechaSalida = new Date(value.departure);
                 fechaLlegada = new Date(value.arrival);
                 if (fechaSalida.toString("dd/MM/yyyy") == fechaLlegada.toString("dd/MM/yyyy")) {
-                    itinerario = itinerario + "<strong>-</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                    itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
                             "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda.";
+                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
+                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
+                    
                 }
                 else
                 {
-                    itinerario = itinerario + "-Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                    itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
                             "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") +".";
+                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
+                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
+                    
                 }
                 itinerario = itinerario + enter;
             });
-            itinerario = itinerario + "<strong>Itinerario de Vuelta: </strong>"+enter;
+            itinerario = itinerario + enter + '<u><strong><font size="3">Itinerario de Vuelta: </font></strong></u>'+enter;
             $.each(resptrip.inboundItinerary, function (index, value) {
             	fechaSalida = new Date(value.departure);
                 fechaLlegada = new Date(value.arrival);
                 if (fechaSalida.toString("dd/MM/yyyy") == fechaLlegada.toString("dd/MM/yyyy")) {
-                    itinerario = itinerario + "<strong>-</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                    itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
                             "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda.";
+                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
+                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
                 }
                 else
                 {
-                    itinerario = itinerario + "-Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                    itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
                             "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") +".";
+                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
+                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
                 }
                 itinerario = itinerario + enter;
             });
@@ -946,16 +986,12 @@ function initClickDetalle(id) {
             itinerario = itinerario + "<strong> Precio Total: "+precio+"</strong>";
             $("div[id=modDetalleViaje] div[class=col-md-6]").html(itinerario);
             //TODO llenar el mapa de detalle del viaje
-            
-            
             currentMap = mapaReview;
             var aux = new Array();
-            
             for (var i = 0; i < resptrip.outboundItinerary.length; i++) {
             	aux.push({"latitude": resptrip.outboundItinerary[i].fromAirport.latitude, "longitude": resptrip.outboundItinerary[i].fromAirport.longitude, "descripcion": resptrip.outboundItinerary[i].fromAirport.name});
             	aux.push({"latitude": resptrip.outboundItinerary[i].toAirport.latitude, "longitude": resptrip.outboundItinerary[i].toAirport.longitude, "descripcion": resptrip.outboundItinerary[i].toAirport.name});
             }            
-            
 //        	Esto es par limpiar los marcadores que vengan en el mapa de un modal abierto anteriormennte
             if (markersVuelos.length > 0) {
             	console.log("TIENE MARKERS, LIMPIO");
@@ -971,25 +1007,18 @@ function initClickDetalle(id) {
                 }
                 lineasVuelos.length = 0;
             }
-            
 //              google.maps.event.addListener(mapaReview, 'bounds_changed', function() {
 //            	  console.log(mapaReview.getMapTypeId());
 //            	  console.log(mapaReview.getZoom());
 //            	  console.log(mapaReview.getBounds());
 //            	});
-              
             drawFlightRoute(aux);
-            
             aux = new Array();
-            
             for (var i = 0; i < resptrip.inboundItinerary.length; i++) {
             	aux.push({"latitude": resptrip.inboundItinerary[i].fromAirport.latitude, "longitude": resptrip.inboundItinerary[i].fromAirport.longitude, "descripcion": resptrip.inboundItinerary[i].fromAirport.name});
             	aux.push({"latitude": resptrip.inboundItinerary[i].toAirport.latitude, "longitude": resptrip.inboundItinerary[i].toAirport.longitude, "descripcion": resptrip.inboundItinerary[i].toAirport.name});
             }            
-            
             drawFlightRoute(aux);
-            
-            
         }
     });
 
@@ -1014,8 +1043,6 @@ function initClickDetalleRecom(datos) {
         url: "/api/trips/one/" + idViaje,
         dataType: 'json',
         success: function (data) {
-//          console.log('El viaje a recomendar es: ' + data.id);
-//          idViajeARecomendar = resptrip.id;
             console.log(data);
             precio = data.price;
             desde = data.fromCity;
@@ -1054,6 +1081,19 @@ function initClickRecomendar(idViajeParaRecomendar) {
     }
     event.preventDefault();
     idViajeARecomendar = idViajeParaRecomendar.data;
+    $.ajax({
+        url: '/api/me/created-trips/' + idViajeParaRecomendar.data,
+        dataType: 'json',
+        success: function (data) {
+            console.log(data);
+            var desde = data.tripDetails.fromCity.name;
+            var hasta = data.tripDetails.toCity.name;
+            var des = desde.split(",");
+            var has = hasta.split(",");
+            var titulo = "\u00A1Recomenda tu viaje desde " + des[0]+","+des[2] + " hasta " + has[0]+","+has[2] + " a tus amigos!";
+            $("#modRecomendar h4").html(titulo);
+        }
+    })
     $("#modRecomendar").modal("show");
     $("#amigosList").html("");
     $("#boxAmigos").val('');
@@ -1102,7 +1142,7 @@ function initClickCompartir(idViajeACompartir) {
         $("#modListaRecomendaciones").modal("hide");
     }
     $.ajax({
-        url: '/api/trips/one/' + idViajeACompartir.data,
+        url: '/api/me/created-trips/' + idViajeACompartir.data,
         dataType: 'json',
         success: function (data) {
             console.log(data);
@@ -1156,6 +1196,8 @@ function initClickCompartir(idViajeACompartir) {
 
 
 }
+//Clicks de botones de Viajes
+//******************************************************************
 
 //helpers autocomplete
 //******************************************************************
@@ -1277,7 +1319,7 @@ function getRandomColor() {
  * gmaps functions *******************************************************************
  */
 
-//####################### FACEBOOK #######################################
+//####################### INICIO FACEBOOK #######################################
 function updateStatusCallback(response) {
 
     console.log('updateStatusCallback');
@@ -1395,9 +1437,9 @@ function updateStatusCallback(response) {
                             if (data.length !== 0) {
                                 $.each(data, function (index, values) {
                                     $("#listViajesAmigos").append(getViajesDeAmigosHTML(values));
-                                    $("div[id=" + values.id + "] a[role=linkViaje]").click(values.id, initClickDetalle);
-                                    $("div[id=" + values.id + "] button[id=btnRecomendarViaje]").click(values.id, initClickRecomendar);
-                                    $("div[id=" + values.id + "] a[id=compartirViaje]").click(values.id, initClickCompartir);
+//                                    $("div[id=" + values.id + "] a[role=linkViaje]").click(values.id, initClickDetalle);
+//                                    $("div[id=" + values.id + "] button[id=btnRecomendarViaje]").click(values.id, initClickRecomendar);
+//                                    $("div[id=" + values.id + "] a[id=compartirViaje]").click(values.id, initClickCompartir);
                                 });
                             }
                         },
@@ -1453,34 +1495,30 @@ function updateStatusCallback(response) {
 
 
 
-function dameLongToken() {
-
-    return token;
-
-}
-
-
 function getViajeParaFB(from, to, salida, vuelta) {
-    return 'TACS POR EL MUNDO: Viajo desde '
-            + from
-            + ' a '
-            + to
-            + ' saliendo el dia '
-            + salida
-            + ' y volviendo el dia '
-            + vuelta;
+	var des = from.split(",");
+	var has = to.split(",");
+	return 'TACS POR EL MUNDO: Viajo desde '
+	+ des[0]+','+des[2] 
+	+ ' a '
+	+ has[0]+','+has[2] 
+	+ ' saliendo el dia '
+	+ salida
+	+ ' y volviendo el dia '
+	+ vuelta;
 }
+
 //PUBLICAR EN MURO CUANDO SE CREA UN VIAJE
 function publicar() {
 //	pruebo las cosas del mapa
-    console.log("https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
-            "&zoom=" + mapaVuelo.getZoom() +
-            "&maptype=" + mapaVuelo.getMapTypeId() +
-            "&size=600x400" +
-            "&markers=color:green%7C" + markerOrigen.getPosition().toString().trim() +
-            "%7C" + markerDestino.getPosition().toString().trim() +
-            "&path=color:red%7C" + markerOrigen.getPosition().toString().trim() +
-            "%7C" + markerDestino.getPosition().toString().trim());
+//    console.log("https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
+//            "&zoom=" + mapaVuelo.getZoom() +
+//            "&maptype=" + mapaVuelo.getMapTypeId() +
+//            "&size=600x400" +
+//            "&markers=color:green%7C" + markerOrigen.getPosition().toString().trim() +
+//            "%7C" + markerDestino.getPosition().toString().trim() +
+//            "&path=color:red%7C" + markerOrigen.getPosition().toString().trim() +
+//            "%7C" + markerDestino.getPosition().toString().trim());
 //	posteo en muro de facebook
     FB.api('/' + id + '/feed', 'post', {
         message: getViajeParaFB(currentTrip.fromCity.description,
@@ -1506,67 +1544,35 @@ function publicar() {
     formResetViaje();
     formResetVuelos();
 }
+
 //COMPARTIR UN VIAJE EN EL MURO YA CREADO PREVIAMENTE
 function compartir(viaje) {
 //	pruebo las cosas del mapa
-//	console.log("https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
-//			"&zoom=" + mapaVuelo.getZoom() +
-//			"&maptype=" + mapaVuelo.getMapTypeId() +
-//			"&size=600x400" +
-//			"&markers=color:green%7C" + markerOrigen.getPosition().toString().trim() +
-//			"%7C" + markerDestino.getPosition().toString().trim() +
-//			"&path=color:red%7C" + markerOrigen.getPosition().toString().trim() +
-//			"%7C" + markerDestino.getPosition().toString().trim());
+//	console.log("https://maps.googleapis.com/maps/api/staticmap?" +
+//	"maptype=ROADMAP" +
+//	"&size=600x400" +
+//	"&markers=color:green%7C" +viaje.tripDetails.fromCity.latitude +","+viaje.tripDetails.fromCity.longitude +
+//	"%7C" + viaje.tripDetails.toCity.latitude +","+viaje.tripDetails.toCity.longitude+
+//	"&path=color:red%7C" +viaje.tripDetails.fromCity.latitude +","+viaje.tripDetails.fromCity.longitude +
+//	"%7C" +viaje.tripDetails.toCity.latitude +","+viaje.tripDetails.toCity.longitude);
 //	posteo en muro de facebook
-    FB.api('/' + id + '/feed', 'post', {
-        message: getViajeParaFB(viaje.fromCity, viaje.toCity, viaje.tripDepartureDate.toString("dd/MM/yyyy HH:mm"), viaje.tripArrivalDate.toString("dd/MM/yyyy HH:mm")),
-//        picture: "https://maps.googleapis.com/maps/api/staticmap?center=" + mapaVuelo.getCenter().toUrlValue() +
-//                "&zoom=" + mapaVuelo.getZoom() +
-//                "&maptype=" + mapaVuelo.getMapTypeId() +
-//                "&size=600x400" +
-//                "&markers=color:green%7C" + markerOrigen.getPosition().toString().trim() +
-//                "%7C" + markerDestino.getPosition().toString().trim() +
-//                "&path=color:red%7C" + markerOrigen.getPosition().toString().trim() +
-//                "%7C" + markerDestino.getPosition().toString().trim(),
-        name: 'TACS POR EL MUNDO',
-        description: 'viaje',
-        access_token: token
-    }, function (data) {
-        console.log(data);
-    });
-    bootbox.alert("Excelente! Tu nuevo viaje ya esta publicado", function () {
-    });
+	FB.api('/' + id + '/feed', 'post', {
+		message: getViajeParaFB(viaje.tripDetails.fromCity.name, viaje.tripDetails.toCity.name, viaje.tripDetails.outboundDate, viaje.tripDetails.inboundDate),
+		picture: "https://maps.googleapis.com/maps/api/staticmap?" +
+			"maptype=ROADMAP" +
+			"&size=600x400" +
+			"&markers=color:green%7C" +viaje.tripDetails.fromCity.latitude +","+viaje.tripDetails.fromCity.longitude +
+			"%7C" + viaje.tripDetails.toCity.latitude +","+viaje.tripDetails.toCity.longitude+
+			"&path=color:red%7C" +viaje.tripDetails.fromCity.latitude +","+viaje.tripDetails.fromCity.longitude +
+			"%7C" +viaje.tripDetails.toCity.latitude +","+viaje.tripDetails.toCity.longitude,
+		name: 'TACS POR EL MUNDO',
+		description: 'viaje',
+		access_token: token
+	}, function (data) {
+		console.log(data);
+		bootbox.alert("Excelente! Tu nuevo viaje ya esta publicado", function () {
+		});
+	});
+
 }
 //####################### FACEBOOK #######################################
-
-//Salís el 23/04/2015 desde Ezeiza, Buenos Aires a las 14:35 hs y llegás al Aeropuerto Internacional de la ciudad de Panamá a las 23:35 del mismo día
-
-function llegadaDatosViaje(datos) {
-    $("#detViajeRecom").append(
-            'Salio el '
-            + datos.tripDepartureDate
-            + ' desde '
-            + datos.fromCity
-            + ' hasta '
-            + datos.toCity
-            + ' llegando el dia '
-            + datos.tripArrivalDate
-            );
-}
-
-//function abrirPabelDetalleViajeRecomendado(viajeId) {
-//    // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
-//    if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
-//        $("#modListaRecomendaciones").modal("hide");
-//    }
-//    // Elimino si ya hay un detalle escrito
-//    $("#detViajeRecom").empty();
-//    // Completo con los datos del pedido ajax
-//    $.getJSON("/api/trips/one/" + viajeId, llegadaDatosViaje);
-//    $("#modDetalleViajeRecom").modal('show');
-//}
-//
-//$("#itemRecom").on("click", function () {
-//    var viajeId = $(this).attr("trip");
-//    abrirPabelDetalleViajeRecomendado(viajeId);
-//});
