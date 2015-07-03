@@ -9,6 +9,8 @@ public interface AcceptedTrip {
 
 	public User getOwner();
 
+	public String getTripId();
+
 	public TripDetails getTripDetails();
 
 	public Date getCreationDate();
