@@ -19,14 +19,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  *
  */
 
-@JsonPropertyOrder({ "trip_details",
+@JsonPropertyOrder({ "trip_id",
+	"trip_details",
 	"recommended_by",
 	"received_on",
 	"accepted_on" })
 public class AcceptedOfyTrip implements AcceptedTrip {
 
 	private Trip trip;
-
 	private Recommendation recommendation;
 
 	public AcceptedOfyTrip(Trip trip, Recommendation recommendation) {
@@ -47,6 +47,7 @@ public class AcceptedOfyTrip implements AcceptedTrip {
 	public TripDetails getTripDetails() {
 
 		return this.trip.getTripDetails();
+
 	}
 
 	@Override
@@ -63,6 +64,14 @@ public class AcceptedOfyTrip implements AcceptedTrip {
 	public Date getPatchDate() {
 
 		return this.recommendation.getPatchDate();
+	}
+
+	@Override
+	@JsonProperty("trip_id")
+	public String getTripId() {
+
+		return this.trip.getId();
+
 	}
 
 }

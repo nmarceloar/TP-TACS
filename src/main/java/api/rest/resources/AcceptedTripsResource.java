@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,6 +24,28 @@ public class AcceptedTripsResource {
 
 	@Inject
 	private TripsService tripsService;
+
+	@Path("/{trip-id}")
+	@GET
+	public Response findAcceptedTripById(@PathParam("trip-id") String tripId) {
+
+		try {
+
+			return Response.ok()
+				.type(MediaType.APPLICATION_JSON)
+				.entity(this.tripsService.findById(tripId))
+				.build();
+
+		} catch (Exception ex) {
+
+			return Response.serverError()
+				.type(MediaType.APPLICATION_JSON)
+				.entity(ex.getMessage())
+				.build();
+
+		}
+
+	}
 
 	@GET
 	public Response findAcceptedTrips() {
