@@ -1,5 +1,6 @@
 package api.rest.resources;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
@@ -10,9 +11,8 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.process.internal.RequestScoped;
 
-import services.OfyTripService;
-import services.OfyTripServiceImpl;
-import api.rest.SessionUtils;
+import services.TripsService;
+import utils.SessionUtils;
 
 @Path("/me/accepted-trips")
 @RequestScoped
@@ -21,7 +21,8 @@ public class AcceptedTripsResource {
 	@Context
 	private HttpServletRequest request;
 
-	private OfyTripService tripsService = OfyTripServiceImpl.getInstance();
+	@Inject
+	private TripsService tripsService;
 
 	@GET
 	public Response findAcceptedTrips() {

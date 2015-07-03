@@ -19,7 +19,7 @@ public class Flight {
 	}
 
 	public Flight(String aerolinea, String nroVuelo, String avion,
-			Date fechaSalida, Date fechaArribo) {
+		Date fechaSalida, Date fechaArribo) {
 
 		super();
 		this.airline = aerolinea;
@@ -82,9 +82,13 @@ public class Flight {
 	@Override
 	public String toString() {
 
-		return "Vuelo " + getFlightNumber() + " de " + getAirline()
-				+ " - Desde: " + getDepartureDate() + " hasta "
-				+ getArrivalDate();
+		return "Vuelo " + getFlightNumber()
+			+ " de "
+			+ getAirline()
+			+ " - Desde: "
+			+ getDepartureDate()
+			+ " hasta "
+			+ getArrivalDate();
 	}
 
 }

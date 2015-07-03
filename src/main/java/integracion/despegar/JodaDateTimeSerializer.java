@@ -16,8 +16,8 @@ public class JodaDateTimeSerializer extends JsonSerializer<DateTime> {
 	private static DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm");
 
 	public void serialize(final DateTime dateTime,
-			final JsonGenerator generator, final SerializerProvider provider)
-			throws IOException, JsonProcessingException {
+		final JsonGenerator generator, final SerializerProvider provider)
+		throws IOException, JsonProcessingException {
 
 		generator.writeString(JodaDateTimeSerializer.formatter.print(dateTime));
 	}

@@ -25,7 +25,7 @@ import model.Trip;
 
 import org.json.JSONObject;
 
-import apis.TripsAPI;
+import services.TripsAPI;
 
 /**
  *
@@ -96,10 +96,15 @@ public class TripsResource {
 	public Response guardarViaje(Trip v) {
 
 		this.vjSrv.saveTrip(v);
-		String result = "Guardado viaje con id " + v.getIdTrip() + " desde "
-				+ v.getFromCity() + " - hasta " + v.getToCity();
+		String result = "Guardado viaje con id " + v.getIdTrip()
+			+ " desde "
+			+ v.getFromCity()
+			+ " - hasta "
+			+ v.getToCity();
 		JSONObject obj = new JSONObject("{\"id\":\"" + v.getIdTrip()
-				+ "\" , \"result\":\"" + result + "\"}");
+			+ "\" , \"result\":\""
+			+ result
+			+ "\"}");
 
 		return Response.status(201)
 			.entity(obj.toString())

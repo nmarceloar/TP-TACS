@@ -8,30 +8,43 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import repository.impl.OfyUserRepository;
 import services.Facebook;
-import services.OfyUserService;
+import services.UsersService;
+import services.impl.OfyUserService;
+import utils.SessionUtils;
 
 public class LoginServlet extends HttpServlet {
-	
-	
-	/// HACER REFACTOR DE ESTO !
+
+	// / HACER REFACTOR DE ESTO !
 
 	private static final long serialVersionUID = 1L;
+
+	private UsersService usersService;
 
 	public LoginServlet() {
 
 		super();
 
+		// hay que encontrar la forma de injectar servicios en servlets con hk2.
+		// lo dejo asi por el momento
+		this.usersService = new OfyUserService(new OfyUserRepository());
+
 	}
 
+	private void destroySession(HttpSession session) {
+		session.invalidate();
+	}
+
+	@Override
 	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+		HttpServletResponse response) throws ServletException, IOException {
 
 		String token = request.getParameter("token");
 
 		if (token == null) {
 
-			noTokenResponse(response);
+			this.noTokenResponse(response);
 
 		}
 
@@ -48,26 +61,31 @@ public class LoginServlet extends HttpServlet {
 					if (SessionUtils.extractToken(session)
 						.equals(token)) {
 
-						existingSessionResponse(response);
+						this.existingSessionResponse(response);
 
 					}
 
 					else {
 
-						destroySession(session);
+						this.destroySession(session);
 
-						prepareSessionAndUser(request, response, token,
-								tokenInfo);
+						this.prepareSessionAndUser(request,
+							response,
+							token,
+							tokenInfo);
 
-						newOrUpdatedSessionResponse(response, tokenInfo);
+						this.newOrUpdatedSessionResponse(response, tokenInfo);
 
 					}
 
 				} else {
 
-					prepareSessionAndUser(request, response, token, tokenInfo);
+					this.prepareSessionAndUser(request,
+						response,
+						token,
+						tokenInfo);
 
-					newSessionResponse(response, tokenInfo);
+					this.newSessionResponse(response, tokenInfo);
 
 				}
 
@@ -75,7 +93,7 @@ public class LoginServlet extends HttpServlet {
 
 			else {
 
-				invalidTokenResponse(response);
+				this.invalidTokenResponse(response);
 
 			}
 
@@ -83,19 +101,8 @@ public class LoginServlet extends HttpServlet {
 
 	}
 
-	private void newSessionResponse(HttpServletResponse response,
-			TokenInfo tokenInfo) throws IOException {
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.getOutputStream()
-			.println(
-					"Ok.Se creo una nueva sesion. userId= "
-							+ tokenInfo.getUserId());
-		response.getOutputStream()
-			.flush();
-	}
-
 	private void existingSessionResponse(HttpServletResponse response)
-			throws IOException {
+		throws IOException {
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.getOutputStream()
 			.println("Ya habia sesion.");
@@ -103,24 +110,8 @@ public class LoginServlet extends HttpServlet {
 			.flush();
 	}
 
-	private void newOrUpdatedSessionResponse(HttpServletResponse response,
-			TokenInfo tokenInfo) throws IOException {
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.getOutputStream()
-			.println(
-					"Ok.Se termino la sesion anterior." + "\n"
-							+ "Se creo una nueva sesion. userId= "
-							+ tokenInfo.getUserId());
-		response.getOutputStream()
-			.flush();
-	}
-
-	private void destroySession(HttpSession session) {
-		session.invalidate();
-	}
-
 	private void invalidTokenResponse(HttpServletResponse response)
-			throws IOException {
+		throws IOException {
 		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		response.getOutputStream()
 			.println("Token no valido.");
@@ -128,8 +119,28 @@ public class LoginServlet extends HttpServlet {
 			.flush();
 	}
 
+	private void newOrUpdatedSessionResponse(HttpServletResponse response,
+		TokenInfo tokenInfo) throws IOException {
+		response.setStatus(HttpServletResponse.SC_OK);
+		response.getOutputStream()
+			.println("Ok.Se termino la sesion anterior." + "\n"
+				+ "Se creo una nueva sesion. userId= "
+				+ tokenInfo.getUserId());
+		response.getOutputStream()
+			.flush();
+	}
+
+	private void newSessionResponse(HttpServletResponse response,
+		TokenInfo tokenInfo) throws IOException {
+		response.setStatus(HttpServletResponse.SC_OK);
+		response.getOutputStream()
+			.println("Ok.Se creo una nueva sesion. userId= " + tokenInfo.getUserId());
+		response.getOutputStream()
+			.flush();
+	}
+
 	private void noTokenResponse(HttpServletResponse response)
-			throws IOException {
+		throws IOException {
 		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		response.getOutputStream()
 			.println("No habia token!.");
@@ -138,8 +149,8 @@ public class LoginServlet extends HttpServlet {
 	}
 
 	private void prepareSessionAndUser(HttpServletRequest request,
-			HttpServletResponse response, String token, TokenInfo tokenInfo)
-			throws IOException {
+		HttpServletResponse response, String token, TokenInfo tokenInfo)
+		throws IOException {
 
 		HttpSession session;
 
@@ -148,15 +159,13 @@ public class LoginServlet extends HttpServlet {
 			session.setAttribute(SessionUtils.USER_ID, tokenInfo.getUserId());
 			session.setAttribute(SessionUtils.TOKEN, token);
 			session.setAttribute(SessionUtils.EXPIRATION_DATE,
-					tokenInfo.getExpirationDate());
+				tokenInfo.getExpirationDate());
 
 		}
 
-		if (!OfyUserService.getInstance()
-			.exists(tokenInfo.getUserId())) {
+		if (!this.usersService.exists(tokenInfo.getUserId())) {
 
-			OfyUserService.getInstance()
-				.createUser(Facebook.getUserDetails(token));
+			this.usersService.createUser(Facebook.getUserDetails(token));
 
 		}
 

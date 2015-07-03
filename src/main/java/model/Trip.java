@@ -7,131 +7,132 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Trip implements Serializable {
 
-    private static int contadorId = 1;
+	private static int contadorId = 1;
 
-    @JsonProperty("idPassenger")
-    private String idPassenger;
+	@JsonProperty("idPassenger")
+	private String idPassenger;
 
-    @JsonProperty("fromCity")
-    private String fromCity;
+	@JsonProperty("fromCity")
+	private String fromCity;
 
-    @JsonProperty("toCity")
-    private String toCity;
+	@JsonProperty("toCity")
+	private String toCity;
 
-    @JsonProperty("price")
-    private String price;
+	@JsonProperty("price")
+	private String price;
 
-    @JsonProperty("itinerary")
-    private List<Segment> itinerary;
+	@JsonProperty("itinerary")
+	private List<Segment> itinerary;
 
-    @JsonProperty("idTrip")
-    private int idTrip;
+	@JsonProperty("idTrip")
+	private int idTrip;
 
-    public String getFromCity() {
+	public String getFromCity() {
 
-        return fromCity;
-    }
+		return fromCity;
+	}
 
-    public void setFromCity(String fromCity) {
+	public void setFromCity(String fromCity) {
 
-        this.fromCity = fromCity;
-    }
+		this.fromCity = fromCity;
+	}
 
-    public String getToCity() {
+	public String getToCity() {
 
-        return toCity;
-    }
+		return toCity;
+	}
 
-    public void setToCity(String toCity) {
+	public void setToCity(String toCity) {
 
-        this.toCity = toCity;
-    }
+		this.toCity = toCity;
+	}
 
-    public Trip() {
+	public Trip() {
 
-        idTrip = contadorId++;
-    }
+		idTrip = contadorId++;
+	}
 
-    public Trip(String idPassenger, String fromCity, String toCity,
-            String price, List<Segment> itinerary) {
+	public Trip(String idPassenger, String fromCity, String toCity,
+		String price, List<Segment> itinerary) {
 
-        this.idPassenger = idPassenger;
-        this.fromCity = fromCity;
-        this.toCity = toCity;
-        this.price = price;
-        this.itinerary = itinerary;
-        idTrip = contadorId++;
-    }
+		this.idPassenger = idPassenger;
+		this.fromCity = fromCity;
+		this.toCity = toCity;
+		this.price = price;
+		this.itinerary = itinerary;
+		idTrip = contadorId++;
+	}
 
-    public Trip(String idPassenger, String fromCity, String toCity, String price, List<Segment> itinerary, int idTrip) {
-        this.idPassenger = idPassenger;
-        this.fromCity = fromCity;
-        this.toCity = toCity;
-        this.price = price;
-        this.itinerary = itinerary;
-        this.idTrip = idTrip;
-    }
+	public Trip(String idPassenger, String fromCity, String toCity,
+		String price, List<Segment> itinerary, int idTrip) {
+		this.idPassenger = idPassenger;
+		this.fromCity = fromCity;
+		this.toCity = toCity;
+		this.price = price;
+		this.itinerary = itinerary;
+		this.idTrip = idTrip;
+	}
 
-    public String getPrice() {
+	public String getPrice() {
 
-        return price;
-    }
+		return price;
+	}
 
-    public void setPrice(String price) {
+	public void setPrice(String price) {
 
-        this.price = price;
-    }
+		this.price = price;
+	}
 
-    public void setIdPassenger(String idPassenger) {
+	public void setIdPassenger(String idPassenger) {
 
-        this.idPassenger = idPassenger;
-    }
+		this.idPassenger = idPassenger;
+	}
 
-    public String getIdPassenger() {
+	public String getIdPassenger() {
 
-        return idPassenger;
-    }
+		return idPassenger;
+	}
 
-    public int getIdTrip() {
+	public int getIdTrip() {
 
-        return idTrip;
-    }
+		return idTrip;
+	}
 
-    public void setIdTrip(int idTrip) {
+	public void setIdTrip(int idTrip) {
 
-        this.idTrip = idTrip;
-    }
+		this.idTrip = idTrip;
+	}
 
-    public void setViajante(String viajante) {
+	public void setViajante(String viajante) {
 
-        this.idPassenger = viajante;
-    }
+		this.idPassenger = viajante;
+	}
 
-    public List<Segment> getItinerary() {
+	public List<Segment> getItinerary() {
 
-        return itinerary;
-    }
+		return itinerary;
+	}
 
-    public void setItinerary(List<Segment> itinerary) {
+	public void setItinerary(List<Segment> itinerary) {
 
-        this.itinerary = itinerary;
-    }
+		this.itinerary = itinerary;
+	}
 
-    public String getTripDepartureDate() {
+	public String getTripDepartureDate() {
 
-        return getItinerary().get(0)
-                .getDepartureDatetime();
-    }
+		return getItinerary().get(0)
+			.getDepartureDatetime();
+	}
 
-    public String getTripArrivalDate() {
+	public String getTripArrivalDate() {
 
-        return getItinerary().get(itinerary.size() - 1)
-                .getArrivalDatetime();
-    }
+		return getItinerary().get(itinerary.size() - 1)
+			.getArrivalDatetime();
+	}
 
-    public void addSegment(Segment tray) {
+	public void addSegment(Segment tray) {
 
-        getItinerary().add(tray);
-    }
+		getItinerary().add(tray);
+	}
 
 }

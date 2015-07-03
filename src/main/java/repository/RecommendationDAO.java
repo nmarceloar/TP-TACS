@@ -25,7 +25,7 @@ public interface RecommendationDAO {
 	public List<Recommendation> getRecomendacionesDeUsuarioPorId(String idUser);
 
 	public void deleteRecommendation(int id);
-        
-        public List<Recommendation> getRecomendaciones();
+
+	public List<Recommendation> getRecomendaciones();
 
 }

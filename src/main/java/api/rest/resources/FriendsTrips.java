@@ -2,27 +2,31 @@ package api.rest.resources;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import model2.Trip;
+
 import org.glassfish.jersey.process.internal.RequestScoped;
 
-import services.OfyTrip;
-import services.OfyTripService;
-import services.OfyTripServiceImpl;
+import services.TripsService;
 
 @Path("/me/friends-trips")
 @RequestScoped
 public class FriendsTrips {
 
-	private OfyTripService tripsService = OfyTripServiceImpl.getInstance();
+	@Inject
+	private TripsService tripsService;
 
 	@GET
 	@Produces("application/json")
-	public List<OfyTrip> findTripsByOwner(
+	public
+		List<? extends Trip>
+		findTripsByOwner(
 			@NotNull(message = "Debe especificar el id del amigo del cual desea ver los viajes") @QueryParam("friend-id") final Long friendId) {
 
 		// ojo, aca habria que verificar si realmente son amigos

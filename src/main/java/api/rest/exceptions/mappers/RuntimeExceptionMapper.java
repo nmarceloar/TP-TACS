@@ -7,7 +7,7 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 public class RuntimeExceptionMapper implements
-		ExceptionMapper<RuntimeException> {
+	ExceptionMapper<RuntimeException> {
 
 	@Override
 	public Response toResponse(RuntimeException exception) {

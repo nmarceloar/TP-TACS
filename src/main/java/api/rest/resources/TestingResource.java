@@ -2,34 +2,40 @@ package api.rest.resources;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import model2.Recommendation;
+import model2.Trip;
+import model2.User;
+
 import org.glassfish.jersey.process.internal.RequestScoped;
 
-import services.OfyRecommendation;
-import services.OfyRecommendationsService;
-import services.OfyTrip;
-import services.OfyTripService;
-import services.OfyTripServiceImpl;
-import services.OfyUser;
-import services.OfyUserService;
+import services.RecommendationsService;
+import services.TripsService;
+import services.UsersService;
 
 @Path("/testing")
 @RequestScoped
 public class TestingResource {
 
-	private OfyUserService users = OfyUserService.getInstance();
-	private OfyTripService trips = OfyTripServiceImpl.getInstance();
-	private OfyRecommendationsService recommendations = OfyRecommendationsService.getInstance();
+	@Inject
+	private UsersService users;
+
+	@Inject
+	private TripsService trips;
+
+	@Inject
+	private RecommendationsService recommendations;
 
 	@GET
 	@Path("/recommendations")
 	@Produces("application/json")
-	public List<OfyRecommendation> findAllRecommendations() {
+	public List<? extends Recommendation> findAllRecommendations() {
 
 		return this.recommendations.findAll();
 
@@ -38,7 +44,7 @@ public class TestingResource {
 	@GET
 	@Path("/trips")
 	@Produces("application/json")
-	public List<OfyTrip> findAllTrips() {
+	public List<? extends Trip> findAllTrips() {
 
 		return this.trips.findAll();
 
@@ -47,7 +53,7 @@ public class TestingResource {
 	@GET
 	@Path("/users")
 	@Produces("application/json")
-	public List<OfyUser> findAllUsers() {
+	public List<? extends User> findAllUsers() {
 
 		return this.users.findAll();
 

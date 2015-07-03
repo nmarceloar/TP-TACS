@@ -6,10 +6,7 @@
 package unitTests.services;
 
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
-import services.TripOptionsDescriptorService;
-import services.TripOptionsDescriptorServiceImpl;
 
 /**
  *
@@ -18,9 +15,9 @@ import services.TripOptionsDescriptorServiceImpl;
 @RunWith(MockitoJUnitRunner.class)
 public class TripOptionsDescriptorServiceTest {
     
-    @InjectMocks
-    private TripOptionsDescriptorService psjServ = TripOptionsDescriptorServiceImpl.getInstance();
-    
-    
+	// @InjectMocks
+	// private TripOptionsDescriptorService psjServ =
+	// TripOptionsDescriptorServiceImpl.getInstance();
+	//    
     
 }

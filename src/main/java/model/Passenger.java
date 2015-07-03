@@ -35,7 +35,7 @@ public class Passenger implements Serializable {
 	// }
 
 	public Passenger(String id, String nombre, String apellido, String token,
-			List<String> amigos) {
+		List<String> amigos) {
 
 		this.name = nombre;
 		this.surname = apellido;

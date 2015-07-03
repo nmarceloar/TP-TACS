@@ -23,13 +23,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import model.Passenger;
-import apis.PassengerAPI;
+import services.PassengerAPI;
 
 /**
  *
  * @author Flavio L. Pietrolati
  */
-//@Path("/passengers")
+// @Path("/passengers")
 @Produces(MediaType.APPLICATION_JSON)
 public class PassengerResource {
 
@@ -79,8 +79,8 @@ public class PassengerResource {
 		this.pjSrv.createPassenger(psj);
 
 		return Response.status(201)
-				.entity("Creado nuevo pasajero " + psj.getIdUser())
-				.build();
+			.entity("Creado nuevo pasajero " + psj.getIdUser())
+			.build();
 
 	}
 
@@ -90,10 +90,10 @@ public class PassengerResource {
 	public Response nuevoPasajero(IdToken idToken) {
 
 		Passenger pass = this.pjSrv.postPassengerByIdToken(idToken.getId(),
-				idToken.gettoken());
+			idToken.gettoken());
 		return Response.status(201)
-				.entity("Logueado correctamente el pasajero " + pass.getIdUser())
-				.build();
+			.entity("Logueado correctamente el pasajero " + pass.getIdUser())
+			.build();
 	}
 
 }

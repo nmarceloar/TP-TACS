@@ -24,13 +24,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import model.Recommendation;
-import apis.RecommendationAPI;
+import services.RecommendationAPI;
 
 /**
  *
  * @author Flavio L. Pietrolati
  */
-//@Path("/recommendations")
+// @Path("/recommendations")
 @Produces(MediaType.APPLICATION_JSON)
 public class RecommendationResource {
 
@@ -49,12 +49,12 @@ public class RecommendationResource {
 	@Path("{userId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response assignRecommendation(RecommendationBeanFB rec,
-			@PathParam("userId") String id) {
+		@PathParam("userId") String id) {
 		this.srvRecom.instanceAndSaveRecommendation(rec, id);
 		String result = "Recomendacion asignada correctamente";
 		return Response.status(201)
-				.entity(result)
-				.build();
+			.entity(result)
+			.build();
 	}
 
 	/**
@@ -67,20 +67,19 @@ public class RecommendationResource {
 	@PUT
 	@Path("one/{idRec}")
 	public Response cambiarEstadoRecomendacion(@PathParam("idRec") String id,
-			@NotNull @QueryParam("st") String state) {
+		@NotNull @QueryParam("st") String state) {
 		if ((id == null) || (state == null)) {
-			String result = "Fallo la asignacion de estado de recomendacion."
-					+ " Parametros invalidos";
+			String result = "Fallo la asignacion de estado de recomendacion." + " Parametros invalidos";
 			return Response.status(401)
-					.entity(result)
-					.build();
+				.entity(result)
+				.build();
 		} else {
 			this.srvRecom.assignStateRecommendation(Integer.parseInt(id), state);
 		}
 		String result = "Estado de recomendacion asignado correctamente";
 		return Response.status(201)
-				.entity(result)
-				.build();
+			.entity(result)
+			.build();
 	}
 
 	@GET
@@ -94,7 +93,7 @@ public class RecommendationResource {
 	@Path("{userId}")
 	@Produces("application/json")
 	public List<Recommendation> getRecommendationsByUser(
-			@PathParam("userId") String id) {
+		@PathParam("userId") String id) {
 		// Salvo la opcion de que devuelva una lista vacia
 		if (this.srvRecom.getRecommendationsOfUser(id) == null) {
 			return new ArrayList<>();

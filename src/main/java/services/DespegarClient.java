@@ -23,7 +23,7 @@ public class DespegarClient {
 
 			@Override
 			public void filter(final ClientRequestContext requestContext)
-					throws IOException {
+				throws IOException {
 
 				requestContext.getHeaders()
 					.add("X-ApiKey", "19638437094c4892a8af7cdbed49ee43");

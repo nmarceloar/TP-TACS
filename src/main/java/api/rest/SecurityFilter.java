@@ -20,7 +20,7 @@ public class SecurityFilter implements Filter {
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response,
-			FilterChain chain) throws IOException, ServletException {
+		FilterChain chain) throws IOException, ServletException {
 
 		HttpServletRequest srequest = (HttpServletRequest)request;
 		HttpServletResponse sresponse = (HttpServletResponse)response;
@@ -29,9 +29,7 @@ public class SecurityFilter implements Filter {
 
 			sresponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			sresponse.getOutputStream()
-				.println(
-						"No se permite el acceso a esta parte.\n"
-								+ "Se debe iniciar sesion primero");
+				.println("No se permite el acceso a esta parte.\n" + "Se debe iniciar sesion primero");
 			sresponse.getOutputStream()
 				.flush();
 

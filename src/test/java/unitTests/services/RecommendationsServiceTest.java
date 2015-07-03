@@ -5,17 +5,21 @@
  */
 package unitTests.services;
 
-import apis.RecommendationAPI;
 import com.google.appengine.repackaged.com.google.protobuf.ServiceException;
+
 import integracion.facebook.RecommendationBeanFB;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.validation.ValidationException;
+
 import model.Passenger;
 import model.Recommendation;
 import model.Segment;
 import model.Trip;
+
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,10 +27,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+
 import static org.mockito.Matchers.any;
+
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
 import static org.mockito.Mockito.when;
+
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
@@ -34,10 +42,12 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+
 import repository.PassengerDAO;
 import repository.RecommendationDAO;
 import repository.TripsDAO;
-import services.PersistenceService;
+import services.RecommendationAPI;
+import services.impl.PersistenceService;
 
 /**
  *

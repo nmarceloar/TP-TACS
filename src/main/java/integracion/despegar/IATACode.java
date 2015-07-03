@@ -23,7 +23,7 @@ public class IATACode {
 	public static String checkValid(final String iataCode) {
 
 		Preconditions.checkNotNull(iataCode,
-				"El codigo del aeropuerto no puede ser null");
+			"El codigo del aeropuerto no puede ser null");
 
 		Preconditions.checkArgument(iataCode.toLowerCase()
 			.matches("[a-z]{3}"), "Formato no válido de codigo de aeropuerto");

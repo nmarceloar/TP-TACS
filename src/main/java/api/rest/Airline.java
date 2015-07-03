@@ -13,7 +13,7 @@ public class Airline {
 	}
 
 	private String buildName(String code, String callsign, String name,
-			String country) {
+		String country) {
 
 		StringBuilder nameBuilder = new StringBuilder();
 

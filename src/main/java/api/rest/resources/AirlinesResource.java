@@ -1,7 +1,7 @@
 package api.rest.resources;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -9,13 +9,13 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.process.internal.RequestScoped;
 
 import services.AirlinesService;
-import services.AirlinesServiceImpl;
 
 //@Path("/airlines")
 @RequestScoped
 public class AirlinesResource {
 
-	private AirlinesService airlinesService = AirlinesServiceImpl.getInstance();
+	@Inject
+	private AirlinesService airlinesService;
 
 	@GET
 	public Response findAirlineByCode(@QueryParam("code") final String code) {

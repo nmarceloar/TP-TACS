@@ -28,11 +28,11 @@ public class TokenInfo {
 
 		@JsonCreator
 		public Data(@JsonProperty("app_id") final long app_id,
-				@JsonProperty("application") final String application,
-				@JsonProperty("expires_at") final long expires_at,
-				@JsonProperty("is_valid") final boolean is_valid,
-				@JsonProperty("scopes") final List<String> scopes,
-				@JsonProperty("user_id") final long user_id) {
+			@JsonProperty("application") final String application,
+			@JsonProperty("expires_at") final long expires_at,
+			@JsonProperty("is_valid") final boolean is_valid,
+			@JsonProperty("scopes") final List<String> scopes,
+			@JsonProperty("user_id") final long user_id) {
 
 			this.app_id = app_id;
 			this.application = application;

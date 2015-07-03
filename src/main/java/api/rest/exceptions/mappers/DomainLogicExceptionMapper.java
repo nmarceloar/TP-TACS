@@ -9,7 +9,7 @@ import api.rest.exceptions.DomainLogicException;
 
 @Provider
 public class DomainLogicExceptionMapper implements
-		ExceptionMapper<DomainLogicException> {
+	ExceptionMapper<DomainLogicException> {
 
 	@Override
 	public Response toResponse(DomainLogicException ex) {

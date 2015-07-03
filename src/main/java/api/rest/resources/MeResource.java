@@ -1,5 +1,6 @@
 package api.rest.resources;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
@@ -7,13 +8,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 
+import model2.User;
+
 import org.glassfish.jersey.process.internal.RequestScoped;
 
 import services.Facebook;
-import services.OfyUser;
-import services.OfyUserService;
+import services.UsersService;
+import utils.SessionUtils;
 import api.rest.FriendsList;
-import api.rest.SessionUtils;
 
 @Path("/me")
 @RequestScoped
@@ -22,7 +24,8 @@ public class MeResource {
 	@Context
 	private HttpServletRequest request;
 
-	private OfyUserService usersService = OfyUserService.getInstance();
+	@Inject
+	private UsersService usersService;
 
 	@Path("/friends")
 	@GET
@@ -86,7 +89,7 @@ public class MeResource {
 
 	@GET
 	@Produces("application/json")
-	public OfyUser me() {
+	public User me() {
 
 		return usersService.findById(this.getCurrentUserId());
 

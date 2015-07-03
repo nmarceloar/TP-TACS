@@ -5,14 +5,12 @@
  */
 package unitTests.services;
 
-import apis.TripOptionsService;
 import mocks.ItinerariosDespegarMock;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import services.TripOptionsServiceImpl;
 
 /**
  *
@@ -21,9 +19,10 @@ import services.TripOptionsServiceImpl;
 @RunWith(MockitoJUnitRunner.class)
 public class TripOptionsServiceTest {
 
-    @InjectMocks
-    private TripOptionsService trpServ = TripOptionsServiceImpl.getInstance();
-    
+	// @InjectMocks
+	// private TripOptionsService trpServ =
+	// TripOptionsServiceImpl.getInstance();
+	//
     @Mock
     private ItinerariosDespegarMock despMock;
     

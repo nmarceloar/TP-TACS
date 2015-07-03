@@ -20,13 +20,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import model.Passenger;
-import apis.PassengerAPI;
+import services.PassengerAPI;
 
 /**
  *
  * @author flavio
  */
-//@Path("/friends")
+// @Path("/friends")
 @Produces(MediaType.APPLICATION_JSON)
 public class FriendsResource {
 
@@ -42,15 +42,16 @@ public class FriendsResource {
 	@Path("{idUser}/{idFriend}")
 	@Consumes("application/json")
 	public Response assignFriend(@PathParam("idUser") String idUser,
-			@PathParam("idFriend") String idFriend) {
+		@PathParam("idFriend") String idFriend) {
 
 		this.pjSrv.assignFriend(idUser, idFriend);
 		this.pjSrv.assignFriend(idFriend, idUser);
-		String result = "El usuario " + idUser + " es amigo del usuario "
-				+ idFriend;
+		String result = "El usuario " + idUser
+			+ " es amigo del usuario "
+			+ idFriend;
 		return Response.status(201)
-				.entity(result)
-				.build();
+			.entity(result)
+			.build();
 	}
 
 	@GET
@@ -69,14 +70,14 @@ public class FriendsResource {
 	@Path("{idUser}/{idFriend}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public boolean getSonAmigos(@PathParam("idUser") String id,
-			@PathParam("idFriend") String idFriend) {
+		@PathParam("idFriend") String idFriend) {
 
 		// Chequeo que si no existe ese usuario, devuelva lista vacia
 		if (this.pjSrv.getFriendsOfPassenger(id) == null) {
 			return false;
 		}
 		if (this.pjSrv.getFriendsOfPassenger(id)
-				.contains(idFriend)) {
+			.contains(idFriend)) {
 			return true;
 		}
 		return false;

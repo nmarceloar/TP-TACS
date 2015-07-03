@@ -50,7 +50,7 @@ public class SearchFriendsFB implements Serializable {
 	}
 
 	public SearchFriendsFB(List<UserRegisteredFB> usuarios,
-			PaginateFB paginate, SummaryPageFB sumary) {
+		PaginateFB paginate, SummaryPageFB sumary) {
 		this.usuarios = usuarios;
 		this.paginate = paginate;
 		this.sumary = sumary;

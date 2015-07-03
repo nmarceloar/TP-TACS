@@ -2,6 +2,7 @@ package api.rest.resources;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
@@ -15,12 +16,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
+import model2.Recommendation;
+import model2.impl.OfyRecommendation;
+
 import org.glassfish.jersey.process.internal.RequestScoped;
 
-import services.OfyRecommendation;
-import services.OfyRecommendationsService;
+import services.RecommendationsService;
+import utils.SessionUtils;
 import api.rest.PATCH;
-import api.rest.SessionUtils;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -33,7 +36,8 @@ public class ReceivedRecommendationsResource {
 	@Context
 	private HttpServletRequest request;
 
-	private OfyRecommendationsService recommendationService = OfyRecommendationsService.getInstance();
+	@Inject
+	private RecommendationsService recommendationService;
 
 	private boolean checkPatchSpec(final RecommendationPatchJsonSpec patchSpec) {
 
@@ -47,8 +51,8 @@ public class ReceivedRecommendationsResource {
 	@GET
 	@Path("/{recommendation-id}")
 	@Produces("application/json")
-	public OfyRecommendation findRecommendationById(
-			@NotNull @PathParam("recommendation-id") final String recommendationId) {
+	public Recommendation findRecommendationById(
+		@NotNull @PathParam("recommendation-id") final String recommendationId) {
 
 		return this.recommendationService.findById(recommendationId);
 
@@ -56,11 +60,13 @@ public class ReceivedRecommendationsResource {
 
 	@GET
 	@Produces("application/json")
-	public List<OfyRecommendation> findRecommendationsByTargetAndStatus(
-			@NotNull @QueryParam("status") @DefaultValue(value = "PENDING") final OfyRecommendation.Status status) {
+	public
+		List<? extends Recommendation>
+		findRecommendationsByTargetAndStatus(
+			@NotNull @QueryParam("status") @DefaultValue(value = "PENDING") final Recommendation.Status status) {
 
-		return this.recommendationService.findByTargetAndStatus(
-				this.getCurrentUserId(), status);
+		return this.recommendationService.findByTargetAndStatus(this.getCurrentUserId(),
+			status);
 
 	}
 
@@ -86,9 +92,9 @@ public class ReceivedRecommendationsResource {
 	@Path("/{recommendation-id}")
 	@Consumes("application/json")
 	@Produces("application/json")
-	public OfyRecommendation patchRecommendation(
-			@NotNull @PathParam("recommendation-id") final String recommendationId,
-			@NotNull final RecommendationPatchJsonSpec patchSpec) {
+	public Recommendation patchRecommendation(
+		@NotNull @PathParam("recommendation-id") final String recommendationId,
+		@NotNull final RecommendationPatchJsonSpec patchSpec) {
 
 		// esto es una implementacion cualquiera(anda, pero es cualquiera).
 		// hay que implementar RFC 6902.
@@ -103,13 +109,13 @@ public class ReceivedRecommendationsResource {
 
 		if (!this.checkPatchSpec(patchSpec)) {
 
-			throw new BadRequestException(
-					"Solo se permite actualizar el estado de una recomendacion");
+			throw new BadRequestException("Solo se permite actualizar el estado de una recomendacion");
 
 		}
 
-		return this.recommendationService.patchRecommendation(
-				this.getCurrentUserId(), recommendationId, patchSpec.getValue());
+		return this.recommendationService.patchRecommendation(this.getCurrentUserId(),
+			recommendationId,
+			patchSpec.getValue());
 
 	}
 
@@ -128,8 +134,8 @@ class RecommendationPatchJsonSpec {
 	private OfyRecommendation.Status value;
 
 	public RecommendationPatchJsonSpec(@JsonProperty("op") String op,
-			@JsonProperty("path") String path,
-			@JsonProperty("value") OfyRecommendation.Status value) {
+		@JsonProperty("path") String path,
+		@JsonProperty("value") OfyRecommendation.Status value) {
 
 		this.op = op;
 		this.path = path;
