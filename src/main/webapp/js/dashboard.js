@@ -1589,6 +1589,7 @@ function updateStatusCallback(response) {
 //                    console.log('Agrego ' + value.id + ' a lista de amigos.')
 //                    listIdAmigosARecomendar.push(value.id);
 //                    listAmigos.push(nombreCom);
+                    $("#itemSinViajeAmigo").hide();
                     listIdAmigosARecomendar.push({"id": value.id, "name": nombreCom});
                     listAmigos.push(nombreCom);
 //                  Aca lleno los viajes de este amigo  
@@ -1607,6 +1608,7 @@ function updateStatusCallback(response) {
                         },
                         error: function(data){
                         	console.log(data.responseText);
+                        	$("#itemSinViajeAmigo").show();
                         }
                     });
                 });
