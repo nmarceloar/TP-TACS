@@ -294,7 +294,8 @@
                         <!--Aca indico que exluya los que estan en el paquete integrationtest-->
                     </excludes>
                     <argLine>
-                        -XX:MaxPermSize=512m -Xmx256m ${jacoco.argLine}
+                        <!--                        -XX:MaxPermSize=512m -Xmx256m ${jacoco.argLine}-->
+                        ${jacoco.argLine}
                     </argLine>
                     <!--Force alphabetical order to have a reproducible build-->
                     <runOrder>alphabetical</runOrder>
