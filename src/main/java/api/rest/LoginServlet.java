@@ -158,8 +158,9 @@ public class LoginServlet extends HttpServlet {
 
 			session.setAttribute(SessionUtils.USER_ID, tokenInfo.getUserId());
 			session.setAttribute(SessionUtils.TOKEN, token);
-			session.setAttribute(SessionUtils.EXPIRATION_DATE,
-				tokenInfo.getExpirationDate());
+			session.setMaxInactiveInterval(-1);
+			// session.setAttribute(SessionUtils.EXPIRATION_DATE,
+			// tokenInfo.getExpirationDate());
 
 		}
 
