@@ -191,15 +191,69 @@ $(function () {
 
 
     $("#btnAceptarRecom").click(function (event) {
+    	
         console.log('Recomendacion activa es: ' + recomActiva);
         $.ajax({
-            url: '/api/recommendations/one/' + recomActiva + '?st=acp',
-            type: 'PUT',
-            dataType: 'text',
+            url: '/api/me/received-recommendations/' + recomActiva,
+            type: 'PATCH',
+            data: JSON.stringify({
+        		"op":"replace",
+        		"path":"/status",
+        		"value":"ACCEPTED"
+        		}),
+        	contentType: 'application/json',
+            dataType: 'json',
             success: function (data) {
                 console.log(data);
-                bootbox.alert('Se ha aceptado la recomendacion', function () {
+                bootbox.alert('Se ha aceptado la recomendacion. Ahora este viaje aparecera como viaje Aceptado.', function () {
                 });
+                $("#listViajesAceptados").html("");
+                $("#listViajesAceptados").append('<div class="list-group-item active"><h4>Viajes Aceptados por recomendaciones</h4></div>');
+                /**
+                 * Lleno mis viajes aceptados
+                 */
+                $.ajax({
+                    url: '/api/me/accepted-trips',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.length != 0) {
+                            $("#itemSinViajeAceptado").hide();
+                            $.each(data, function (index, value) {
+                            	console.log(value);
+                                $("#listViajesAceptados").append(getViajesAceptadosHTML(value));
+//                                $("div[id=" + value.id + "] a[role=linkViaje]").click(value.id, initClickDetalle);
+//                                $("div[id=" + value.id + "] button[id=btnRecomendarViaje]").click(value.id, initClickRecomendar);
+//                                $("div[id=" + value.id + "] a[id=compartirViaje]").click(value.id, initClickCompartir);
+                            });
+                        }
+                    }
+                }
+                );
+                $("#listRecomendaciones").html("");
+    			/**
+    			 * Lleno con las recomendaciones que me hicieron
+    			 */
+    			$.ajax({
+    				url: '/api/me/received-recommendations/',
+    				dataType: 'json',
+    				success: function (data) {
+//  					var i = 1;
+    					if (data.length != 0) {
+    						$("#CeroRecom").remove();
+    						$.each(data, function (index, value) {
+//  							$("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value, i));
+//  							i++;
+    							$("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value));
+    							//<a href="#" role="linkViajeRecom" id="itemRecom" trip="4">
+    							$("a[role=linkViajeRecom][id=" + value.id + "][trip=" + value.trip.id + "]").click({"idRec": value.id}, initClickDetalleRecom);
+    						});
+    						$("#listRecomendaciones").append("<li class=\"divider\"></li>");
+//  						$("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
+    					}else{
+    						$("#listRecomendaciones").append('<li id="CeroRecom"><a href="#" role="linkViajeRecom"> No tenes nuevas Recomendaciones</a></li>');
+    					}
+    				}
+    			});
             },
             error: function (data) {
                 console.log(data);
@@ -210,21 +264,52 @@ $(function () {
     });
 
     $("#btnRechazarRecom").click(function (event) {
-        $.ajax({
-            url: '/api/recommendations/one/' + recomActiva + '?st=rej',
-            type: 'PUT',
-            dataType: 'text',
-            success: function (data) {
-                console.log(data);
-                bootbox.alert('Se ha rechazado la recomendacion', function () {
-                });
-            },
-            error: function (data) {
-                console.log(data);
-                bootbox.alert('Fallo el rechazo de recomendacion', function () {
-                });
-            }
-        });
+    	$.ajax({
+    		url: '/api/me/received-recommendations/' + recomActiva,
+    		type: 'PATCH',
+    		data: JSON.stringify({
+    			"op":"replace",
+    			"path":"/status",
+    			"value":"REJECTED"
+    		}),
+    		contentType: 'application/json',
+    		dataType: 'json',
+    		success: function (data) {
+    			console.log(data);
+    			bootbox.alert('Se ha rechazado la recomendacion', function () {
+    			});
+    			$("#listRecomendaciones").html("");
+    			/**
+    			 * Lleno con las recomendaciones que me hicieron
+    			 */
+    			$.ajax({
+    				url: '/api/me/received-recommendations/',
+    				dataType: 'json',
+    				success: function (data) {
+//  					var i = 1;
+    					if (data.length != 0) {
+    						$("#CeroRecom").remove();
+    						$.each(data, function (index, value) {
+//  							$("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value, i));
+//  							i++;
+    							$("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value));
+    							//<a href="#" role="linkViajeRecom" id="itemRecom" trip="4">
+    							$("a[role=linkViajeRecom][id=" + value.id + "][trip=" + value.trip.id + "]").click({"idRec": value.id}, initClickDetalleRecom);
+    						});
+    						$("#listRecomendaciones").append("<li class=\"divider\"></li>");
+//  						$("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
+    					}else{
+    						$("#listRecomendaciones").append('<li id="CeroRecom"><a href="#" role="linkViajeRecom"> No tenes nuevas Recomendaciones</a></li>');
+    					}
+    				}
+    			});
+    		},
+    		error: function (data) {
+    			console.log(data);
+    			bootbox.alert('Fallo el rechazo de recomendacion', function () {
+    			});
+    		}
+    	});
     });
     
     $("#btnRecomendarViaje").click(function (event) {
@@ -292,7 +377,7 @@ $(function () {
                 },
                 error: function(data){
                 	console.log(data);
-                	bootbox.alert("Ya existe una recomendacion pendiente por este viaje para un usuario seleccionado", function () {
+                	bootbox.alert("Ya hiciste una recomendacion por este viaje para un usuario seleccionado", function () {
                     });
                 }
             });
@@ -558,6 +643,11 @@ $(function () {
                     }
                     lineasVuelos.length = 0;
                 }
+            },
+            error: function(data){
+            	console.log(data);
+            	bootbox.alert("Ha surgido un problema! no hemos podido crear tu viaje", function () {
+              	});
             }
         });
 
@@ -571,28 +661,6 @@ $(function () {
 });
 
 // ** templates ************************************************
-function getViajesAceptadosHTML(data) {
-    contViajes++;
-    return '<div class="list-group-item" id="'
-            + data.id
-            + '">'
-            + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje '
-            + contViajes
-            + '. Desde '
-            + data.tripDetails.fromCity.name
-            + ' a '
-            + data.tripDetails.toCity.name
-            + ' saliendo el d&iacute;a '
-            + data.tripDetails.outboundDate
-            + ' y volviendo el d&iacute;a '
-            + data.tripDetails.inboundDate
-            + '</a></h3>'
-            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a></p>'
-            + '</div>';
-}
-
-
-
 function getViajesPropiosHTML(data) {
     contViajes++;
     var des = data.tripDetails.fromCity.name.split(",");
@@ -610,6 +678,27 @@ function getViajesPropiosHTML(data) {
             + data.tripDetails.outboundDate
             + ' y volviendo el d&iacute;a '
             + data.tripDetails.inboundDate
+            + '</a></h3>'
+            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a> <a href="#" id="eliminarViaje">Eliminar</a></p>'
+            + '</div>';
+}
+
+function getViajesAceptadosHTML(data) {
+    var des = data.trip_details.fromCity.name.split(",");
+    var has = data.trip_details.toCity.name.split(",");
+//    aca hay q ponerle el id o algo
+    return '<div class="list-group-item" id="'
+            + data.id
+            + '">'
+            + '<h3 class="list-group-item-heading"><a href="#" role="linkViaje">Viaje '
+            + 'desde '
+            + des[0]+','+des[2] 
+            + ' a '
+            + has[0]+','+has[2] 
+            + ' saliendo el d&iacute;a '
+            + data.trip_details.outboundDate
+            + ' y volviendo el d&iacute;a '
+            + data.trip_details.inboundDate
             + '</a></h3>'
             + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a> <a href="#" id="eliminarViaje">Eliminar</a></p>'
             + '</div>';
@@ -636,15 +725,17 @@ function getViajesDeAmigosHTML(data) {
 
 //function insertarRecomendacionesDeViajes(data, count) {
 function insertarRecomendacionesDeViajes(data) {
+	var des = data.trip.tripDetails.fromCity.name.split(",");
+    var has = data.trip.tripDetails.toCity.name.split(",");
 //    return '<li><a href="#" role="linkViajeRecom" id="itemRecom'
     return '<li><a href="#" role="linkViajeRecom" id="' + data.id + '" trip="'
-            + data.viajeAsoc
+            + data.trip.id
             + '">'
-            + data.nombreyap
+            + data.owner.name
             + ' quiere que viajes desde '
-            + data.origen
+            + des[0]+','+des[2] 
             + ' hasta '
-            + data.destino
+            + has[0]+','+has[2] 
             + '</a></li>';
 }
 
@@ -856,8 +947,7 @@ function getVuelos() {
             $("#cargandoVuelos").hide();
             $("#lstVuelos").show();
             $("#sinVuelos").show();
-            bootbox.alert("Ha surgido un problema! no hemos podido crear tu viaje", function () {
-            });
+            
         }
     });
 }
@@ -1025,50 +1115,122 @@ function initClickDetalle(id) {
 }
 
 function initClickDetalleRecom(datos) {
-
-    event.preventDefault();
-    var idViaje = datos.data.viaje;
+	
+	$("#modDetalleViajeRecom").modal('show');
+	
+	event.preventDefault();
     recomActiva = datos.data.idRec;
-    console.log('click detalle: idViaje: ' + idViaje + ' - recom: ' + recomActiva);
+    console.log('click detalle: recomendacion id: ' + recomActiva);
 
 
     // reviso si la lista de recomendaciones está abierta y la cierro si hace falta
     if (typeof $("#modListaRecomendaciones").data("bs.modal") != 'undefined' && $("#modListaRecomendaciones").data("bs.modal").isShown) {
         $("#modListaRecomendaciones").modal("hide");
     }
+    
     var precio;
     var desde;
     var hasta;
+    
     $.ajax({
-        url: "/api/trips/one/" + idViaje,
+        url: "/api/me/received-recommendations/" + recomActiva,
         dataType: 'json',
         success: function (data) {
-            console.log(data);
-            precio = data.price;
-            desde = data.fromCity;
-            hasta = data.toCity;
-            var titulo = "\u00A1Tu viaje desde " + desde + " hasta " + hasta + "!";
+        	var resptrip = data.trip.tripDetails;
+            console.log("Respuesta trip");
+            console.log(resptrip);
+            precio = resptrip.priceDetail.total+" "+resptrip.priceDetail.currency;
+            desde = resptrip.fromCity.name;
+            hasta = resptrip.toCity.name;
+            var des = desde.split(",");
+            var has = hasta.split(",");
+            var titulo = "\u00A1Viaje desde " + des[0]+","+des[2] + " hasta " + has[0]+","+has[2] + "!";
             $("div[id=modDetalleViajeRecom] h4").html(titulo);
-            var itinerario = "";
             var enter = "<br>";
-            $.each(data.itinerary, function (index, value) {
-                console.log(value);
-                var fechaSalida = value.departure_datetime;
-                var fechaLlegada = value.arrival_datetime;
+            var itinerario = '<u><strong><font size="3">Itinerario de Ida: </font></strong></u>'+enter;
+            var fechaSalida;
+            var fechaLlegada;
+            $.each(resptrip.outboundItinerary, function (index, value) {
+            	fechaSalida = new Date(value.departure);
+                fechaLlegada = new Date(value.arrival);
                 if (fechaSalida.toString("dd/MM/yyyy") == fechaLlegada.toString("dd/MM/yyyy")) {
-                    itinerario = itinerario + "Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.from + " a las " + fechaSalida.toString("HH:mm") + " hs " +
-                            "y lleg\u00e1s a " + value.to + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda";
+                    itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                            "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda.";
+                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
+                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
+                    
                 }
                 else
                 {
-                    itinerario = itinerario + "Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.from + " a las " + fechaSalida.toString("HH:mm") + " hs " +
-                            "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.to + " a las " + fechaLlegada.toString("HH:mm");
+                    itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                            "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") +".";
+                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
+                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
+                    
                 }
                 itinerario = itinerario + enter;
             });
+            itinerario = itinerario + enter + '<u><strong><font size="3">Itinerario de Vuelta: </font></strong></u>'+enter;
+            $.each(resptrip.inboundItinerary, function (index, value) {
+            	fechaSalida = new Date(value.departure);
+                fechaLlegada = new Date(value.arrival);
+                if (fechaSalida.toString("dd/MM/yyyy") == fechaLlegada.toString("dd/MM/yyyy")) {
+                    itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                            "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda.";
+                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
+                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
+                }
+                else
+                {
+                    itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
+                            "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") +".";
+                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
+                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
+                }
+                itinerario = itinerario + enter;
+            });
+            itinerario = itinerario + enter;
+            itinerario = itinerario + enter;
+            itinerario = itinerario + "<strong> Precio Total: "+precio+"</strong>";
             $("div[id=modDetalleViajeRecom] div[class=col-md-6]").html(itinerario);
             //TODO llenar el mapa de detalle del viaje
-
+            currentMap = mapaReviewRecom;
+            var aux = new Array();
+            for (var i = 0; i < resptrip.outboundItinerary.length; i++) {
+            	aux.push({"latitude": resptrip.outboundItinerary[i].fromAirport.latitude, "longitude": resptrip.outboundItinerary[i].fromAirport.longitude, "descripcion": resptrip.outboundItinerary[i].fromAirport.name});
+            	aux.push({"latitude": resptrip.outboundItinerary[i].toAirport.latitude, "longitude": resptrip.outboundItinerary[i].toAirport.longitude, "descripcion": resptrip.outboundItinerary[i].toAirport.name});
+            }            
+//        	Esto es par limpiar los marcadores que vengan en el mapa de un modal abierto anteriormennte
+            if (markersVuelos.length > 0) {
+            	console.log("TIENE MARKERS, LIMPIO");
+                for (i in markersVuelos) {
+                	markersVuelos[i].setMap(null);
+                }
+                markersVuelos.length = 0;
+            }
+            if (lineasVuelos.length > 0) {
+            	console.log("TIENE Lineas, LIMPIO");
+                for (i in lineasVuelos) {
+                	lineasVuelos[i].setMap(null);
+                }
+                lineasVuelos.length = 0;
+            }
+//              google.maps.event.addListener(mapaReview, 'bounds_changed', function() {
+//            	  console.log(mapaReview.getMapTypeId());
+//            	  console.log(mapaReview.getZoom());
+//            	  console.log(mapaReview.getBounds());
+//            	});
+            drawFlightRoute(aux);
+            aux = new Array();
+            for (var i = 0; i < resptrip.inboundItinerary.length; i++) {
+            	aux.push({"latitude": resptrip.inboundItinerary[i].fromAirport.latitude, "longitude": resptrip.inboundItinerary[i].fromAirport.longitude, "descripcion": resptrip.inboundItinerary[i].fromAirport.name});
+            	aux.push({"latitude": resptrip.inboundItinerary[i].toAirport.latitude, "longitude": resptrip.inboundItinerary[i].toAirport.longitude, "descripcion": resptrip.inboundItinerary[i].toAirport.name});
+            }            
+            drawFlightRoute(aux);
         }
     });
 
@@ -1404,11 +1566,11 @@ function updateStatusCallback(response) {
                 if (data.length != 0) {
                     $("#itemSinViajeAceptado").hide();
                     $.each(data, function (index, value) {
-                        $("#listViajesAceptados").append(getViajesPropiosHTML(value));
-                        console.log(value.id);
-                        $("div[id=" + value.id + "] a[role=linkViaje]").click(value.id, initClickDetalle);
-                        $("div[id=" + value.id + "] button[id=btnRecomendarViaje]").click(value.id, initClickRecomendar);
-                        $("div[id=" + value.id + "] a[id=compartirViaje]").click(value.id, initClickCompartir);
+                    	console.log(value);
+                        $("#listViajesAceptados").append(getViajesAceptadosHTML(value));
+//                        $("div[id=" + value.id + "] a[role=linkViaje]").click(value.id, initClickDetalle);
+//                        $("div[id=" + value.id + "] button[id=btnRecomendarViaje]").click(value.id, initClickRecomendar);
+//                        $("div[id=" + value.id + "] a[id=compartirViaje]").click(value.id, initClickCompartir);
                     });
                 }
             }
@@ -1466,7 +1628,7 @@ function updateStatusCallback(response) {
 //      				i++;
                         $("#listRecomendaciones").append(insertarRecomendacionesDeViajes(value));
                         //<a href="#" role="linkViajeRecom" id="itemRecom" trip="4">
-                        $("a[role=linkViajeRecom][id=" + value.id + "][trip=" + value.viajeAsoc + "]").click({"viaje": value.viajeAsoc, "idRec": value.id}, initClickDetalleRecom);
+                        $("a[role=linkViajeRecom][id=" + value.id + "][trip=" + value.trip.id + "]").click({"idRec": value.id}, initClickDetalleRecom);
                     });
                     $("#listRecomendaciones").append("<li class=\"divider\"></li>");
                     $("#listRecomendaciones").append("<li><a href=\"#\" id=\"verTodasRecomendaciones\">Ver todas las recomendaciones</a></li>");
