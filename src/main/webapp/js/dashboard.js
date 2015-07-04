@@ -204,6 +204,7 @@ $(function () {
         	contentType: 'application/json',
             dataType: 'json',
             success: function (data) {
+//    			aca mirar que viene, obtener el id del chabon owner del viaje.
                 console.log(data);
                 bootbox.alert('Se ha aceptado la recomendacion. Ahora este viaje aparecera como viaje Aceptado.', function () {
                 });
@@ -254,6 +255,17 @@ $(function () {
     					}
     				}
     			});
+//    			ACA AGREGAR LO DE LA NOTIFICACION CUANDO ACEPTO UN VIAJE.
+                console.log("el app token es");
+                console.log(appToken);
+                FB.api('/' + data.owner.id + '/notifications', 'post', {
+                    template: data.target.name + " acepto una recomendacion del viaje desde "+data.trip.tripDetails.fromCity.name+ " hasta "+data.trip.tripDetails.toCity.name,
+                    href: 'http://tacs-viajando-g1.appspot.com/html/redirect.html',
+                    access_token: appToken
+                }, function (data) {
+                    console.log(data);
+                });
+    			
             },
             error: function (data) {
                 console.log(data);
@@ -342,10 +354,8 @@ $(function () {
      */
     $("#btnRecomendar").click(function (event) {
     	console.log("Empiezo la recomendacion");
-
         event.preventDefault();
         $("#modRecomendar").hide();
-
         $.each(amigosSelecRecomendar, function (i, val) {
             // Posteo de recomendacion    
             console.log('Recomendacion posteada ------');
@@ -365,16 +375,15 @@ $(function () {
                 dataType: 'json',
                 success: function (data) {
                 	console.log(data);
-//                    console.log("el app token es");
-//                    appToken = "1586547271608233|" + data;
-//                    console.log(appToken);
-//                    FB.api('/' + val + '/notifications', 'post', {
-//                        template: "Recibiste una recomendacion de un viaje",
-//                        href: 'http://localhost:8080',
-//                        access_token: appToken
-//                    }, function (data) {
-//                        console.log(data);
-//                    });
+                    console.log("el app token es");
+                    console.log(appToken);
+                    FB.api('/' + val + '/notifications', 'post', {
+                        template: "Recibiste una recomendacion de un viaje",
+                        href: 'http://tacs-viajando-g1.appspot.com/html/redirect.html',
+                        access_token: appToken
+                    }, function (data) {
+                        console.log(data);
+                    });
                     bootbox.alert("Has recomendado el viaje satisfactoriamente", function () {
                     });
                 },
@@ -384,25 +393,7 @@ $(function () {
                     });
                 }
             });
-
-//             Posteo notificacion //CORREGIR °!!!!!!!!!!!!!!!!!!!!
-//            $.ajax({
-//                type: 'POST',
-//                url: 'http://graph.facebook.com/v2.3/' + val + '/notifications?template=Recibiste una recomendacion de un viaje&href=http://localhost:8080',
-////                data: "template=Recibiste una recomendacion de un viaje&href=http://localhost:8080",
-////                contentType: 'application/json',
-//                dataType: 'json',
-//                success: function (data) {
-//                    console.log('Parametros notification: ' + data);
-//                },
-//            	error:function(data){
-//            		console.log(data);
-//            	}
-//            });
-
         });
-
-
     });
 
 
@@ -1545,8 +1536,23 @@ function updateStatusCallback(response) {
 //            });
 //        })
         token = response.authResponse.accessToken;
+        /**
+         * Lleno mis viajes anteriores
+         */
+        console.log("aca");
+        $.ajax({
+            url: '/api/me/token',
+            dataType: 'text',
+            success: function (data) {
+               console.log(data);
+               appToken = data;
+            },
+        	error: function(data){
+        		console.log(data);
+        	}
+        });
         //#############################################################
-
+        
         /**
          * Implemento la carga de viajes del usuario mediante rest
          */
