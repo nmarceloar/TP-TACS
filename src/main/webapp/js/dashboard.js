@@ -1621,6 +1621,8 @@ function updateStatusCallback(response) {
 //                                    $("div[id=" + values.id + "] button[id=btnRecomendarViaje]").click(values.id, initClickRecomendar);
 //                                    $("div[id=" + values.id + "] a[id=compartirViaje]").click(values.id, initClickCompartir);
                                 });
+                            }else{
+                            	$("#itemSinViajeAmigo").show();
                             }
                         },
                         error: function(data){
