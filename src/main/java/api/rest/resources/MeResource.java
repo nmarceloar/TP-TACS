@@ -37,6 +37,15 @@ public class MeResource {
 
 	}
 
+	@Path("/token")
+	@GET
+	@Produces("application/json")
+	public String getAppToken() {
+
+		return Facebook.getApptoken(); // ?????
+
+	}
+
 	@Path("/links")
 	@GET
 	@Produces("application/json")
