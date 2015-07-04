@@ -12,16 +12,16 @@ public interface RecommendationsRepository {
 
 	public boolean exists(String id);
 
-	public List<? extends Recommendation> findAll();
+	public List<OfyRecommendation> findAll();
 
 	public Recommendation findById(String id);
 
-	public List<? extends Recommendation> findByOwner(User owner);
+	public List<OfyRecommendation> findByOwner(User owner);
 
-	public List<? extends Recommendation> findByOwnerAndStatus(User owner,
+	public List<OfyRecommendation> findByOwnerAndStatus(User owner,
 		OfyRecommendation.Status status);
 
-	public List<? extends Recommendation> findByTargetAndStatus(User target,
+	public List<OfyRecommendation> findByTargetAndStatus(User target,
 		Recommendation.Status status);
 
 	public void removeAll();

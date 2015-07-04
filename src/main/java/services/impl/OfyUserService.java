@@ -85,7 +85,7 @@ public class OfyUserService implements UsersService {
 	}
 
 	@Override
-	public List<? extends User> findAll() {
+	public List<OfyUser> findAll() {
 
 		return userRepo.findAll();
 

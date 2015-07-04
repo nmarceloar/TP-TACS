@@ -4,6 +4,7 @@ import java.util.List;
 
 import model2.User;
 import api.rest.UserDetails;
+import model2.impl.OfyUser;
 
 public interface UsersService {
 
@@ -14,7 +15,7 @@ public interface UsersService {
 
 	public boolean exists(final long userId);
 
-	public List<? extends User> findAll();
+	public List<OfyUser> findAll();
 
 	public User findById(final long userId);
 

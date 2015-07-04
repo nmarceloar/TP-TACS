@@ -4,6 +4,7 @@ import java.util.List;
 
 import model2.Trip;
 import model2.User;
+import model2.impl.OfyTrip;
 
 public interface TripsRepository {
 
@@ -11,11 +12,11 @@ public interface TripsRepository {
 
 	public boolean exists(String id);
 
-	public List<? extends Trip> findAll();
+	public List<OfyTrip> findAll();
 
 	public Trip findById(String id);
 
-	public List<? extends Trip> findByOwner(User owner);
+	public List<OfyTrip> findByOwner(User owner);
 
 	public void removeAll();
 

@@ -37,7 +37,7 @@ public class OfyTripRepository implements TripsRepository {
 	}
 
 	@Override
-	public List<? extends Trip> findAll() {
+	public List<OfyTrip> findAll() {
 
 		return OfyService.ofy()
 			.load()
@@ -69,7 +69,7 @@ public class OfyTripRepository implements TripsRepository {
 	}
 
 	@Override
-	public List<? extends Trip> findByOwner(User owner) {
+	public List<OfyTrip> findByOwner(User owner) {
 
 		return OfyService.ofy()
 			.load()

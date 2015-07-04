@@ -23,6 +23,7 @@ import org.glassfish.jersey.process.internal.RequestScoped;
 import services.TripsService;
 import utils.SessionUtils;
 import api.rest.views.TripDetails;
+import model2.impl.OfyTrip;
 
 @Path("/me/created-trips")
 @RequestScoped
@@ -55,7 +56,7 @@ public class CreatedTripsResource {
 
 	@GET
 	@Produces("application/json")
-	public List<? extends Trip> findByOwner() {
+	public List<OfyTrip> findByOwner() {
 
 		return this.tripsService.findByOwner(SessionUtils.extractUserId(SessionUtils.existingFrom(request)));
 

@@ -3,22 +3,23 @@ package services;
 import java.util.List;
 
 import model2.Recommendation;
+import model2.impl.OfyRecommendation;
 
 public interface RecommendationsService {
 
 	public Recommendation createRecommendation(long ownerId, long targetId,
 		String tripId);
 
-	public List<? extends Recommendation> findAll();
+	public List<OfyRecommendation> findAll();
 
 	public Recommendation findById(String recId);
 
-	public List<? extends Recommendation> findByOwner(long ownerId);
+	public List<OfyRecommendation> findByOwner(long ownerId);
 
-	public List<? extends Recommendation> findByOwnerAndStatus(long ownerId,
+	public List<OfyRecommendation> findByOwnerAndStatus(long ownerId,
 		Recommendation.Status status);
 
-	public List<? extends Recommendation> findByTargetAndStatus(long targetId,
+	public List<OfyRecommendation> findByTargetAndStatus(long targetId,
 		Recommendation.Status status);
 
 	public Recommendation patchRecommendation(long userId,

@@ -61,7 +61,7 @@ public class ReceivedRecommendationsResource {
 	@GET
 	@Produces("application/json")
 	public
-		List<? extends Recommendation>
+		List<OfyRecommendation>
 		findRecommendationsByTargetAndStatus(
 			@NotNull @QueryParam("status") @DefaultValue(value = "PENDING") final Recommendation.Status status) {
 

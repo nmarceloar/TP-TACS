@@ -36,7 +36,7 @@ public class OfyUserRepository implements UsersRepository {
 	}
 
 	@Override
-	public List<? extends User> findAll() {
+	public List<OfyUser> findAll() {
 
 		return OfyService.ofy()
 			.load()

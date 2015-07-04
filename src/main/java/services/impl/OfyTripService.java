@@ -72,10 +72,10 @@ public class OfyTripService implements TripsService {
     public List<? extends AcceptedTrip> findAcceptedByTarget(final long userId) {
 
 		// entre los aceptados(recomendaciones), filtra por target user
-		// esto despues lo podemos cambiar por una nueva entidad para no tener
+        // esto despues lo podemos cambiar por una nueva entidad para no tener
         // que delegar y crear una vista
-        List<AcceptedTrip> trips = Lists.transform(recommendationRepo.findByTargetAndStatus(this.userRepo.findById(userId),
-                Status.ACCEPTED),
+        List<AcceptedTrip> trips = Lists.transform(
+                recommendationRepo.findByTargetAndStatus(this.userRepo.findById(userId), Status.ACCEPTED),
                 new Function<Recommendation, AcceptedTrip>() {
 
                     @Override
@@ -98,19 +98,20 @@ public class OfyTripService implements TripsService {
      * @see services.TripService#findAll()
      */
     @Override
-    public List<? extends Trip> findAll() {
+    public List<OfyTrip> findAll() {
 
         return this.tripRepo.findAll();
 
     }
 
     @Override
-    public List<? extends Trip> findByOwner(final long ownerId) {
+    public List<OfyTrip> findByOwner(final long ownerId) {
 
         return this.tripRepo.findByOwner(this.userRepo.findById(ownerId));
 
     }
 
+    @Override
     public void removeAll() {
         this.tripRepo.removeAll();
     }

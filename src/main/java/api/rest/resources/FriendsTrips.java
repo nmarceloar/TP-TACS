@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import model2.Trip;
+import model2.impl.OfyTrip;
 
 import org.glassfish.jersey.process.internal.RequestScoped;
 
@@ -25,7 +26,7 @@ public class FriendsTrips {
 	@GET
 	@Produces("application/json")
 	public
-		List<? extends Trip>
+		List<OfyTrip>
 		findTripsByOwner(
 			@NotNull(message = "Debe especificar el id del amigo del cual desea ver los viajes") @QueryParam("friend-id") final Long friendId) {
 

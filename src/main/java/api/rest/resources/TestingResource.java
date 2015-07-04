@@ -9,9 +9,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import model2.Recommendation;
 import model2.Trip;
 import model2.User;
+import model2.impl.OfyRecommendation;
+import model2.impl.OfyTrip;
+import model2.impl.OfyUser;
 
 import org.glassfish.jersey.process.internal.RequestScoped;
 
@@ -35,7 +37,7 @@ public class TestingResource {
 	@GET
 	@Path("/recommendations")
 	@Produces("application/json")
-	public List<? extends Recommendation> findAllRecommendations() {
+	public List<OfyRecommendation> findAllRecommendations() {
 
 		return this.recommendations.findAll();
 
@@ -44,7 +46,7 @@ public class TestingResource {
 	@GET
 	@Path("/trips")
 	@Produces("application/json")
-	public List<? extends Trip> findAllTrips() {
+	public List<OfyTrip> findAllTrips() {
 
 		return this.trips.findAll();
 
@@ -53,7 +55,7 @@ public class TestingResource {
 	@GET
 	@Path("/users")
 	@Produces("application/json")
-	public List<? extends User> findAllUsers() {
+	public List<OfyUser> findAllUsers() {
 
 		return this.users.findAll();
 

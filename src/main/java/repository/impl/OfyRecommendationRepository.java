@@ -37,7 +37,7 @@ public class OfyRecommendationRepository implements RecommendationsRepository {
 	}
 
 	@Override
-	public List<? extends Recommendation> findAll() {
+	public List<OfyRecommendation> findAll() {
 
 		return OfyService.ofy()
 			.load()
@@ -69,7 +69,7 @@ public class OfyRecommendationRepository implements RecommendationsRepository {
 	}
 
 	@Override
-	public List<? extends Recommendation> findByOwner(final User owner) {
+	public List<OfyRecommendation> findByOwner(final User owner) {
 
 		return OfyService.ofy()
 			.load()
@@ -81,7 +81,7 @@ public class OfyRecommendationRepository implements RecommendationsRepository {
 	}
 
 	@Override
-	public List<? extends Recommendation> findByOwnerAndStatus(
+	public List<OfyRecommendation> findByOwnerAndStatus(
 		final User owner, final Recommendation.Status status) {
 
 		return OfyService.ofy()
@@ -95,7 +95,7 @@ public class OfyRecommendationRepository implements RecommendationsRepository {
 	}
 
 	@Override
-	public List<? extends Recommendation> findByTargetAndStatus(
+	public List<OfyRecommendation> findByTargetAndStatus(
 		final User target, final Recommendation.Status status) {
 
 		return OfyService.ofy()

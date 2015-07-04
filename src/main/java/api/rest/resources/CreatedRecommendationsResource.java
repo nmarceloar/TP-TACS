@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 
 import model2.Recommendation;
+import model2.impl.OfyRecommendation;
 
 import org.glassfish.jersey.process.internal.RequestScoped;
 
@@ -45,7 +46,7 @@ public class CreatedRecommendationsResource {
 
 	@GET
 	@Produces("application/json")
-	public List<? extends Recommendation> findByOwner() {
+	public List<OfyRecommendation> findByOwner() {
 
 		return this.recommendationService.findByOwner(this.getCurrentUserId());
 

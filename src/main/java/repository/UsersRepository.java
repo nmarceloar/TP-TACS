@@ -3,6 +3,7 @@ package repository;
 import java.util.List;
 
 import model2.User;
+import model2.impl.OfyUser;
 
 public interface UsersRepository {
 
@@ -10,7 +11,7 @@ public interface UsersRepository {
 
 	public boolean exists(long id);
 
-	public List<? extends User> findAll();
+	public List<OfyUser> findAll();
 
 	public User findById(long id);
 
