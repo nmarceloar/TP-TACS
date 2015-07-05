@@ -617,10 +617,10 @@ $(function () {
                                 formResetVuelos();
                             }
                         });
-                $("div[id=" + data.id + "] a[role=linkViaje]").click(data.id, initClickDetalle);
+                $("div[id=" + data.id + "] a[role=linkViaje]").click({"id":data.id,"origen":"creado"}, initClickDetalle);
                 $("div[id=" + data.id + "] button[id=btnRecomendarViaje]").click(data.id, initClickRecomendar);
                 $("div[id=" + data.id + "] a[id=eliminarViaje]").click(data.id, initClickEliminar);
-                $("div[id=" + data.id + "] a[id=compartirViaje]").click(data.id, initClickCompartir);
+                $("div[id=" + data.id + "] a[id=compartirViaje]").click({"id":data.id,"origen":"creado"}, initClickCompartir);
                 
 //              Limpio los marcadores que quedaron
                 if (markersVuelos.length > 0) {
@@ -1036,7 +1036,7 @@ function initClickDetalle(id) {
                 if (fechaSalida.toString("dd/MM/yyyy") == fechaLlegada.toString("dd/MM/yyyy")) {
                     itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
                             "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda.";
-                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>Aerol\u00EDnea:</strong> " + value.airline.name + ".";
                     itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
                     itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
                     
@@ -1045,7 +1045,7 @@ function initClickDetalle(id) {
                 {
                     itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
                             "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") +".";
-                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>Aerol\u00EDnea:</strong> " + value.airline.name + ".";
                     itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
                     itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
                     
@@ -1059,7 +1059,7 @@ function initClickDetalle(id) {
                 if (fechaSalida.toString("dd/MM/yyyy") == fechaLlegada.toString("dd/MM/yyyy")) {
                     itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
                             "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda.";
-                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>Aerol\u00EDnea:</strong> " + value.airline.name + ".";
                     itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
                     itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
                 }
@@ -1067,7 +1067,7 @@ function initClickDetalle(id) {
                 {
                     itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
                             "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") +".";
-                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>Aerol\u00EDnea:</strong> " + value.airline.name + ".";
                     itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
                     itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
                 }
@@ -1158,7 +1158,7 @@ function initClickDetalleRecom(datos) {
                 if (fechaSalida.toString("dd/MM/yyyy") == fechaLlegada.toString("dd/MM/yyyy")) {
                     itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
                             "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda.";
-                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>Aerol\u00EDnea:</strong> " + value.airline.name + ".";
                     itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
                     itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
                     
@@ -1167,7 +1167,7 @@ function initClickDetalleRecom(datos) {
                 {
                     itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
                             "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") +".";
-                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>Aerol\u00EDnea:</strong> " + value.airline.name + ".";
                     itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
                     itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
                     
@@ -1181,7 +1181,7 @@ function initClickDetalleRecom(datos) {
                 if (fechaSalida.toString("dd/MM/yyyy") == fechaLlegada.toString("dd/MM/yyyy")) {
                     itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
                             "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda.";
-                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>Aerol\u00EDnea:</strong> " + value.airline.name + ".";
                     itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
                     itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
                 }
@@ -1189,7 +1189,7 @@ function initClickDetalleRecom(datos) {
                 {
                     itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
                             "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") +".";
-                    itinerario = itinerario + enter + "<strong>Aerolinea:</strong> " + value.airline.name + ".";
+                    itinerario = itinerario + enter + "<strong>Aerol\u00EDnea:</strong> " + value.airline.name + ".";
                     itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
                     itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
                 }
@@ -1277,6 +1277,7 @@ function initClickEliminar(idViajeAEliminar) {
         dataType: "text",
         method: "DELETE",
         success: function (data) {
+        	contViajes=0;
             console.log(data);
             $("#listViajes").html('<div class="list-group-item active"><h4>Tus viajes</h4></div>' +
                     '<div class="list-group-item" id="itemSinViaje">Todav\u00eda no hiciste ning\u00fan viaje <span class="glyphicon glyphicon-thumbs-down"></span></div>');
@@ -1288,9 +1289,10 @@ function initClickEliminar(idViajeAEliminar) {
                         $("#itemSinViaje").hide();
                         $.each(data, function (index, value) {
                             $("#listViajes").append(getViajesPropiosHTML(value));
-                            $("div[id=" + value.id + "] a[role=linkViaje]").click(value.id, initClickDetalle);
+                            $("div[id=" + value.id + "] a[role=linkViaje]").click({"id":value.id,"origen":"creado"}, initClickDetalle);
+                            $("div[id=" + value.id + "] button[id=btnRecomendarViaje]").click(value.id, initClickRecomendar);
                             $("div[id=" + value.id + "] a[id=eliminarViaje]").click(value.id, initClickEliminar);
-                            $("div[id=" + value.id + "] a[id=compartirViaje]").click(value.id, initClickCompartir);
+                            $("div[id=" + value.id + "] a[id=compartirViaje]").click({"id":value.id,"origen":"creado"}, initClickCompartir);
                         });
                     }
                 }
