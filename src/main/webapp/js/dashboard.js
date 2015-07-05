@@ -670,9 +670,9 @@ function getViajesPropiosHTML(data) {
             + has[0]+','+has[2] 
             + ' saliendo el d&iacute;a '
             + data.tripDetails.outboundDate
-            + ' y volviendo el d&iacute;a '
+            + ' hs y volviendo el d&iacute;a '
             + data.tripDetails.inboundDate
-            + '</a></h3>'
+            + ' hs</a></h3>'
             + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a> <a href="#" id="eliminarViaje">Eliminar</a></p>'
             + '</div>';
 }
@@ -691,9 +691,9 @@ function getViajesAceptadosHTML(data) {
             + has[0]+','+has[2] 
             + ' saliendo el d&iacute;a '
             + data.trip_details.outboundDate
-            + ' y volviendo el d&iacute;a '
+            + ' hs y volviendo el d&iacute;a '
             + data.trip_details.inboundDate
-            + '</a></h3>'
+            + ' hs</a></h3>'
             + '<p class="list-group-item-text" align="right"><a href="#" id="compartirViaje">Compartir en Muro de FB</a></p>'
             + '</div>';
 }
@@ -709,9 +709,9 @@ function getViajesDeAmigosHTML(data) {
             + has[0]+','+has[2] 
             + ' saliendo el d&iacute;a '
             + data.tripDetails.outboundDate
-            + ' y volviendo el d&iacute;a '
+            + ' hs y volviendo el d&iacute;a '
             + data.tripDetails.inboundDate
-            + '</a></h3>'
+            + ' hs</a></h3>'
 //            + '<p class="list-group-item-text" align="right"><button type="button" class="btn btn-xs btn-primary" id="btnRecomendarViaje">Recomendar <span class="glyphicon glyphicon-share-alt"></span></button> <a href="#" id="compartirViaje">Compartir</a></p>'
             + '</div>';
 }
@@ -1035,19 +1035,19 @@ function initClickDetalle(id) {
                 fechaLlegada = new Date(value.arrival);
                 if (fechaSalida.toString("dd/MM/yyyy") == fechaLlegada.toString("dd/MM/yyyy")) {
                     itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
-                            "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda.";
+                            "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " hs del mismo d\u00eda.";
                     itinerario = itinerario + enter + "<strong>Aerol\u00EDnea:</strong> " + value.airline.name + ".";
                     itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
-                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
+                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + " hs.";
                     
                 }
                 else
                 {
                     itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
-                            "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") +".";
+                            "y lleg\u00e1s el " + fechaLlegada.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") +" hs.";
                     itinerario = itinerario + enter + "<strong>Aerol\u00EDnea:</strong> " + value.airline.name + ".";
                     itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
-                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
+                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + " hs.";
                     
                 }
                 itinerario = itinerario + enter;
@@ -1058,18 +1058,18 @@ function initClickDetalle(id) {
                 fechaLlegada = new Date(value.arrival);
                 if (fechaSalida.toString("dd/MM/yyyy") == fechaLlegada.toString("dd/MM/yyyy")) {
                     itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
-                            "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " del mismo d\u00eda.";
+                            "y lleg\u00e1s a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") + " hs del mismo d\u00eda.";
                     itinerario = itinerario + enter + "<strong>Aerol\u00EDnea:</strong> " + value.airline.name + ".";
                     itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
-                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
+                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + " hs.";
                 }
                 else
                 {
                     itinerario = itinerario + "<strong>--</strong>Sal\u00eds el " + fechaSalida.toString("dd/MM/yyyy") + " desde " + value.fromAirport.name + " a las " + fechaSalida.toString("HH:mm") + " hs " +
-                            "y lleg\u00e1s el " + fechaSalida.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") +".";
+                            "y lleg\u00e1s el " + fechaLlegada.toString("dd/MM/yyyy") + " a " + value.toAirport.name + " a las " + fechaLlegada.toString("HH:mm") +" hs.";
                     itinerario = itinerario + enter + "<strong>Aerol\u00EDnea:</strong> " + value.airline.name + ".";
                     itinerario = itinerario + enter + "<strong>N\u00FAmero de vuelo:</strong> " + value.flightid + ".";
-                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + ".";
+                    itinerario = itinerario + enter + "<strong>Duraci\u00F3n del vuelo:</strong> " + value.duration + " hs.";
                 }
                 itinerario = itinerario + enter;
             });
