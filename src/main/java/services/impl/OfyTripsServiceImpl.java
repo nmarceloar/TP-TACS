@@ -17,7 +17,6 @@ import api.rest.views.TripDetails;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import com.googlecode.objectify.Work;
 
 // en realidad habria que implementar un AOP para poder separar bien el
 // servicio del repositorio
@@ -43,25 +42,16 @@ public class OfyTripsServiceImpl implements OfyTripsService {
 	public OfyTrip createTrip(final long userId,
 		final TripDetails tripDetails) {
 
-		return OfyService.ofy().transact(new Work<OfyTrip>() {
+		final OfyTrip trip = OfyTrip.createFrom(userRepo.findById(userId),
+			tripDetails);
 
-			@Override
-			public OfyTrip run() {
+		if (!tripRepo.exists(trip.getId())) {
 
-				final OfyTrip trip = OfyTrip.createFrom(userRepo.findById(userId),
-					tripDetails);
+			return tripRepo.add(trip);
 
-				if (!OfyTripsServiceImpl.this.tripRepo.exists(trip.getId())) {
+		}
 
-					return OfyTripsServiceImpl.this.tripRepo.add(trip);
-
-				}
-
-				throw new DomainLogicException("Ya existe un viaje con el id asociado");
-
-			}
-
-		});
+		throw new DomainLogicException("Ya existe un viaje con el id asociado");
 
 	}
 

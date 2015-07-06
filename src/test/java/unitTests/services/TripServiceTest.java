@@ -5,28 +5,27 @@
  */
 package unitTests.services;
 
-import static org.mockito.Mockito.when;
-
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import model2.impl.OfyTrip;
 import model2.impl.OfyUser;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
-import repository.OfyRecommendationsRepository;
 import repository.OfyTripsRepository;
 import repository.OfyUsersRepository;
+import repository.impl.OfyRecommendationsRepositoryImpl;
+import repository.impl.OfyTripsRepositoryImpl;
+import repository.impl.OfyUsersRepositoryImpl;
 import services.OfyTripsService;
+import services.OfyUsersService;
 import services.impl.OfyTripsServiceImpl;
+import services.impl.OfyUsersServiceImpl;
+import api.rest.UserDetails;
+import api.rest.views.Airline;
 import api.rest.views.Airport;
 import api.rest.views.City;
 import api.rest.views.PriceDetail;
@@ -37,181 +36,117 @@ import api.rest.views.TripDetails;
  *
  * @author flpitu88
  */
-public class TripServiceTest {
+public class TripServiceTest extends BaseOfyTest {
 
-	private OfyUsersRepository userRepo;
-	private OfyTripsRepository tripRepo;
-	private OfyRecommendationsRepository recommendationRepo;
+	@Test
+	public void createTripTest() {
 
-	private OfyTripsService trpSrv;
+		// esto esta testeando varias cosas en realidad, separar.
 
-	@Before
-	public void setUp() {
+		final OfyUsersRepository userRepo = new OfyUsersRepositoryImpl();
+		final OfyTripsRepository tripRepo = new OfyTripsRepositoryImpl();
+		final OfyRecommendationsRepositoryImpl recommendationRepo = new OfyRecommendationsRepositoryImpl();
 
-		userRepo = Mockito.mock(OfyUsersRepository.class);
-		tripRepo = Mockito.mock(OfyTripsRepository.class);
-		recommendationRepo = Mockito.mock(OfyRecommendationsRepository.class);
-
-		trpSrv = new OfyTripsServiceImpl(userRepo,
+		final OfyTripsService tripsService = new OfyTripsServiceImpl(userRepo,
 			tripRepo,
 			recommendationRepo);
 
-		OfyUser user1 = OfyUser.createFrom(1L,
-			"Ejemplo",
-			"url",
-			"mail@test.com");
+		final OfyUsersService usersService = new OfyUsersServiceImpl(userRepo);
 
-		OfyUser user2 = OfyUser.createFrom(2L,
-			"Ejemplo",
-			"url",
-			"mail@test.com");
+		usersService.createUser(new UserDetails(1L,
+			"user1",
+			"mail",
+			"link"));
 
-		OfyUser user3 = OfyUser.createFrom(3L,
-			"Ejemplo",
-			"url",
-			"mail@test.com");
+		final OfyTrip trip = tripsService.createTrip(1L,
+			buildTripDetails());
 
-		City ciudadDe = new City("BUE", "Buenos Aires", 100, 100);
-		City ciudadHasta = new City("ROM", "Roma", 100, 100);
-		PriceDetail precio = new PriceDetail("ARS", 150);
-		Segment segmento = new Segment(null,
-			null,
-			null,
-			null,
-			null,
-			null,
-			null);
-		TripDetails detalles = new TripDetails(ciudadDe,
-			ciudadHasta,
-			precio,
-			Arrays.asList(segmento),
-			Arrays.asList(segmento));
-
-		final OfyTrip viaje = OfyTrip.createFrom(user1, detalles);
-
-		final List<OfyTrip> lista1 = Arrays.asList(viaje);
-		final List<OfyTrip> lista2 = Arrays.asList(viaje);
-		final List<OfyTrip> lista3 = Arrays.asList(viaje);
-
-		when(tripRepo.findById("1")).thenReturn(viaje);
-		when(tripRepo.findAll()).thenReturn(lista1);
-		when(userRepo.findById(1)).thenReturn(user1);
-		when(userRepo.findById(2)).thenReturn(user2);
-		when(userRepo.findById(3)).thenReturn(user3);
-		when(tripRepo.findByOwner(user1)).thenReturn(lista1);
-		when(tripRepo.findByOwner(user2)).thenReturn(lista2);
-		when(tripRepo.findByOwner(user3)).thenReturn(lista3);
-
-		Mockito.doAnswer(new Answer<Object>() {
-			@Override
-			public Object answer(InvocationOnMock invocation) {
-				System.out.println("Elimino el elemento");
-				lista2.clear();
-				return null;
-			}
-		}).when(tripRepo).removeAll();
-
-		Mockito.doAnswer(new Answer<Object>() {
-			@Override
-			public Object answer(InvocationOnMock invocation) {
-				System.out.println("Elimino el elemento");
-				lista3.clear();
-				return null;
-			}
-		}).when(tripRepo).deleteById("1");
-
-	}
-
-	@After
-	public void tearDown() {
-
-		this.userRepo = null;
-		this.tripRepo = null;
-		this.recommendationRepo = null;
-
-		this.trpSrv = null;
+		Assert.assertNotEquals(null, trip);
+		Assert.assertEquals(trip, tripsService.findById(trip.getId()));
+		Assert.assertTrue(tripsService.findByOwner(1L)
+			.size() == 1);
+		Assert.assertTrue(tripsService.findByOwner(1L)
+			.get(0)
+			.equals(trip));
 
 	}
 
 	@Test
-	@Ignore
-	public void createTripTest() {
-		// SIN POSIBILIDAD DE TESTEAR
-	}
-
-	@Test
-	@Ignore
 	public void findAcceptedByTargetTest() {
-		// SIN POSIBILIDAD DE TESTEAR
+
 	}
 
 	@Test
 	public void findAllTest() {
 
-		List<OfyTrip> listado = trpSrv.findAll();
+		final OfyUsersRepository userRepo = new OfyUsersRepositoryImpl();
+		final OfyTripsRepository tripRepo = new OfyTripsRepositoryImpl();
+		final OfyRecommendationsRepositoryImpl recommendationRepo = new OfyRecommendationsRepositoryImpl();
 
-		Assert.assertEquals(1, listado.size());
+		final OfyTripsService tripsService = new OfyTripsServiceImpl(userRepo,
+			tripRepo,
+			recommendationRepo);
 
-		Assert.assertEquals("BUE", listado.get(0)
-			.getTripDetails()
-			.getFromCity()
-			.getCode());
+		final OfyUser user1 = OfyUser.createFrom(1L,
+			"user1",
+			"fbuser1",
+			"user1@facebook.com");
 
-		Assert.assertEquals("ROM", listado.get(0)
-			.getTripDetails()
-			.getToCity()
-			.getCode());
-	}
+		userRepo.add(user1);
 
-	@Test
-	public void findByOwnerTest() {
-
-		List<OfyTrip> listado = trpSrv.findByOwner(1);
-		Assert.assertEquals(1, listado.size());
-		Assert.assertEquals("BUE", listado.get(0)
-			.getTripDetails()
-			.getFromCity()
-			.getCode());
-
-		Assert.assertEquals("ROM", listado.get(0)
-			.getTripDetails()
-			.getToCity()
-			.getCode());
-	}
-
-	@Test
-	public void removeAllTest() {
-		Assert.assertEquals(1, tripRepo.findByOwner(userRepo.findById(2))
-			.size());
-		trpSrv.removeAll();
-		Assert.assertTrue(tripRepo.findByOwner(userRepo.findById(2))
+		Assert.assertTrue(userRepo.exists(1L));
+		Assert.assertFalse(userRepo.findAll()
 			.isEmpty());
-	}
+		Assert.assertTrue(userRepo.findById(1L)
+			.getFacebookLink()
+			.equals(user1.getFacebookLink()));
 
-	@Test
-	public void findByIdTest() {
+		final OfyTrip trip = tripsService.createTrip(1L,
+			buildTripDetails());
 
-		Assert.assertEquals("BUE", trpSrv.findById("1")
-			.getTripDetails()
-			.getFromCity()
-			.getCode());
-
-		Assert.assertEquals("ROM", trpSrv.findById("1")
-			.getTripDetails()
-			.getToCity()
-			.getCode());
-	}
-
-	@Test
-	public void deleteByIdTest() {
-
-		Assert.assertEquals(1, tripRepo.findByOwner(userRepo.findById(3))
-			.size());
-
-		trpSrv.deleteById("1");
-
-		Assert.assertTrue(tripRepo.findByOwner(userRepo.findById(3))
+		Assert.assertTrue(trip != null);
+		Assert.assertTrue(!tripsService.findAll()
 			.isEmpty());
+
+	}
+
+	private TripDetails buildTripDetails() {
+
+		final City c1 = new City("BUE", "Buenos Aires", 4566.321, 56565.34);
+		final City c2 = new City("ROM", "Roma", 4566.321, 56565.34);
+		final PriceDetail pd = new PriceDetail("ARS", 5545.12);
+
+		Airport fromAirport = new Airport("EZE", "Ezeiza", 123.12, 564.12);
+		Airport toAirport = new Airport("MOR",
+			"Aeropuerto de Roma",
+			123.12,
+			564.12);
+
+		Airline airline = new Airline("AE1", "aerolinea1");
+
+		Segment segment = new Segment(fromAirport,
+			toAirport,
+			airline,
+			"fid1",
+			new Date(),
+			new Date(),
+			"45:45");
+
+		Segment segment2 = new Segment(toAirport,
+			fromAirport,
+			airline,
+			"fid1",
+			new Date(),
+			new Date(),
+			"45:45");
+
+		final List<Segment> outit = Arrays.asList(segment);
+		final List<Segment> init = Arrays.asList(segment2);
+
+		TripDetails td = new TripDetails(c1, c2, pd, outit, init);
+
+		return td;
+
 	}
 
 }

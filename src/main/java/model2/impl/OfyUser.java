@@ -18,6 +18,22 @@ import com.googlecode.objectify.annotation.Index;
 @Entity
 public class OfyUser implements User {
 
+	@Override
+	public String toString() {
+		return "OfyUser [getEmail()=" + getEmail()
+			+ ", getFacebookLink()="
+			+ getFacebookLink()
+			+ ", getId()="
+			+ getId()
+			+ ", getName()="
+			+ getName()
+			+ ", getRegistrationDate()="
+			+ getRegistrationDate()
+			+ ", hashCode()="
+			+ hashCode()
+			+ "]";
+	}
+
 	@Id
 	private long id;
 
@@ -58,10 +74,7 @@ public class OfyUser implements User {
 
 	private OfyUser(UserDetails userDetails) {
 
-		this(userDetails.getId(),
-			userDetails.getName(),
-			userDetails.getLink(),
-			userDetails.getEmail());
+		this(userDetails.getId(), userDetails.getName(), userDetails.getLink(), userDetails.getEmail());
 
 	}
 

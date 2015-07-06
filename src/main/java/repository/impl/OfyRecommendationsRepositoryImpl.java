@@ -17,7 +17,10 @@ public class OfyRecommendationsRepositoryImpl implements
 	@Override
 	public OfyRecommendation add(final OfyRecommendation recommendation) {
 
-		OfyService.ofy().save().entity(recommendation).now();
+		OfyService.ofy()
+			.save()
+			.entity(recommendation)
+			.now();
 
 		return recommendation;
 

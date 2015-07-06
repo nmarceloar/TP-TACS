@@ -17,9 +17,7 @@ public class OfyService {
 	static {
 
 		OfyService.factory().register(OfyUser.class);
-
 		OfyService.factory().register(OfyTrip.class);
-
 		OfyService.factory().register(OfyRecommendation.class);
 
 	}

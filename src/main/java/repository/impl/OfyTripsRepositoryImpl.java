@@ -15,7 +15,10 @@ public class OfyTripsRepositoryImpl implements OfyTripsRepository {
 	@Override
 	public OfyTrip add(final OfyTrip trip) {
 
-		OfyService.ofy().save().entity(trip).now();
+		OfyService.ofy()
+			.save()
+			.entity(trip)
+			.now();
 
 		return trip;
 
@@ -24,14 +27,22 @@ public class OfyTripsRepositoryImpl implements OfyTripsRepository {
 	@Override
 	public void deleteById(final String tripId) {
 
-		OfyService.ofy().delete().type(OfyTrip.class).id(tripId).now();
+		OfyService.ofy()
+			.delete()
+			.type(OfyTrip.class)
+			.id(tripId)
+			.now();
 
 	}
 
 	@Override
 	public boolean exists(final String id) {
 
-		return OfyService.ofy().load().type(OfyTrip.class).id(id).now() != null;
+		return OfyService.ofy()
+			.load()
+			.type(OfyTrip.class)
+			.id(id)
+			.now() != null;
 
 	}
 

@@ -68,22 +68,15 @@ public class LoginServlet extends HttpServlet {
 
 						this.destroySession(session);
 
-						this.prepareSessionAndUser(request,
-							response,
-							token,
-							tokenInfo);
+						this.prepareSessionAndUser(request, response, token, tokenInfo);
 
-						this.newOrUpdatedSessionResponse(response,
-							tokenInfo);
+						this.newOrUpdatedSessionResponse(response, tokenInfo);
 
 					}
 
 				} else {
 
-					this.prepareSessionAndUser(request,
-						response,
-						token,
-						tokenInfo);
+					this.prepareSessionAndUser(request, response, token, tokenInfo);
 
 					this.newSessionResponse(response, tokenInfo);
 
@@ -118,18 +111,16 @@ public class LoginServlet extends HttpServlet {
 	private void newOrUpdatedSessionResponse(HttpServletResponse response,
 		TokenInfo tokenInfo) throws IOException {
 		response.setStatus(HttpServletResponse.SC_OK);
-		response.getOutputStream()
-			.println("Ok.Se termino la sesion anterior." + "\n"
-				+ "Se creo una nueva sesion. userId= "
-				+ tokenInfo.getUserId());
+		response.getOutputStream().println("Ok.Se termino la sesion anterior." + "\n"
+			+ "Se creo una nueva sesion. userId= "
+			+ tokenInfo.getUserId());
 		response.getOutputStream().flush();
 	}
 
 	private void newSessionResponse(HttpServletResponse response,
 		TokenInfo tokenInfo) throws IOException {
 		response.setStatus(HttpServletResponse.SC_OK);
-		response.getOutputStream()
-			.println("Ok.Se creo una nueva sesion. userId= " + tokenInfo.getUserId());
+		response.getOutputStream().println("Ok.Se creo una nueva sesion. userId= " + tokenInfo.getUserId());
 		response.getOutputStream().flush();
 	}
 
@@ -148,8 +139,7 @@ public class LoginServlet extends HttpServlet {
 
 		synchronized (session = request.getSession(true)) {
 
-			session.setAttribute(SessionUtils.USER_ID,
-				tokenInfo.getUserId());
+			session.setAttribute(SessionUtils.USER_ID, tokenInfo.getUserId());
 			session.setAttribute(SessionUtils.TOKEN, token);
 			session.setMaxInactiveInterval(-1);
 			// session.setAttribute(SessionUtils.EXPIRATION_DATE,

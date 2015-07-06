@@ -14,7 +14,10 @@ public class OfyUsersRepositoryImpl implements OfyUsersRepository {
 	@Override
 	public OfyUser add(final OfyUser user) {
 
-		OfyService.ofy().save().entity(user).now();
+		OfyService.ofy()
+			.save()
+			.entity(user)
+			.now();
 
 		return user;
 
@@ -23,7 +26,11 @@ public class OfyUsersRepositoryImpl implements OfyUsersRepository {
 	@Override
 	public boolean exists(final long id) {
 
-		return OfyService.ofy().load().type(OfyUser.class).id(id).now() != null;
+		return OfyService.ofy()
+			.load()
+			.type(OfyUser.class)
+			.id(id)
+			.now() != null;
 
 	}
 

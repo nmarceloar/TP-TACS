@@ -139,4 +139,18 @@ public class OfyTrip implements Trip {
 
 	}
 
+	@Override
+	public String toString() {
+		return "OfyTrip [getCreationDate()=" + getCreationDate()
+			+ ", getId()="
+			+ getId()
+			+ ", getOwner()="
+			+ getOwner()
+			+ ", getTripDetails()="
+			+ getTripDetails()
+			+ ", hashCode()="
+			+ hashCode()
+			+ "]";
+	}
+
 }

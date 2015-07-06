@@ -6,10 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Paging {
 
 	private int offset;
-
-	private int total;
-
 	private int limit;
+	private int total;
 
 	public Paging() {
 

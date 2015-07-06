@@ -14,8 +14,6 @@ import services.OfyUsersService;
 import api.rest.UserDetails;
 import api.rest.exceptions.DomainLogicException;
 
-import com.googlecode.objectify.Work;
-
 // en realidad habria que implementar un AOP para poder separar bien el
 // servicio del repositorio
 
@@ -31,21 +29,13 @@ public class OfyUsersServiceImpl implements OfyUsersService {
 	@Override
 	public OfyUser createUser(final UserDetails userDetails) {
 
-		return OfyService.ofy().transact(new Work<OfyUser>() {
+		if (!userRepo.exists(userDetails.getId())) {
 
-			@Override
-			public OfyUser run() {
+			return userRepo.add(OfyUser.createFrom(userDetails));
 
-				if (!OfyUsersServiceImpl.this.userRepo.exists(userDetails.getId())) {
+		}
 
-					return OfyUsersServiceImpl.this.userRepo.add(OfyUser.createFrom(userDetails));
-
-				}
-
-				throw new DomainLogicException("Ya existe un usuario con ese id");
-
-			}
-		});
+		throw new DomainLogicException("Ya existe un usuario con ese id");
 
 	}
 

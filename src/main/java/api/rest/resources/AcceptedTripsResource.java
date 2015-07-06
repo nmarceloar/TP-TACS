@@ -1,31 +1,35 @@
 package api.rest.resources;
 
+import static api.rest.resources.JsonResponseFactory.okJsonFrom;
+
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.glassfish.jersey.process.internal.RequestScoped;
 
 import services.OfyTripsService;
 import utils.SessionUtils;
 
-import static api.rest.resources.JsonResponseFactory.*;
-
 @Path("/me/accepted-trips")
-@RequestScoped
+@Singleton
 public class AcceptedTripsResource {
 
-	@Context
 	private HttpServletRequest request;
+	private OfyTripsService tripsService;
 
 	@Inject
-	private OfyTripsService tripsService;
+	public AcceptedTripsResource(@Context HttpServletRequest request,
+		OfyTripsService tripsService) {
+
+		this.request = request;
+		this.tripsService = tripsService;
+
+	}
 
 	@Path("/{trip-id}")
 	@GET
