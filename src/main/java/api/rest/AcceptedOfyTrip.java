@@ -5,6 +5,7 @@ import java.util.Date;
 import model2.Recommendation;
 import model2.Trip;
 import model2.User;
+import model2.impl.OfyRecommendation;
 import utils.DateSerializer;
 import api.rest.views.TripDetails;
 
@@ -29,9 +30,9 @@ public class AcceptedOfyTrip implements AcceptedTrip {
 	private Trip trip;
 	private Recommendation recommendation;
 
-	public AcceptedOfyTrip(Trip trip, Recommendation recommendation) {
+	public AcceptedOfyTrip(OfyRecommendation recommendation) {
 
-		this.trip = trip;
+		this.trip = recommendation.getTrip();
 		this.recommendation = recommendation;
 	}
 

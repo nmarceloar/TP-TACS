@@ -1,16 +1,17 @@
 package api.rest.views;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import static org.apache.commons.lang3.RandomStringUtils.*;
 
 public class Airport {
 
 	private String code;
-
 	private String name;
-
 	private double latitude;
-
 	private double longitude;
 
 	private Airport() {

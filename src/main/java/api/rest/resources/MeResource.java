@@ -13,7 +13,7 @@ import model2.User;
 import org.glassfish.jersey.process.internal.RequestScoped;
 
 import services.Facebook;
-import services.UsersService;
+import services.OfyUsersService;
 import utils.SessionUtils;
 import api.rest.FriendsList;
 
@@ -25,15 +25,14 @@ public class MeResource {
 	private HttpServletRequest request;
 
 	@Inject
-	private UsersService usersService;
+	private OfyUsersService usersService;
 
 	@Path("/friends")
 	@GET
 	@Produces("application/json")
 	public FriendsList findFriendsList() {
 
-		return this.getFacebookService()
-			.findFriends();
+		return this.getFacebookService().findFriends();
 
 	}
 
@@ -51,8 +50,7 @@ public class MeResource {
 	@Produces("application/json")
 	public String findLinksList() {
 
-		return this.getFacebookService()
-			.findLinks();
+		return this.getFacebookService().findLinks();
 
 	}
 
@@ -61,8 +59,7 @@ public class MeResource {
 	@Produces("application/json")
 	public String findNotificationsList() {
 
-		return this.getFacebookService()
-			.findNotifications();
+		return this.getFacebookService().findNotifications();
 
 	}
 
@@ -71,8 +68,7 @@ public class MeResource {
 	@Produces("application/json")
 	public String findPostsList() {
 
-		return this.getFacebookService()
-			.findPosts();
+		return this.getFacebookService().findPosts();
 
 	}
 
@@ -81,8 +77,7 @@ public class MeResource {
 	@Produces("application/json")
 	public String findStatusesList() {
 
-		return this.getFacebookService()
-			.findStatuses();
+		return this.getFacebookService().findStatuses();
 
 	}
 
@@ -91,8 +86,7 @@ public class MeResource {
 	@Produces("application/json")
 	public String findTaggedList() {
 
-		return this.getFacebookService()
-			.findTagged();
+		return this.getFacebookService().findTagged();
 
 	}
 

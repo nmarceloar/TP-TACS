@@ -46,7 +46,8 @@ public class Segment {
 	 * @param flightId
 	 */
 	public Segment(String from, String to, String departureDatetime,
-		String arrivalDatetime, String duration, String airline, String flightId) {
+		String arrivalDatetime, String duration, String airline,
+		String flightId) {
 		this.from = from;
 		this.to = to;
 		this.departureDatetime = departureDatetime;

@@ -2,36 +2,28 @@ package repository.impl;
 
 import java.util.List;
 
-import model2.User;
 import model2.impl.OfyUser;
-import repository.UsersRepository;
+import repository.OfyUsersRepository;
 import services.impl.OfyService;
 import api.rest.exceptions.DomainLogicException;
 
 import com.googlecode.objectify.NotFoundException;
 
-public class OfyUserRepository implements UsersRepository {
+public class OfyUsersRepositoryImpl implements OfyUsersRepository {
 
 	@Override
-	public User add(final User user) {
+	public OfyUser add(final OfyUser user) {
 
-		OfyService.ofy()
-			.save()
-			.entity(user)
-			.now();
+		OfyService.ofy().save().entity(user).now();
 
 		return user;
 
 	}
 
 	@Override
-	public boolean exists(long id) {
+	public boolean exists(final long id) {
 
-		return OfyService.ofy()
-			.load()
-			.type(OfyUser.class)
-			.id(id)
-			.now() != null;
+		return OfyService.ofy().load().type(OfyUser.class).id(id).now() != null;
 
 	}
 
@@ -47,7 +39,7 @@ public class OfyUserRepository implements UsersRepository {
 	}
 
 	@Override
-	public OfyUser findById(long id) {
+	public OfyUser findById(final long id) {
 
 		try {
 
@@ -58,7 +50,7 @@ public class OfyUserRepository implements UsersRepository {
 				.safe();
 		}
 
-		catch (NotFoundException nfe) {
+		catch (final NotFoundException nfe) {
 
 			throw new DomainLogicException("No se encontro el usuario con id " + id
 				+ "\n"

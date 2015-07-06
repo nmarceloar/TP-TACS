@@ -25,8 +25,7 @@ public class FacebookClient {
 
 	private FacebookClient() {
 
-		Logger.getLogger(this.getClass()
-			.getCanonicalName())
+		Logger.getLogger(this.getClass().getCanonicalName())
 			.info("Facebook Ok.");
 	}
 

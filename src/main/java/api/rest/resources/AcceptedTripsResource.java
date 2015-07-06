@@ -12,70 +12,46 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.process.internal.RequestScoped;
 
-import services.TripsService;
+import services.OfyTripsService;
 import utils.SessionUtils;
+
+import static api.rest.resources.JsonResponseFactory.*;
 
 @Path("/me/accepted-trips")
 @RequestScoped
 public class AcceptedTripsResource {
 
-    @Context
-    private HttpServletRequest request;
+	@Context
+	private HttpServletRequest request;
 
-    @Inject
-    private TripsService tripsService;
+	@Inject
+	private OfyTripsService tripsService;
 
 	@Path("/{trip-id}")
 	@GET
-	public Response findAcceptedTripById(@PathParam("trip-id") String tripId) {
+	public Response findAcceptedTripById(
+		@PathParam("trip-id") String tripId) {
 
-		try {
-
-			return Response.ok()
-				.type(MediaType.APPLICATION_JSON)
-				.entity(this.tripsService.findById(tripId))
-				.build();
-
-		} catch (Exception ex) {
-
-			return Response.serverError()
-				.type(MediaType.APPLICATION_JSON)
-				.entity(ex.getMessage())
-				.build();
-
-		}
+		return okJsonFrom(this.tripsService.findById(tripId));
 
 	}
 
 	@GET
 	public Response findAcceptedTrips() {
 
-        try {
+		return okJsonFrom(this.tripsService.findAcceptedByTarget(this.getCurrentUserId()));
 
-            return Response.ok()
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity(this.tripsService.findAcceptedByTarget(this.getCurrentUserId()))
-                    .build();
+	}
 
-        } catch (Exception ex) {
+	private HttpSession getCurrentSession() {
 
-            return Response.serverError()
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity(ex.getMessage())
-                    .build();
-        }
+		return this.request.getSession(false);
 
-    }
+	}
 
-    private HttpSession getCurrentSession() {
+	private Long getCurrentUserId() {
 
-        return this.request.getSession(false);
+		return SessionUtils.extractUserId(this.getCurrentSession());
 
-    }
-
-    private Long getCurrentUserId() {
-
-        return SessionUtils.extractUserId(this.getCurrentSession());
-
-    }
+	}
 }

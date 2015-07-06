@@ -3,23 +3,21 @@ package repository.impl;
 import java.util.List;
 
 import model2.Recommendation;
-import model2.User;
 import model2.impl.OfyRecommendation;
-import repository.RecommendationsRepository;
+import model2.impl.OfyUser;
+import repository.OfyRecommendationsRepository;
 import services.impl.OfyService;
 import api.rest.exceptions.DomainLogicException;
 
 import com.googlecode.objectify.NotFoundException;
 
-public class OfyRecommendationRepository implements RecommendationsRepository {
+public class OfyRecommendationsRepositoryImpl implements
+	OfyRecommendationsRepository {
 
 	@Override
-	public Recommendation add(final Recommendation recommendation) {
+	public OfyRecommendation add(final OfyRecommendation recommendation) {
 
-		OfyService.ofy()
-			.save()
-			.entity(recommendation)
-			.now();
+		OfyService.ofy().save().entity(recommendation).now();
 
 		return recommendation;
 
@@ -48,7 +46,7 @@ public class OfyRecommendationRepository implements RecommendationsRepository {
 	}
 
 	@Override
-	public Recommendation findById(final String id) {
+	public OfyRecommendation findById(final String id) {
 
 		try {
 
@@ -58,7 +56,7 @@ public class OfyRecommendationRepository implements RecommendationsRepository {
 				.id(id)
 				.safe();
 
-		} catch (NotFoundException nfe) {
+		} catch (final NotFoundException nfe) {
 			throw new DomainLogicException("No se encontro la recommendacion con id " + id
 				+ "\n"
 				+ "Esto puede ser porque se empezo con el datastore vacio durante el testing"
@@ -69,7 +67,7 @@ public class OfyRecommendationRepository implements RecommendationsRepository {
 	}
 
 	@Override
-	public List<OfyRecommendation> findByOwner(final User owner) {
+	public List<OfyRecommendation> findByOwner(final OfyUser owner) {
 
 		return OfyService.ofy()
 			.load()
@@ -82,7 +80,7 @@ public class OfyRecommendationRepository implements RecommendationsRepository {
 
 	@Override
 	public List<OfyRecommendation> findByOwnerAndStatus(
-		final User owner, final Recommendation.Status status) {
+		final OfyUser owner, final Recommendation.Status status) {
 
 		return OfyService.ofy()
 			.load()
@@ -96,7 +94,7 @@ public class OfyRecommendationRepository implements RecommendationsRepository {
 
 	@Override
 	public List<OfyRecommendation> findByTargetAndStatus(
-		final User target, final Recommendation.Status status) {
+		final OfyUser target, final Recommendation.Status status) {
 
 		return OfyService.ofy()
 			.load()

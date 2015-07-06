@@ -1,6 +1,6 @@
 package api.rest.resources;
 
-import java.util.List;
+import static api.rest.resources.JsonResponseFactory.okJsonFrom;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -9,15 +9,12 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-
-import model2.Recommendation;
-import model2.impl.OfyRecommendation;
+import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.process.internal.RequestScoped;
 
-import services.RecommendationsService;
+import services.OfyRecommendationsService;
 import utils.SessionUtils;
 
 @Path("/me/created-recommendations")
@@ -25,30 +22,28 @@ import utils.SessionUtils;
 public class CreatedRecommendationsResource {
 
 	@Inject
-	private RecommendationsService recommendationService;
+	private OfyRecommendationsService recommendationService;
 
 	@Context
 	private HttpServletRequest request;
 
 	@POST
-	@Produces("application/json")
-	public Recommendation
-		createRecommendation(@FormParam("targetid") Long targetId,
-			@FormParam("tripid") String tripId) {
+	public Response createRecommendation(
+		@FormParam("targetid") Long targetId,
+		@FormParam("tripid") String tripId) {
 
 		// ojo, aca ya estariamos suponiendo que son amigos !
 
-		return this.recommendationService.createRecommendation(this.getCurrentUserId(),
+		return okJsonFrom(this.recommendationService.createRecommendation(this.getCurrentUserId(),
 			targetId,
-			tripId);
+			tripId));
 
 	}
 
 	@GET
-	@Produces("application/json")
-	public List<OfyRecommendation> findByOwner() {
+	public Response findByOwner() {
 
-		return this.recommendationService.findByOwner(this.getCurrentUserId());
+		return okJsonFrom(this.recommendationService.findByOwner(this.getCurrentUserId()));
 
 	}
 

@@ -34,8 +34,8 @@ public class Passenger implements Serializable {
 	// this.recommendations = recommendations;
 	// }
 
-	public Passenger(String id, String nombre, String apellido, String token,
-		List<String> amigos) {
+	public Passenger(String id, String nombre, String apellido,
+		String token, List<String> amigos) {
 
 		this.name = nombre;
 		this.surname = apellido;

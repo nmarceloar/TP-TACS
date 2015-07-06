@@ -5,7 +5,8 @@ public class Airline {
 	private String code;
 	private String name;
 
-	public Airline(String code, String callsign, String name, String country) {
+	public Airline(String code, String callsign, String name,
+		String country) {
 
 		this.code = code;
 		this.name = buildName(code, callsign, name, country);

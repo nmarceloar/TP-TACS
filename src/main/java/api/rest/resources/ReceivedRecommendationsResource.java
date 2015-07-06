@@ -1,6 +1,6 @@
 package api.rest.resources;
 
-import java.util.List;
+import static api.rest.resources.JsonResponseFactory.okJsonFrom;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -12,16 +12,16 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 
 import model2.Recommendation;
 import model2.impl.OfyRecommendation;
 
 import org.glassfish.jersey.process.internal.RequestScoped;
 
-import services.RecommendationsService;
+import services.OfyRecommendationsService;
 import utils.SessionUtils;
 import api.rest.PATCH;
 
@@ -37,42 +37,36 @@ public class ReceivedRecommendationsResource {
 	private HttpServletRequest request;
 
 	@Inject
-	private RecommendationsService recommendationService;
+	private OfyRecommendationsService recommendationService;
 
-	private boolean checkPatchSpec(final RecommendationPatchJsonSpec patchSpec) {
+	private boolean checkPatchSpec(
+		final RecommendationPatchJsonSpec patchSpec) {
 
 		// esto es cualquiera (anda, pero hay que pasar a RFC6902)
 
-		return patchSpec.getOp()
-			.equals("replace") && patchSpec.getPath()
+		return patchSpec.getOp().equals("replace") && patchSpec.getPath()
 			.equals("/status");
 	}
 
 	@GET
 	@Path("/{recommendation-id}")
-	@Produces("application/json")
-	public Recommendation findRecommendationById(
-		@NotNull @PathParam("recommendation-id") final String recommendationId) {
+	public
+		Response
+		findRecommendationById(
+			@NotNull @PathParam("recommendation-id") final String recommendationId) {
 
-		return this.recommendationService.findById(recommendationId);
+		return okJsonFrom(this.recommendationService.findById(recommendationId));
 
 	}
 
 	@GET
-	@Produces("application/json")
 	public
-		List<OfyRecommendation>
+		Response
 		findRecommendationsByTargetAndStatus(
 			@NotNull @QueryParam("status") @DefaultValue(value = "PENDING") final Recommendation.Status status) {
 
-		return this.recommendationService.findByTargetAndStatus(this.getCurrentUserId(),
-			status);
-
-	}
-
-	private String getCurrentFacebookToken() {
-
-		return SessionUtils.extractToken(this.getCurrentSession());
+		return okJsonFrom(this.recommendationService.findByTargetAndStatus(this.getCurrentUserId(),
+			status));
 
 	}
 
@@ -91,10 +85,11 @@ public class ReceivedRecommendationsResource {
 	@PATCH
 	@Path("/{recommendation-id}")
 	@Consumes("application/json")
-	@Produces("application/json")
-	public Recommendation patchRecommendation(
-		@NotNull @PathParam("recommendation-id") final String recommendationId,
-		@NotNull final RecommendationPatchJsonSpec patchSpec) {
+	public
+		Response
+		patchRecommendation(
+			@NotNull @PathParam("recommendation-id") final String recommendationId,
+			@NotNull final RecommendationPatchJsonSpec patchSpec) {
 
 		// esto es una implementacion cualquiera(anda, pero es cualquiera).
 		// hay que implementar RFC 6902.
@@ -113,9 +108,9 @@ public class ReceivedRecommendationsResource {
 
 		}
 
-		return this.recommendationService.patchRecommendation(this.getCurrentUserId(),
+		return okJsonFrom(this.recommendationService.patchRecommendation(this.getCurrentUserId(),
 			recommendationId,
-			patchSpec.getValue());
+			patchSpec.getValue()));
 
 	}
 
@@ -125,17 +120,18 @@ public class ReceivedRecommendationsResource {
 class RecommendationPatchJsonSpec {
 
 	@JsonProperty
-	private String op;
+	private final String op;
 
 	@JsonProperty
-	private String path;
+	private final String path;
 
 	@JsonProperty
-	private OfyRecommendation.Status value;
+	private final OfyRecommendation.Status value;
 
-	public RecommendationPatchJsonSpec(@JsonProperty("op") String op,
-		@JsonProperty("path") String path,
-		@JsonProperty("value") OfyRecommendation.Status value) {
+	public RecommendationPatchJsonSpec(
+		@JsonProperty("op") final String op,
+		@JsonProperty("path") final String path,
+		@JsonProperty("value") final OfyRecommendation.Status value) {
 
 		this.op = op;
 		this.path = path;

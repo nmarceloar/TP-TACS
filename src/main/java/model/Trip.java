@@ -120,8 +120,7 @@ public class Trip implements Serializable {
 
 	public String getTripDepartureDate() {
 
-		return getItinerary().get(0)
-			.getDepartureDatetime();
+		return getItinerary().get(0).getDepartureDatetime();
 	}
 
 	public String getTripArrivalDate() {

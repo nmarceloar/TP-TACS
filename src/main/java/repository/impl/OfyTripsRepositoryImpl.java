@@ -2,37 +2,36 @@ package repository.impl;
 
 import java.util.List;
 
-import model2.Trip;
-import model2.User;
 import model2.impl.OfyTrip;
-import repository.TripsRepository;
+import model2.impl.OfyUser;
+import repository.OfyTripsRepository;
 import services.impl.OfyService;
 import api.rest.exceptions.DomainLogicException;
 
 import com.googlecode.objectify.NotFoundException;
 
-public class OfyTripRepository implements TripsRepository {
+public class OfyTripsRepositoryImpl implements OfyTripsRepository {
 
 	@Override
-	public Trip add(final Trip trip) {
+	public OfyTrip add(final OfyTrip trip) {
 
-		OfyService.ofy()
-			.save()
-			.entity(trip)
-			.now();
+		OfyService.ofy().save().entity(trip).now();
 
 		return trip;
 
 	}
 
 	@Override
-	public boolean exists(String id) {
+	public void deleteById(final String tripId) {
 
-		return OfyService.ofy()
-			.load()
-			.type(OfyTrip.class)
-			.id(id)
-			.now() != null;
+		OfyService.ofy().delete().type(OfyTrip.class).id(tripId).now();
+
+	}
+
+	@Override
+	public boolean exists(final String id) {
+
+		return OfyService.ofy().load().type(OfyTrip.class).id(id).now() != null;
 
 	}
 
@@ -48,7 +47,7 @@ public class OfyTripRepository implements TripsRepository {
 	}
 
 	@Override
-	public Trip findById(String id) {
+	public OfyTrip findById(final String id) {
 
 		try {
 
@@ -58,7 +57,7 @@ public class OfyTripRepository implements TripsRepository {
 				.id(id)
 				.safe();
 
-		} catch (NotFoundException nfe) {
+		} catch (final NotFoundException nfe) {
 
 			throw new DomainLogicException("No se encontro el viaje con id " + id
 				+ "\n"
@@ -69,7 +68,7 @@ public class OfyTripRepository implements TripsRepository {
 	}
 
 	@Override
-	public List<OfyTrip> findByOwner(User owner) {
+	public List<OfyTrip> findByOwner(final OfyUser owner) {
 
 		return OfyService.ofy()
 			.load()
@@ -90,17 +89,6 @@ public class OfyTripRepository implements TripsRepository {
 				.type(OfyTrip.class)
 				.keys()
 				.list())
-			.now();
-
-	}
-
-	@Override
-	public void deleteById(final String tripId) {
-
-		OfyService.ofy()
-			.delete()
-			.type(OfyTrip.class)
-			.id(tripId)
 			.now();
 
 	}

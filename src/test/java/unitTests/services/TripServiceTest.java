@@ -5,162 +5,213 @@
  */
 package unitTests.services;
 
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.List;
+
+import model2.impl.OfyTrip;
+import model2.impl.OfyUser;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import repository.OfyRecommendationsRepository;
+import repository.OfyTripsRepository;
+import repository.OfyUsersRepository;
+import services.OfyTripsService;
+import services.impl.OfyTripsServiceImpl;
+import api.rest.views.Airport;
 import api.rest.views.City;
 import api.rest.views.PriceDetail;
 import api.rest.views.Segment;
 import api.rest.views.TripDetails;
-import com.google.appengine.repackaged.com.google.protobuf.ServiceException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import javax.validation.ValidationException;
-import junit.framework.Assert;
-import model2.Recommendation;
-import model2.Trip;
-import model2.impl.OfyRecommendation;
-import model2.impl.OfyTrip;
-import model2.impl.OfyUser;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
-import repository.RecommendationsRepository;
-import repository.TripsRepository;
-import repository.UsersRepository;
-import services.TripsService;
-import services.impl.OfyTripService;
 
 /**
  *
  * @author flpitu88
  */
-@RunWith(MockitoJUnitRunner.class)
 public class TripServiceTest {
 
-    @InjectMocks
-    private TripsService trpSrv = new OfyTripService();
+	private OfyUsersRepository userRepo;
+	private OfyTripsRepository tripRepo;
+	private OfyRecommendationsRepository recommendationRepo;
 
-    @Mock
-    private UsersRepository userRepo;
+	private OfyTripsService trpSrv;
 
-    @Mock
-    private TripsRepository tripRepo;
+	@Before
+	public void setUp() {
 
-    @Mock
-    private RecommendationsRepository recommendationRepo;
+		userRepo = Mockito.mock(OfyUsersRepository.class);
+		tripRepo = Mockito.mock(OfyTripsRepository.class);
+		recommendationRepo = Mockito.mock(OfyRecommendationsRepository.class);
 
-    @Before
-    public void prepare() throws ServiceException, ValidationException {
-        City ciudadDe = new City("BUE", "Buenos Aires", 100, 100);
-        City ciudadHasta = new City("ROM", "Roma", 100, 100);
-        PriceDetail precio = new PriceDetail("ARS", 150);
-        Segment segmento = new Segment(null, null, null, null, null, null, null);
-        TripDetails detalles = new TripDetails(ciudadDe, ciudadHasta, precio,
-                Arrays.asList(segmento), Arrays.asList(segmento));
+		trpSrv = new OfyTripsServiceImpl(userRepo,
+			tripRepo,
+			recommendationRepo);
 
-        final OfyTrip viaje = new OfyTrip();
-        viaje.setTripDetails(detalles);
+		OfyUser user1 = OfyUser.createFrom(1L,
+			"Ejemplo",
+			"url",
+			"mail@test.com");
 
-        List<OfyTrip> lista = Arrays.asList(viaje);
-        final List<OfyTrip> lista2 = new ArrayList<>();
-        lista2.add(viaje);
-        final List<OfyTrip> lista3 = new ArrayList<>();
-        lista3.add(viaje);
+		OfyUser user2 = OfyUser.createFrom(2L,
+			"Ejemplo",
+			"url",
+			"mail@test.com");
 
-        OfyUser user = new OfyUser(1, "Ejemplo", "url", "mail@test.com");
-        OfyUser user2 = new OfyUser(2, "Ejemplo", "url", "mail@test.com");
-        OfyUser user3 = new OfyUser(3, "Ejemplo", "url", "mail@test.com");
+		OfyUser user3 = OfyUser.createFrom(3L,
+			"Ejemplo",
+			"url",
+			"mail@test.com");
 
-        when(tripRepo.findById("1")).thenReturn(viaje);
-        when(tripRepo.findAll()).thenReturn(lista);
-        when(userRepo.findById(1)).thenReturn(user);
-        when(userRepo.findById(2)).thenReturn(user2);
-        when(userRepo.findById(3)).thenReturn(user3);
-        when(tripRepo.findByOwner(user)).thenReturn(lista);
-        when(tripRepo.findByOwner(user2)).thenReturn(lista2);
-        when(tripRepo.findByOwner(user3)).thenReturn(lista3);
-        Mockito.doAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) {
-                System.out.println("Elimino el elemento");
-                lista2.clear();
-                return null;
-            }
-        }).when(tripRepo).removeAll();
-        Mockito.doAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) {
-                System.out.println("Elimino el elemento");
-                lista3.clear();
-                return null;
-            }
-        }).when(tripRepo).deleteById("1");
+		City ciudadDe = new City("BUE", "Buenos Aires", 100, 100);
+		City ciudadHasta = new City("ROM", "Roma", 100, 100);
+		PriceDetail precio = new PriceDetail("ARS", 150);
+		Segment segmento = new Segment(null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null);
+		TripDetails detalles = new TripDetails(ciudadDe,
+			ciudadHasta,
+			precio,
+			Arrays.asList(segmento),
+			Arrays.asList(segmento));
 
-    }
+		final OfyTrip viaje = OfyTrip.createFrom(user1, detalles);
 
-    @Test
-    @Ignore
-    public void createTripTest() {
-        // SIN POSIBILIDAD DE TESTEAR
-    }
+		final List<OfyTrip> lista1 = Arrays.asList(viaje);
+		final List<OfyTrip> lista2 = Arrays.asList(viaje);
+		final List<OfyTrip> lista3 = Arrays.asList(viaje);
 
-    @Test
-    @Ignore
-    public void findAcceptedByTargetTest() {
-        // SIN POSIBILIDAD DE TESTEAR
-    }
+		when(tripRepo.findById("1")).thenReturn(viaje);
+		when(tripRepo.findAll()).thenReturn(lista1);
+		when(userRepo.findById(1)).thenReturn(user1);
+		when(userRepo.findById(2)).thenReturn(user2);
+		when(userRepo.findById(3)).thenReturn(user3);
+		when(tripRepo.findByOwner(user1)).thenReturn(lista1);
+		when(tripRepo.findByOwner(user2)).thenReturn(lista2);
+		when(tripRepo.findByOwner(user3)).thenReturn(lista3);
 
-    @Test
-    public void findAllTest() {
-        List<OfyTrip> listado = trpSrv.findAll();
-        Assert.assertEquals(1, listado.size());
-        Assert.assertEquals("BUE", listado.get(0).getTripDetails()
-                .getFromCity().getCode());
-        Assert.assertEquals("ROM", listado.get(0).getTripDetails()
-                .getToCity().getCode());
-    }
+		Mockito.doAnswer(new Answer<Object>() {
+			@Override
+			public Object answer(InvocationOnMock invocation) {
+				System.out.println("Elimino el elemento");
+				lista2.clear();
+				return null;
+			}
+		}).when(tripRepo).removeAll();
 
-    @Test
-    public void findByOwnerTest() {
-        List<OfyTrip> listado = trpSrv.findByOwner(1);
-        Assert.assertEquals(1, listado.size());
-        Assert.assertEquals("BUE", listado.get(0).getTripDetails()
-                .getFromCity().getCode());
-        Assert.assertEquals("ROM", listado.get(0).getTripDetails()
-                .getToCity().getCode());
-    }
+		Mockito.doAnswer(new Answer<Object>() {
+			@Override
+			public Object answer(InvocationOnMock invocation) {
+				System.out.println("Elimino el elemento");
+				lista3.clear();
+				return null;
+			}
+		}).when(tripRepo).deleteById("1");
 
-    @Test
-    public void removeAllTest() {
-        Assert.assertEquals(1, tripRepo
-                .findByOwner(userRepo.findById(2)).size());
-        trpSrv.removeAll();
-        Assert.assertTrue(tripRepo
-                .findByOwner(userRepo.findById(2)).isEmpty());
-    }
+	}
 
-    @Test
-    public void findByIdTest() {
-        Assert.assertEquals("BUE", trpSrv.findById("1")
-                .getTripDetails().getFromCity().getCode());
-        Assert.assertEquals("ROM", trpSrv.findById("1")
-                .getTripDetails().getToCity().getCode());
-    }
+	@After
+	public void tearDown() {
 
-    @Test
-    public void deleteByIdTest() {
-        Assert.assertEquals(1, tripRepo
-                .findByOwner(userRepo.findById(3)).size());
-        trpSrv.deleteById("1");
-        Assert.assertTrue(tripRepo
-                .findByOwner(userRepo.findById(3)).isEmpty());
-    }
+		this.userRepo = null;
+		this.tripRepo = null;
+		this.recommendationRepo = null;
+
+		this.trpSrv = null;
+
+	}
+
+	@Test
+	@Ignore
+	public void createTripTest() {
+		// SIN POSIBILIDAD DE TESTEAR
+	}
+
+	@Test
+	@Ignore
+	public void findAcceptedByTargetTest() {
+		// SIN POSIBILIDAD DE TESTEAR
+	}
+
+	@Test
+	public void findAllTest() {
+
+		List<OfyTrip> listado = trpSrv.findAll();
+
+		Assert.assertEquals(1, listado.size());
+
+		Assert.assertEquals("BUE", listado.get(0)
+			.getTripDetails()
+			.getFromCity()
+			.getCode());
+
+		Assert.assertEquals("ROM", listado.get(0)
+			.getTripDetails()
+			.getToCity()
+			.getCode());
+	}
+
+	@Test
+	public void findByOwnerTest() {
+
+		List<OfyTrip> listado = trpSrv.findByOwner(1);
+		Assert.assertEquals(1, listado.size());
+		Assert.assertEquals("BUE", listado.get(0)
+			.getTripDetails()
+			.getFromCity()
+			.getCode());
+
+		Assert.assertEquals("ROM", listado.get(0)
+			.getTripDetails()
+			.getToCity()
+			.getCode());
+	}
+
+	@Test
+	public void removeAllTest() {
+		Assert.assertEquals(1, tripRepo.findByOwner(userRepo.findById(2))
+			.size());
+		trpSrv.removeAll();
+		Assert.assertTrue(tripRepo.findByOwner(userRepo.findById(2))
+			.isEmpty());
+	}
+
+	@Test
+	public void findByIdTest() {
+
+		Assert.assertEquals("BUE", trpSrv.findById("1")
+			.getTripDetails()
+			.getFromCity()
+			.getCode());
+
+		Assert.assertEquals("ROM", trpSrv.findById("1")
+			.getTripDetails()
+			.getToCity()
+			.getCode());
+	}
+
+	@Test
+	public void deleteByIdTest() {
+
+		Assert.assertEquals(1, tripRepo.findByOwner(userRepo.findById(3))
+			.size());
+
+		trpSrv.deleteById("1");
+
+		Assert.assertTrue(tripRepo.findByOwner(userRepo.findById(3))
+			.isEmpty());
+	}
 
 }

@@ -48,10 +48,8 @@ public class AirlinesServiceImpl implements AirlinesService {
 					String name = splitted[1].replace("\"", "");
 					String country = splitted[6].replace("\"", "");
 
-					this.airlines.put(airportCode, new Airline(airportCode,
-						callsign,
-						name,
-						country));
+					this.airlines.put(airportCode,
+						new Airline(airportCode, callsign, name, country));
 
 				}
 

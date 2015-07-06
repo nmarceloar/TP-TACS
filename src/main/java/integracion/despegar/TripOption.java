@@ -88,7 +88,8 @@ public class TripOption {
 		this.inbound_choices = inbound_choices;
 	}
 
-	public void setOutbound_choices(final List<Itinerary> outbound_choices) {
+	public void
+		setOutbound_choices(final List<Itinerary> outbound_choices) {
 
 		this.outbound_choices = outbound_choices;
 	}

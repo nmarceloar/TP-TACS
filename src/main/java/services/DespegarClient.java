@@ -25,8 +25,8 @@ public class DespegarClient {
 			public void filter(final ClientRequestContext requestContext)
 				throws IOException {
 
-				requestContext.getHeaders()
-					.add("X-ApiKey", "19638437094c4892a8af7cdbed49ee43");
+				requestContext.getHeaders().add("X-ApiKey",
+					"19638437094c4892a8af7cdbed49ee43");
 			}
 		});
 
@@ -38,8 +38,7 @@ public class DespegarClient {
 
 	private DespegarClient() {
 
-		Logger.getLogger(this.getClass()
-			.getCanonicalName())
+		Logger.getLogger(this.getClass().getCanonicalName())
 			.info("DespegarClient Ok.");
 
 	}

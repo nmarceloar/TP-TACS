@@ -24,14 +24,11 @@ public class LogoutServlet extends HttpServlet {
 
 		if (inSession(request)) {
 
-			SessionUtils.existingFrom(request)
-				.invalidate();
+			SessionUtils.existingFrom(request).invalidate();
 
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getOutputStream()
-				.println("Ok. Sesion terminada.");
-			response.getOutputStream()
-				.flush();
+			response.getOutputStream().println("Ok. Sesion terminada.");
+			response.getOutputStream().flush();
 
 		}
 
@@ -40,8 +37,7 @@ public class LogoutServlet extends HttpServlet {
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			response.getOutputStream()
 				.println("Error.\n" + "No habia sesion previa");
-			response.getOutputStream()
-				.flush();
+			response.getOutputStream().flush();
 		}
 
 	}

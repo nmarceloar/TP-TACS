@@ -58,8 +58,7 @@ public class PassengerDAOStatic implements PassengerDAO {
 	public Passenger getPasajeroById(String id) {
 		Passenger buscado = null;
 		for (Passenger p : getListaPasajeros()) {
-			if (p.getIdUser()
-				.equals(id)) {
+			if (p.getIdUser().equals(id)) {
 				buscado = p;
 			}
 		}
@@ -75,8 +74,7 @@ public class PassengerDAOStatic implements PassengerDAO {
 	public List<Passenger> getAmigos(String id) {
 		List<Passenger> amigos = new ArrayList();
 		for (Passenger psj : getListaPasajeros()) {
-			if (psj.getIdUser()
-				.equals(id)) {
+			if (psj.getIdUser().equals(id)) {
 				for (String idPas : psj.getFriends()) {
 					amigos.add(getPasajeroById(idPas));
 				}
@@ -89,8 +87,7 @@ public class PassengerDAOStatic implements PassengerDAO {
 	@Override
 	public List<String> getIdsAmigos(String id) {
 		for (Passenger psj : getListaPasajeros()) {
-			if (psj.getIdUser()
-				.equals(id)) {
+			if (psj.getIdUser().equals(id)) {
 				return psj.getFriends();
 			}
 		}

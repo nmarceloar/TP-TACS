@@ -20,7 +20,8 @@ public class Trayecto implements Serializable {
 
 	}
 
-	public Trayecto(AirportBean origen, AirportBean destino, Flight infoVuelo) {
+	public Trayecto(AirportBean origen, AirportBean destino,
+		Flight infoVuelo) {
 		this.origen = origen;
 		this.destino = destino;
 		this.infoVuelo = infoVuelo;

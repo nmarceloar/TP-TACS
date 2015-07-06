@@ -30,8 +30,7 @@ public class SecurityFilter implements Filter {
 			sresponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			sresponse.getOutputStream()
 				.println("No se permite el acceso a esta parte.\n" + "Se debe iniciar sesion primero");
-			sresponse.getOutputStream()
-				.flush();
+			sresponse.getOutputStream().flush();
 
 			return;
 

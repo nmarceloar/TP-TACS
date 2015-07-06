@@ -59,7 +59,8 @@ public class PersistenceService implements PassengerAPI, TripsAPI,
 	}
 
 	@Override
-	public void asignarPasajeroARecomendacion(Recommendation rec, String pass) {
+	public void asignarPasajeroARecomendacion(Recommendation rec,
+		String pass) {
 
 		Passenger pj = this.psjDao.getPasajeroById(pass);
 		rec.setNombreYAp(pj.getName() + " " + pj.getSurname());
@@ -147,8 +148,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI,
 
 		Passenger buscado = null;
 		for (Passenger p : this.psjDao.getTodosLosPasajeros()) {
-			if (p.getIdUser()
-				.equals(id)) {
+			if (p.getIdUser().equals(id)) {
 				ClientConfig config = new ClientConfig().register(new JacksonFeature());
 				Client client = ClientBuilder.newClient(config);
 				WebTarget target = client.target("https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=1586547271608233&client_secret=359a6eae58ad036b4df0c599d0cdd11a&fb_exchange_token=" + shortToken);
@@ -293,8 +293,8 @@ public class PersistenceService implements PassengerAPI, TripsAPI,
 	 * Instancia una recomendacion a partir de los datos recibidos, y la guarda
 	 * en el DAO correspondiente.
 	 */
-	public void instanceAndSaveRecommendation(RecommendationBeanFB recBean,
-		String idUser) {
+	public void instanceAndSaveRecommendation(
+		RecommendationBeanFB recBean, String idUser) {
 
 		int idViajeRecom = recBean.getIdTrip();
 		String idUsuarioQueRecomienda = recBean.getIdUser();
@@ -336,8 +336,7 @@ public class PersistenceService implements PassengerAPI, TripsAPI,
 		if (p.getFriends() == null) {
 			return false;
 		}
-		if (p.getFriends()
-			.contains(idFriend)) {
+		if (p.getFriends().contains(idFriend)) {
 			return true;
 		}
 		return false;

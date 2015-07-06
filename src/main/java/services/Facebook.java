@@ -10,8 +10,6 @@ import api.rest.UserDetails;
 
 public class Facebook {
 
-	// https://graph.facebook.com/debug_token?input_token=value&access_token=app_id|app_secret
-
 	private final static String GRAPH_API = "https://graph.facebook.com/v2.3";
 
 	private final static String APP_ID = "1586547271608233";

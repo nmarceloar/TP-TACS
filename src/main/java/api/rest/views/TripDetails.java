@@ -12,21 +12,18 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class TripDetails {
 
 	public City fromCity;
-
 	public City toCity;
-
 	public PriceDetail priceDetail;
-
 	public List<Segment> outboundItinerary;
-
 	public List<Segment> inboundItinerary;
 
 	private TripDetails() {
-
+		super();
 	}
 
 	@JsonCreator
-	public TripDetails(@JsonProperty("fromCity") City fromCity,
+	public TripDetails(
+		@JsonProperty("fromCity") City fromCity,
 		@JsonProperty("toCity") City toCity,
 		@JsonProperty("priceDetail") PriceDetail priceDetail,
 		@JsonProperty("outboundItinerary") List<Segment> outboundItinerary,
@@ -48,8 +45,7 @@ public class TripDetails {
 	@JsonSerialize(using = DateSerializer.class)
 	public Date getInboundDate() {
 
-		return this.inboundItinerary.get(0)
-			.getDeparture();
+		return this.inboundItinerary.get(0).getDeparture();
 
 	}
 
@@ -61,8 +57,7 @@ public class TripDetails {
 	@JsonSerialize(using = DateSerializer.class)
 	public Date getOutboundDate() {
 
-		return this.outboundItinerary.get(0)
-			.getDeparture();
+		return this.outboundItinerary.get(0).getDeparture();
 
 	}
 

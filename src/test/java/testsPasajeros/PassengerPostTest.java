@@ -26,26 +26,29 @@ import org.junit.Test;
  */
 public class PassengerPostTest {
 
-    // FIXME: este test falla, hay que arreglarlo, retorna http 400
-    // Desde Curl: curl localhost:9000/sync -H "Content-type:application/json" -X POST -d @json.txt
-    @Ignore
-    @Test
-    public void testPostNuevoPasajero() throws IOException {
+	// FIXME: este test falla, hay que arreglarlo, retorna http 400
+	// Desde Curl: curl localhost:9000/sync -H "Content-type:application/json"
+	// -X POST -d @json.txt
+	@Ignore
+	@Test
+	public void testPostNuevoPasajero() throws IOException {
 
-        ClientConfig config = new ClientConfig().register(new JacksonFeature());
-        Client client = ClientBuilder.newClient(config);
+		ClientConfig config = new ClientConfig().register(new JacksonFeature());
+		Client client = ClientBuilder.newClient(config);
 
-        WebTarget target = client.target("http://localhost:8080/pasajeros");
-        
-        Passenger pasajero8 = new Passenger("8","pasajero8", "apellido8", "888888", new ArrayList<String>());
-        
-        Response response = target.request()
-                .post(Entity.entity(
-                        pasajero8,
-                        MediaType.APPLICATION_JSON_TYPE));
-//        Assert.assertEquals("hola", response.getEntity().toString());
-        Assert.assertEquals(201, response.getStatus());
+		WebTarget target = client.target("http://localhost:8080/pasajeros");
 
-    }
+		Passenger pasajero8 = new Passenger("8",
+			"pasajero8",
+			"apellido8",
+			"888888",
+			new ArrayList<String>());
+
+		Response response = target.request().post(Entity.entity(pasajero8,
+			MediaType.APPLICATION_JSON_TYPE));
+		// Assert.assertEquals("hola", response.getEntity().toString());
+		Assert.assertEquals(201, response.getStatus());
+
+	}
 
 }
