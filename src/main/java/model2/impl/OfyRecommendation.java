@@ -45,7 +45,14 @@ public class OfyRecommendation implements Recommendation {
 
 	}
 
-	public OfyRecommendation(final OfyUser owner, final OfyUser target,
+	public static OfyRecommendation createFrom(OfyUser owner,
+		OfyUser target, OfyTrip trip) {
+
+		return new OfyRecommendation(owner, target, trip);
+
+	}
+
+	private OfyRecommendation(final OfyUser owner, final OfyUser target,
 		final OfyTrip trip) {
 
 		this.owner = Ref.create(owner);
@@ -187,7 +194,8 @@ public class OfyRecommendation implements Recommendation {
 	@Override
 	public boolean wasCreatedFor(final User target) {
 
-		return this.getTarget().equals(target);
+		return this.getTarget()
+			.equals(target);
 
 	}
 

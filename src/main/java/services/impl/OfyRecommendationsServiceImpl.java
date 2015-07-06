@@ -41,8 +41,7 @@ public class OfyRecommendationsServiceImpl implements
 
 		if (ownerId == targetId) {
 
-			throw new DomainLogicException(
-				"No se puede crear una recomendacion para uno mismo");
+			throw new DomainLogicException("No se puede crear una recomendacion para uno mismo");
 
 		}
 
@@ -51,15 +50,15 @@ public class OfyRecommendationsServiceImpl implements
 
 		if (!trip.wasCreatedBy(owner)) {
 
-			throw new DomainLogicException(
-				"Solo los propieratarios de un viaje pueden recommendar el mismo");
+			throw new DomainLogicException("Solo los propieratarios de un viaje pueden recommendar el mismo");
 
 		}
 
 		final OfyUser target = this.userRepo.findById(targetId);
 
-		final OfyRecommendation recommendation = new OfyRecommendation(
-			owner, target, trip);
+		final OfyRecommendation recommendation = OfyRecommendation.createFrom(owner,
+			target,
+			trip);
 
 		if (!recommendationRepository.exists(recommendation.getId())) {
 
@@ -67,12 +66,11 @@ public class OfyRecommendationsServiceImpl implements
 
 		}
 
-		throw new DomainLogicException(
-			"Ya existe una recomendacion de " + ownerId
-				+ " para "
-				+ targetId
-				+ " que referencia al viaje "
-				+ tripId);
+		throw new DomainLogicException("Ya existe una recomendacion de " + ownerId
+			+ " para "
+			+ targetId
+			+ " que referencia al viaje "
+			+ tripId);
 
 	}
 
@@ -93,8 +91,7 @@ public class OfyRecommendationsServiceImpl implements
 	@Override
 	public List<OfyRecommendation> findByOwner(final long ownerId) {
 
-		return this.recommendationRepository.findByOwner(this.userRepo
-			.findById(ownerId));
+		return this.recommendationRepository.findByOwner(this.userRepo.findById(ownerId));
 
 	}
 
@@ -102,16 +99,16 @@ public class OfyRecommendationsServiceImpl implements
 	public List<OfyRecommendation> findByOwnerAndStatus(
 		final long ownerId, final OfyRecommendation.Status status) {
 
-		return this.recommendationRepository.findByOwnerAndStatus(
-			this.userRepo.findById(ownerId), status);
+		return this.recommendationRepository.findByOwnerAndStatus(this.userRepo.findById(ownerId),
+			status);
 	}
 
 	@Override
 	public List<OfyRecommendation> findByTargetAndStatus(
 		final long targetId, final OfyRecommendation.Status status) {
 
-		return this.recommendationRepository.findByTargetAndStatus(
-			this.userRepo.findById(targetId), status);
+		return this.recommendationRepository.findByTargetAndStatus(this.userRepo.findById(targetId),
+			status);
 
 	}
 
@@ -120,18 +117,15 @@ public class OfyRecommendationsServiceImpl implements
 		final String recommendationId,
 		final OfyRecommendation.Status newStatus) {
 
-		final OfyRecommendation recommendation = recommendationRepository
-			.findById(recommendationId);
+		final OfyRecommendation recommendation = recommendationRepository.findById(recommendationId);
 
 		if (!recommendation.wasCreatedFor(userRepo.findById(userId))) {
 
-			throw new DomainLogicException(
-				"Solo el destinatario de una recomendacion puede modificar la misma.");
+			throw new DomainLogicException("Solo el destinatario de una recomendacion puede modificar la misma.");
 
 		}
 
-		return recommendationRepository.add(recommendation
-			.markAs(newStatus));
+		return recommendationRepository.add(recommendation.markAs(newStatus));
 
 		// aca habria que notificar a facebook para no distribuir la logica
 		// entre el front y el server
