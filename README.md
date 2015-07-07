@@ -9,6 +9,10 @@ Build:
 Test: 
 
 	mvn -X test 
+	
+Test and Generate Reports: 
+
+	mvn test jacoco:report 
 
 Run: 
 
