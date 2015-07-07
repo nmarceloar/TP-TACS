@@ -19,7 +19,6 @@ import model2.impl.OfyRecommendation;
 import model2.impl.OfyTrip;
 import model2.impl.OfyUser;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import repository.OfyRecommendationsRepository;
 import repository.OfyTripsRepository;
