@@ -14,9 +14,10 @@ import api.rest.views.TripDetails;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import junit.framework.Assert;
+
 import model2.impl.OfyTrip;
 import model2.impl.OfyUser;
+import org.junit.Assert;
 import org.junit.Test;
 import repository.OfyRecommendationsRepository;
 import repository.OfyTripsRepository;
@@ -75,7 +76,7 @@ public class OfyTripsRepositoryImplTest extends BaseOfyTest {
         Assert.assertEquals("Buenos Aires", detalles.getFromCity().getName());
         Assert.assertEquals("Roma", detalles.getToCity().getName());
         Assert.assertEquals("ARS", detalles.getPriceDetail().getCurrency());
-        Assert.assertEquals(5545.12, detalles.getPriceDetail().getTotal());
+        Assert.assertEquals(5545.12, detalles.getPriceDetail().getTotal(),0);
     }
     
     @Test
