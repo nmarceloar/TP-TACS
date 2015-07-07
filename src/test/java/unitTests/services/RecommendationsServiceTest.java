@@ -5,12 +5,8 @@
  */
 package unitTests.services;
 
-import api.rest.UserDetails;
 import api.rest.views.Airline;
 import api.rest.views.Airport;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,9 +16,6 @@ import model2.impl.OfyUser;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
-
-import repository.OfyRecommendationsRepository;
 import repository.OfyTripsRepository;
 import repository.OfyUsersRepository;
 import services.OfyRecommendationsService;
@@ -37,9 +30,7 @@ import repository.impl.OfyRecommendationsRepositoryImpl;
 import repository.impl.OfyTripsRepositoryImpl;
 import repository.impl.OfyUsersRepositoryImpl;
 import services.OfyTripsService;
-import services.OfyUsersService;
 import services.impl.OfyTripsServiceImpl;
-import services.impl.OfyUsersServiceImpl;
 
 /**
  *
@@ -116,6 +107,42 @@ public class RecommendationsServiceTest extends BaseOfyTest {
         Assert.assertEquals(rec.getId(), recom.getId());
         Assert.assertEquals(user1.getId(), recom.getOwner().getId());
         Assert.assertEquals(user2.getId(), recom.getTarget().getId());
+    }
+
+    @Test
+    public void removeAllTest() {
+       final OfyUsersRepository userRepo = new OfyUsersRepositoryImpl();
+        final OfyTripsRepository tripRepo = new OfyTripsRepositoryImpl();
+        final OfyRecommendationsRepositoryImpl recommendationRepo = new OfyRecommendationsRepositoryImpl();
+        final OfyTripsService tripsService
+                = new OfyTripsServiceImpl(userRepo,
+                        tripRepo,
+                        recommendationRepo);
+        final OfyRecommendationsService recService
+                = new OfyRecommendationsServiceImpl(userRepo,
+                        tripRepo,
+                        recommendationRepo);
+
+        final OfyUser user1 = OfyUser.createFrom(1L,
+                "user1",
+                "fbuser1",
+                "user1@facebook.com");
+        final OfyUser user2 = OfyUser.createFrom(2L,
+                "user2",
+                "fbuser2",
+                "user2@facebook.com");
+
+        userRepo.add(user1);
+        userRepo.add(user2);
+        final OfyTrip trip = tripsService.createTrip(1L,
+                buildTripDetails());
+        OfyRecommendation recom = recService.createRecommendation(user1.getId(),
+                user2.getId(), trip.getId());
+        recommendationRepo.add(recom);
+
+        Assert.assertEquals(1, recService.findAll().size());
+        recService.removeAll();
+        Assert.assertEquals(0, recService.findAll().size());
     }
 
     @Test

@@ -5,12 +5,14 @@
  */
 package repository.impl;
 
+import api.rest.exceptions.DomainLogicException;
 import api.rest.views.Airline;
 import api.rest.views.Airport;
 import api.rest.views.City;
 import api.rest.views.PriceDetail;
 import api.rest.views.Segment;
 import api.rest.views.TripDetails;
+import com.google.appengine.repackaged.org.joda.time.DateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -86,6 +88,29 @@ public class OfyRecommendationsRepositoryImplTest extends BaseOfyTest {
 
         OfyRecommendation reco = recommendationRepo.findById(recommendation.getId());
         Assert.assertEquals(recommendation.getId(), reco.getId());
+
+        Assert.assertEquals(trip.getId(), reco.getTrip().getId());
+        reco.markAs(Recommendation.Status.ACCEPTED);
+        Assert.assertEquals(DateTime.now().getDayOfMonth(), reco.getCreationDate().getDate());
+        Assert.assertEquals(Recommendation.Status.ACCEPTED.name(),
+                reco.getStatus().name());
+        Assert.assertNotNull(reco.getPatchDate());
+        Assert.assertEquals(DateTime.now().getDayOfMonth(), reco.getPatchDate().getDate());
+    }
+
+    @Test(expected = DomainLogicException.class)
+    public void findByIdTestNotFound() {
+        OfyUser owner = OfyUser.createFrom(1L, "name1", "link1", "mail1");
+        OfyUser target = OfyUser.createFrom(2L, "name2", "link2", "mail2");
+        owner = userRepo.add(owner);
+        target = userRepo.add(target);
+        OfyTrip trip = OfyTrip.createFrom(owner, buildTripDetails());
+        trip = tripRepo.add(trip);
+        OfyRecommendation recommendation = OfyRecommendation.createFrom(owner,
+                target, trip);
+        recommendationRepo.add(recommendation);
+
+        OfyRecommendation reco = recommendationRepo.findById("NN");
     }
 
     @Test

@@ -5,6 +5,7 @@
  */
 package repository.impl;
 
+import api.rest.exceptions.DomainLogicException;
 import api.rest.views.Airline;
 import api.rest.views.Airport;
 import api.rest.views.City;
@@ -77,6 +78,18 @@ public class OfyTripsRepositoryImplTest extends BaseOfyTest {
         Assert.assertEquals("Roma", detalles.getToCity().getName());
         Assert.assertEquals("ARS", detalles.getPriceDetail().getCurrency());
         Assert.assertEquals(5545.12, detalles.getPriceDetail().getTotal(),0);
+    }
+    
+    @Test(expected = DomainLogicException.class)
+    public void findByIdTestNotFound(){
+        OfyUser owner = OfyUser.createFrom(1L, "name1", "link1", "mail1");
+        OfyUser target = OfyUser.createFrom(2L, "name2", "link2", "mail2");
+        owner = userRepo.add(owner);
+        OfyTrip trip = OfyTrip.createFrom(owner, buildTripDetails());
+        tripRepo.add(trip);
+        
+        OfyTrip viaje = tripRepo.findById("NN");
+
     }
     
     @Test
