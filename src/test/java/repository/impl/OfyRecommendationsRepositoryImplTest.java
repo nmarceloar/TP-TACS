@@ -5,125 +5,205 @@
  */
 package repository.impl;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import model2.Recommendation.Status;
-import model2.impl.OfyRecommendation;
-import model2.impl.OfyTrip;
-import model2.impl.OfyUser;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import repository.OfyRecommendationsRepository;
-import repository.OfyTripsRepository;
-import repository.OfyUsersRepository;
-import unitTests.services.BaseOfyTest;
 import api.rest.views.Airline;
 import api.rest.views.Airport;
 import api.rest.views.City;
 import api.rest.views.PriceDetail;
 import api.rest.views.Segment;
 import api.rest.views.TripDetails;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import model2.Recommendation;
+import model2.impl.OfyRecommendation;
+import model2.impl.OfyTrip;
+import model2.impl.OfyUser;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import repository.OfyRecommendationsRepository;
+import repository.OfyTripsRepository;
+import repository.OfyUsersRepository;
+import unitTests.services.BaseOfyTest;
 
 /**
  *
- * @author flavio
+ * @author flpitu88
  */
 public class OfyRecommendationsRepositoryImplTest extends BaseOfyTest {
 
-	@Test
-	public void separar() {
+    OfyUsersRepository userRepo = new OfyUsersRepositoryImpl();
+    OfyTripsRepository tripRepo = new OfyTripsRepositoryImpl();
+    OfyRecommendationsRepository recommendationRepo = new OfyRecommendationsRepositoryImpl();
 
-		OfyUsersRepository userRepo = new OfyUsersRepositoryImpl();
-		OfyTripsRepository tripRepo = new OfyTripsRepositoryImpl();
-		OfyRecommendationsRepository recommendationRepo = new OfyRecommendationsRepositoryImpl();
+    @Test
+    public void addTest() {
 
-		OfyUser owner = OfyUser.createFrom(1L, "name1", "link1", "mail1");
-		OfyUser target = OfyUser.createFrom(1L, "name2", "link2", "mail2");
+        OfyUser owner = OfyUser.createFrom(1L, "name1", "link1", "mail1");
+        OfyUser target = OfyUser.createFrom(2L, "name2", "link2", "mail2");
+        owner = userRepo.add(owner);
+        target = userRepo.add(target);
+        OfyTrip trip = OfyTrip.createFrom(owner, buildTripDetails());
+        trip = tripRepo.add(trip);
+        OfyRecommendation recommendation = OfyRecommendation.createFrom(owner,
+                target, trip);
 
-		owner = userRepo.add(owner);
-		target = userRepo.add(target);
+        Assert.assertTrue(!recommendationRepo.exists(recommendation.getId()));
 
-		OfyTrip trip = OfyTrip.createFrom(owner, buildTripDetails());
+        recommendation = recommendationRepo.add(recommendation);
 
-		trip = tripRepo.add(trip);
+        Assert.assertTrue(recommendationRepo.exists(recommendation.getId()));
 
-		OfyRecommendation recommendation = OfyRecommendation.createFrom(owner,
-			target,
-			trip);
+    }
 
-		recommendation = recommendationRepo.add(recommendation);
+    @Test
+    public void findAllTest() {
+        OfyUser owner = OfyUser.createFrom(1L, "name1", "link1", "mail1");
+        OfyUser target = OfyUser.createFrom(2L, "name2", "link2", "mail2");
+        owner = userRepo.add(owner);
+        target = userRepo.add(target);
+        OfyTrip trip = OfyTrip.createFrom(owner, buildTripDetails());
+        trip = tripRepo.add(trip);
+        OfyRecommendation recommendation = OfyRecommendation.createFrom(owner,
+                target, trip);
+        recommendationRepo.add(recommendation);
 
-		// separar en varios test, es un ejemplo
+        List<OfyRecommendation> listado = recommendationRepo.findAll();
+        Assert.assertEquals(1, listado.size());
 
-		Assert.assertTrue(recommendationRepo.exists(recommendation.getId()));
+    }
 
-		Assert.assertEquals(recommendation,
-			recommendationRepo.findById(recommendation.getId()));
+    @Test
+    public void findByIdTest() {
+        OfyUser owner = OfyUser.createFrom(1L, "name1", "link1", "mail1");
+        OfyUser target = OfyUser.createFrom(2L, "name2", "link2", "mail2");
+        owner = userRepo.add(owner);
+        target = userRepo.add(target);
+        OfyTrip trip = OfyTrip.createFrom(owner, buildTripDetails());
+        trip = tripRepo.add(trip);
+        OfyRecommendation recommendation = OfyRecommendation.createFrom(owner,
+                target, trip);
+        recommendationRepo.add(recommendation);
 
-		Assert.assertEquals(1, recommendationRepo.findAll()
-			.size());
+        OfyRecommendation reco = recommendationRepo.findById(recommendation.getId());
+        Assert.assertEquals(recommendation.getId(), reco.getId());
+    }
 
-		Assert.assertEquals(owner,
-			recommendationRepo.findById(recommendation.getId())
-				.getOwner());
+    @Test
+    public void findByOwnerTest() {
+        OfyUser owner = OfyUser.createFrom(1L, "name1", "link1", "mail1");
+        OfyUser target = OfyUser.createFrom(2L, "name2", "link2", "mail2");
+        OfyUser otro = OfyUser.createFrom(3L, "name3", "link3", "mail3");
+        owner = userRepo.add(owner);
+        target = userRepo.add(target);
+        OfyTrip trip = OfyTrip.createFrom(owner, buildTripDetails());
+        trip = tripRepo.add(trip);
+        OfyRecommendation recommendation = OfyRecommendation.createFrom(owner,
+                target, trip);
+        recommendationRepo.add(recommendation);
 
-		Assert.assertEquals(1,
-			recommendationRepo.findByOwnerAndStatus(owner, Status.PENDING)
-				.size());
+        List<OfyRecommendation> encontrados1 = recommendationRepo.findByOwner(owner);
+        Assert.assertEquals(1, encontrados1.size());
+        Assert.assertEquals("name1", encontrados1.get(0).getOwner().getName());
+        List<OfyRecommendation> encontrados2 = recommendationRepo.findByOwner(target);
+        Assert.assertEquals(0, encontrados2.size());
+    }
 
-		Assert.assertEquals(1,
-			recommendationRepo.findByTargetAndStatus(target,
-				Status.PENDING)
-				.size());
+    @Test
+    public void findByOwnerAndStatusTest() {
+        OfyUser owner = OfyUser.createFrom(1L, "name1", "link1", "mail1");
+        OfyUser target = OfyUser.createFrom(2L, "name2", "link2", "mail2");
+        owner = userRepo.add(owner);
+        target = userRepo.add(target);
+        OfyTrip trip = OfyTrip.createFrom(owner, buildTripDetails());
+        trip = tripRepo.add(trip);
+        OfyRecommendation recommendation = OfyRecommendation.createFrom(owner,
+                target, trip);
+        recommendationRepo.add(recommendation);
 
-		Assert.assertEquals(recommendationRepo.findByOwnerAndStatus(owner,
-			Status.PENDING),
-			recommendationRepo.findByTargetAndStatus(target,
-				Status.PENDING));
+        List<OfyRecommendation> listado = recommendationRepo.
+                findByOwnerAndStatus(owner, Recommendation.Status.PENDING);
 
-	}
+        Assert.assertEquals(1, listado.size());
+    }
 
-	private TripDetails buildTripDetails() {
+    @Test
+    public void findByTargetAndStatusTest() {
+        OfyUser owner = OfyUser.createFrom(1L, "name1", "link1", "mail1");
+        OfyUser target = OfyUser.createFrom(2L, "name2", "link2", "mail2");
+        owner = userRepo.add(owner);
+        target = userRepo.add(target);
+        OfyTrip trip = OfyTrip.createFrom(owner, buildTripDetails());
+        trip = tripRepo.add(trip);
+        OfyRecommendation recommendation = OfyRecommendation.createFrom(owner,
+                target, trip);
+        recommendationRepo.add(recommendation);
 
-		final City c1 = new City("BUE", "Buenos Aires", 4566.321, 56565.34);
-		final City c2 = new City("ROM", "Roma", 4566.321, 56565.34);
-		final PriceDetail pd = new PriceDetail("ARS", 5545.12);
+        List<OfyRecommendation> listado = recommendationRepo.findByTargetAndStatus(
+                target, Recommendation.Status.PENDING);
 
-		Airport fromAirport = new Airport("EZE", "Ezeiza", 123.12, 564.12);
-		Airport toAirport = new Airport("MOR",
-			"Aeropuerto de Roma",
-			123.12,
-			564.12);
+        Assert.assertEquals(1, listado.size());
+    }
 
-		Airline airline = new Airline("AE1", "aerolinea1");
+    @Test
+    public void removeAllTest() {
+        OfyUser owner = OfyUser.createFrom(1L, "name1", "link1", "mail1");
+        OfyUser target = OfyUser.createFrom(2L, "name2", "link2", "mail2");
+        owner = userRepo.add(owner);
+        target = userRepo.add(target);
+        OfyTrip trip = OfyTrip.createFrom(owner, buildTripDetails());
+        trip = tripRepo.add(trip);
+        OfyRecommendation recommendation = OfyRecommendation.createFrom(owner,
+                target, trip);
+        recommendationRepo.add(recommendation);
 
-		Segment segment = new Segment(fromAirport,
-			toAirport,
-			airline,
-			"fid1",
-			new Date(),
-			new Date(),
-			"45:45");
+        Assert.assertEquals(1, recommendationRepo.findAll().size());
+        recommendationRepo.removeAll();
+        Assert.assertEquals(0, recommendationRepo.findAll().size());
+    }
 
-		Segment segment2 = new Segment(toAirport,
-			fromAirport,
-			airline,
-			"fid1",
-			new Date(),
-			new Date(),
-			"45:45");
+    /**
+     * Meotodo para crear un detalle de viajes utilizado en los tests
+     *
+     * @return
+     */
+    private TripDetails buildTripDetails() {
 
-		final List<Segment> outit = Arrays.asList(segment);
-		final List<Segment> init = Arrays.asList(segment2);
+        final City c1 = new City("BUE", "Buenos Aires", 4566.321, 56565.34);
+        final City c2 = new City("ROM", "Roma", 4566.321, 56565.34);
+        final PriceDetail pd = new PriceDetail("ARS", 5545.12);
 
-		TripDetails td = new TripDetails(c1, c2, pd, outit, init);
+        Airport fromAirport = new Airport("EZE", "Ezeiza", 123.12, 564.12);
+        Airport toAirport = new Airport("MOR",
+                "Aeropuerto de Roma",
+                123.12,
+                564.12);
 
-		return td;
+        Airline airline = new Airline("AE1", "aerolinea1");
 
-	}
+        Segment segment = new Segment(fromAirport,
+                toAirport,
+                airline,
+                "fid1",
+                new Date(),
+                new Date(),
+                "45:45");
+
+        Segment segment2 = new Segment(toAirport,
+                fromAirport,
+                airline,
+                "fid1",
+                new Date(),
+                new Date(),
+                "45:45");
+
+        final List<Segment> outit = Arrays.asList(segment);
+        final List<Segment> init = Arrays.asList(segment2);
+
+        TripDetails td = new TripDetails(c1, c2, pd, outit, init);
+
+        return td;
+
+    }
 
 }
