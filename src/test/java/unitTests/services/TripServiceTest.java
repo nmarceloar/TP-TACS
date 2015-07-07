@@ -62,13 +62,6 @@ public class TripServiceTest extends BaseOfyTest {
         Assert.assertNotNull(trip);
         Assert.assertEquals("Buenos Aires", trip.getTripDetails().getFromCity().getName());
         Assert.assertEquals("Roma", trip.getTripDetails().getToCity().getName());
-//        Assert.assertEquals(trip, tripsService.findById(trip.getId()));
-//        Assert.assertTrue(tripsService.findByOwner(1L)
-//                .size() == 1);
-//        Assert.assertTrue(tripsService.findByOwner(1L)
-//                .get(0)
-//                .equals(trip));
-
     }
 
     @Test
