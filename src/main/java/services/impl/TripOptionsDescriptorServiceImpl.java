@@ -58,7 +58,7 @@ public class TripOptionsDescriptorServiceImpl implements
 						@Override
 						public Airline call() throws Exception {
 
-							return TripOptionsDescriptorServiceImpl.this.airlinesService.findByCode(airlineCode);
+							return airlinesService.findByCode(airlineCode);
 
 						}
 

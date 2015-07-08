@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package unitTests.resources;
+package api.rest.resources;
 
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
-
-import javax.validation.ValidationException;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,10 +19,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import services.CitiesService;
-import api.rest.resources.CitiesResource;
 import api.rest.views.City;
-
-import com.google.appengine.repackaged.com.google.protobuf.ServiceException;
 
 /**
  *
@@ -40,7 +35,7 @@ public class CitiesResourcesTest {
 	private CitiesResource cityRes = new CitiesResource();
 
 	@Before
-	public void prepare() throws ServiceException, ValidationException {
+	public void prepare() {
 		List<City> lista = Arrays.asList(new City("BUE",
 			"Buenos Aires",
 			100,

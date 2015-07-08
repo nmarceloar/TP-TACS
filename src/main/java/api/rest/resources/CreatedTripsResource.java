@@ -3,6 +3,7 @@ package api.rest.resources;
 import static api.rest.resources.JsonResponseFactory.okJsonFrom;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -14,21 +15,29 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
-import org.glassfish.jersey.process.internal.RequestScoped;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import services.OfyTripsService;
 import utils.SessionUtils;
 import api.rest.views.TripDetails;
 
 @Path("/me/created-trips")
-@RequestScoped
+@Singleton
 public class CreatedTripsResource {
 
-	@Inject
 	private OfyTripsService tripsService;
-
-	@Context
 	private HttpServletRequest request;
+
+	@Inject
+	public CreatedTripsResource(OfyTripsService tripsService,
+		@Context HttpServletRequest request) {
+
+		this.tripsService = tripsService;
+		this.request = request;
+
+		System.out.println(ToStringBuilder.reflectionToString(this));
+
+	}
 
 	@POST
 	@Consumes("application/json")

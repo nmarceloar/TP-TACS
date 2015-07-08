@@ -13,6 +13,8 @@ import repository.OfyUsersRepository;
 import services.OfyRecommendationsService;
 import api.rest.exceptions.DomainLogicException;
 
+import com.googlecode.objectify.Work;
+
 // en realidad habria que implementar un AOP para poder separar bien el
 // servicio del repositorio
 
@@ -45,32 +47,40 @@ public class OfyRecommendationsServiceImpl implements
 
 		}
 
-		final OfyTrip trip = this.tripRepo.findById(tripId);
-		final OfyUser owner = this.userRepo.findById(ownerId);
+		return OfyService.ofy().transact(new Work<OfyRecommendation>() {
 
-		if (!trip.wasCreatedBy(owner)) {
+			@Override
+			public OfyRecommendation run() {
 
-			throw new DomainLogicException("Solo los propieratarios de un viaje pueden recommendar el mismo");
+				final OfyTrip trip = tripRepo.findById(tripId);
+				final OfyUser owner = userRepo.findById(ownerId);
 
-		}
+				if (!trip.wasCreatedBy(owner)) {
 
-		final OfyUser target = this.userRepo.findById(targetId);
+					throw new DomainLogicException("Solo los propieratarios de un viaje pueden recommendar el mismo");
 
-		final OfyRecommendation recommendation = OfyRecommendation.createFrom(owner,
-			target,
-			trip);
+				}
 
-		if (!recommendationRepository.exists(recommendation.getId())) {
+				final OfyUser target = userRepo.findById(targetId);
 
-			return recommendationRepository.add(recommendation);
+				final OfyRecommendation recommendation = OfyRecommendation.createFrom(owner,
+					target,
+					trip);
 
-		}
+				if (!recommendationRepository.exists(recommendation.getId())) {
 
-		throw new DomainLogicException("Ya existe una recomendacion de " + ownerId
-			+ " para "
-			+ targetId
-			+ " que referencia al viaje "
-			+ tripId);
+					return recommendationRepository.add(recommendation);
+
+				}
+
+				throw new DomainLogicException("Ya existe una recomendacion de " + ownerId
+					+ " para "
+					+ targetId
+					+ " que referencia al viaje "
+					+ tripId);
+
+			}
+		});
 
 	}
 
@@ -117,6 +127,21 @@ public class OfyRecommendationsServiceImpl implements
 		final String recommendationId,
 		final OfyRecommendation.Status newStatus) {
 
+		return OfyService.ofy().transact(new Work<OfyRecommendation>() {
+			@Override
+			public OfyRecommendation run() {
+				return doPatch(userId, recommendationId, newStatus);
+			}
+		});
+
+		// aca habria que notificar a facebook para no distribuir la logica
+		// entre el front y el server
+	}
+
+	private OfyRecommendation doPatch(final long userId,
+		final String recommendationId,
+		final OfyRecommendation.Status newStatus) {
+
 		final OfyRecommendation recommendation = recommendationRepository.findById(recommendationId);
 
 		if (!recommendation.wasCreatedFor(userRepo.findById(userId))) {
@@ -127,8 +152,6 @@ public class OfyRecommendationsServiceImpl implements
 
 		return recommendationRepository.add(recommendation.markAs(newStatus));
 
-		// aca habria que notificar a facebook para no distribuir la logica
-		// entre el front y el server
 	}
 
 	@Override

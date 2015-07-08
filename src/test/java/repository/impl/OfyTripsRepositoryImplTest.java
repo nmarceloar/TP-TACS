@@ -12,18 +12,21 @@ import api.rest.views.City;
 import api.rest.views.PriceDetail;
 import api.rest.views.Segment;
 import api.rest.views.TripDetails;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import model2.impl.OfyTrip;
 import model2.impl.OfyUser;
+
 import org.junit.Assert;
 import org.junit.Test;
+
 import repository.OfyRecommendationsRepository;
 import repository.OfyTripsRepository;
 import repository.OfyUsersRepository;
-import unitTests.services.BaseOfyTest;
+import services.impl.BaseOfyTest;
 
 /**
  *

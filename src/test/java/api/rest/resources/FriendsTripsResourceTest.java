@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package unitTests.resources;
+package api.rest.resources;
 
 import static org.mockito.Mockito.when;
 
@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import services.OfyTripsService;
+import services.impl.BaseOfyTest;
 import api.rest.resources.FriendsTripsResource;
 import api.rest.views.Airline;
 import api.rest.views.Airport;
@@ -28,18 +29,22 @@ import api.rest.views.City;
 import api.rest.views.PriceDetail;
 import api.rest.views.Segment;
 import api.rest.views.TripDetails;
+
 import java.util.Arrays;
 import java.util.Date;
+
 import javax.ws.rs.core.Response;
+
 import model2.impl.OfyUser;
+
 import org.junit.Assert;
+
 import repository.OfyRecommendationsRepository;
 import repository.OfyTripsRepository;
 import repository.OfyUsersRepository;
 import repository.impl.OfyRecommendationsRepositoryImpl;
 import repository.impl.OfyTripsRepositoryImpl;
 import repository.impl.OfyUsersRepositoryImpl;
-import unitTests.services.BaseOfyTest;
 
 /**
  *
@@ -61,6 +66,7 @@ public class FriendsTripsResourceTest extends BaseOfyTest {
 
     @Before
     public void prepare() {
+    	
         OfyUser owner = OfyUser.createFrom(1L, "name1", "link1", "mail1");
         OfyUser target = OfyUser.createFrom(2L, "name2", "link2", "mail2");
         owner = userRepo.add(owner);
@@ -68,6 +74,7 @@ public class FriendsTripsResourceTest extends BaseOfyTest {
         tripRepo.add(trip);
         
         when(tripsService.findByOwner(1L)).thenReturn(tripRepo.findAll());
+        
     }
 
     @Test

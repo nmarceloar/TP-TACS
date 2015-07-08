@@ -58,7 +58,8 @@ public class LoginServlet extends HttpServlet {
 
 				if (session != null) {
 
-					if (SessionUtils.extractToken(session).equals(token)) {
+					if (SessionUtils.extractToken(session)
+						.equals(token)) {
 
 						this.existingSessionResponse(response);
 
@@ -68,15 +69,22 @@ public class LoginServlet extends HttpServlet {
 
 						this.destroySession(session);
 
-						this.prepareSessionAndUser(request, response, token, tokenInfo);
+						this.prepareSessionAndUser(request,
+							response,
+							token,
+							tokenInfo);
 
-						this.newOrUpdatedSessionResponse(response, tokenInfo);
+						this.newOrUpdatedSessionResponse(response,
+							tokenInfo);
 
 					}
 
 				} else {
 
-					this.prepareSessionAndUser(request, response, token, tokenInfo);
+					this.prepareSessionAndUser(request,
+						response,
+						token,
+						tokenInfo);
 
 					this.newSessionResponse(response, tokenInfo);
 
@@ -96,39 +104,59 @@ public class LoginServlet extends HttpServlet {
 
 	private void existingSessionResponse(HttpServletResponse response)
 		throws IOException {
+
 		response.setStatus(HttpServletResponse.SC_OK);
-		response.getOutputStream().println("Ya habia sesion.");
-		response.getOutputStream().flush();
+		response.getOutputStream()
+			.println("Ya habia sesion.");
+		response.getOutputStream()
+			.flush();
+
 	}
 
 	private void invalidTokenResponse(HttpServletResponse response)
 		throws IOException {
+
 		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-		response.getOutputStream().println("Token no valido.");
-		response.getOutputStream().flush();
+		response.getOutputStream()
+			.println("Token no valido.");
+		response.getOutputStream()
+			.flush();
+
 	}
 
 	private void newOrUpdatedSessionResponse(HttpServletResponse response,
 		TokenInfo tokenInfo) throws IOException {
+
 		response.setStatus(HttpServletResponse.SC_OK);
-		response.getOutputStream().println("Ok.Se termino la sesion anterior." + "\n"
-			+ "Se creo una nueva sesion. userId= "
-			+ tokenInfo.getUserId());
-		response.getOutputStream().flush();
+		response.getOutputStream()
+			.println("Ok.Se termino la sesion anterior." + "\n"
+				+ "Se creo una nueva sesion. userId= "
+				+ tokenInfo.getUserId());
+		response.getOutputStream()
+			.flush();
+
 	}
 
 	private void newSessionResponse(HttpServletResponse response,
 		TokenInfo tokenInfo) throws IOException {
+
 		response.setStatus(HttpServletResponse.SC_OK);
-		response.getOutputStream().println("Ok.Se creo una nueva sesion. userId= " + tokenInfo.getUserId());
-		response.getOutputStream().flush();
+		response.getOutputStream()
+			.println("Ok.Se creo una nueva sesion. userId= " + tokenInfo.getUserId());
+		response.getOutputStream()
+			.flush();
+
 	}
 
 	private void noTokenResponse(HttpServletResponse response)
 		throws IOException {
+
 		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-		response.getOutputStream().println("No habia token!.");
-		response.getOutputStream().flush();
+		response.getOutputStream()
+			.println("No habia token!.");
+		response.getOutputStream()
+			.flush();
+
 	}
 
 	private void prepareSessionAndUser(HttpServletRequest request,
@@ -139,7 +167,8 @@ public class LoginServlet extends HttpServlet {
 
 		synchronized (session = request.getSession(true)) {
 
-			session.setAttribute(SessionUtils.USER_ID, tokenInfo.getUserId());
+			session.setAttribute(SessionUtils.USER_ID,
+				tokenInfo.getUserId());
 			session.setAttribute(SessionUtils.TOKEN, token);
 			session.setMaxInactiveInterval(-1);
 			// session.setAttribute(SessionUtils.EXPIRATION_DATE,

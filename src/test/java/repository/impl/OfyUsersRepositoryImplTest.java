@@ -8,7 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import repository.OfyUsersRepository;
-import unitTests.services.BaseOfyTest;
+import services.impl.BaseOfyTest;
 
 public class OfyUsersRepositoryImplTest extends BaseOfyTest {
 

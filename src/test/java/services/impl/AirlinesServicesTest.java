@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package unitTests.services;
+package services.impl;
 
 import api.rest.Airline;
 import java.util.List;
